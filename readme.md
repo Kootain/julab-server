@@ -2,7 +2,7 @@
 
 ## install:
 
- 1. install ` node.js` (include ` npm`).[click here]:("https://nodejs.org/","nodejs")
+ 1. install ` node.js` (include ` npm`). [click here](https://nodejs.org/ "nodejs")
  2. install dependency. run the following commands.
 ``` shell
 $ npm install bower -g
