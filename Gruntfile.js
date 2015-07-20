@@ -155,6 +155,10 @@ module.exports = function (grunt) {
                     livereload: '<%= connect.options.livereload %>'
                 }
             },
+            img:{
+                files: ['app/img/**/*.*'],
+                tasks: ['copy:dist'],
+            },
             livereload: {
                 options: {
                     livereload: '<%= connect.options.livereload %>'
@@ -240,6 +244,22 @@ module.exports = function (grunt) {
                 dest: '<%= inspinia.dist %>/scripts/',
                 src: '*.js'
             },
+            tmp: {
+                files:[
+                    {
+                        expand: true,
+                        cwd: '.tmp/concat/scripts',
+                        dest: '<%= inspinia.dist %>/scripts',
+                        src: '*.*'
+                    },
+                    {
+                        expand: true,
+                        cwd: '.tmp/concat/styles',
+                        dest: '<%= inspinia.dist %>/styles',
+                        src: '*.*'
+                    }
+                ]
+            },
         },
         // Renames files for browser caching purposes
         filerev: {
@@ -289,7 +309,7 @@ module.exports = function (grunt) {
 
     // Run build version of app
     grunt.registerTask('run', [
-        'release',
+        'build',
         'concurrent'
     ]);
 
@@ -300,11 +320,11 @@ module.exports = function (grunt) {
         'useminPrepare',
         'concat',
         'copy:dist',
-        'cssmin',
+        'copy:tmp',
         'filerev',
         'inject',
         'usemin',
-        'htmlmin'
+
     ]);
 
     // Build version for production
