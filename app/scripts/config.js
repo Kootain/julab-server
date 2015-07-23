@@ -7,24 +7,42 @@
  *
  */
 function config($stateProvider, $urlRouterProvider) {
-    $urlRouterProvider.otherwise("/index/main");
+    $urlRouterProvider.otherwise("/main/index");
 
     $stateProvider
-
-        .state('index', {
+        //////////////////index
+        .state('content', {
             abstract: true,
-            url: "/index",
+            url: "/main",
             templateUrl: "views/common/content.html",
         })
-        .state('index.main', {
-            url: "/main",
+        .state('content.index', {
+            url: "/index",
             templateUrl: "views/main.html",
-            data: { pageTitle: 'Example view' }
+            data: { pageTitle: 'welcome' }
         })
-        .state('index.minor', {
-            url: "/minor",
-            templateUrl: "views/minor.html",
-            data: { pageTitle: 'Example view' }
+        //////////////////devices manage
+        .state('content.device-overview', {
+            url: "/device",
+            templateUrl: "views/devices_list.html",
+            data: { pageTitle: 'devices overview' }
+        })
+        .state('content.device-online', {
+            url: "/is-online",
+            templateUrl: "views/devices_list.html",
+            data: { pageTitle: 'online devices' }
+        })
+        /////////////////reagent manage
+
+        .state('content.reagent-overview', {
+            url: "/reagent",
+            templateUrl: "views/reagent_overview.html",
+            data: { pageTitle: 'reagents overview' }
+        })
+        .state('content.reagent-add', {
+            url: "/add",
+            templateUrl: "views/devices_list.html",
+            data: { pageTitle: 'add reagents' }
         })
 }
 angular

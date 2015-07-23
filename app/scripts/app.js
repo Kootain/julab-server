@@ -5,6 +5,7 @@
 (function () {
     angular.module('inspinia', [
         'ui.router',                    // Routing
-        'ui.bootstrap'                 // Bootstrap
+        'ui.bootstrap',					// Bootstrap
+        'pascalprecht.translate'       	// translate          
     ])
 })();

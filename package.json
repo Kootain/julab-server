@@ -1,13 +1,17 @@
 {
-  "name": "INSPINIA",
-  "version": "2.2.0",
-  "description": "INSPINIA - Responsive Admin Theme",
+  "name": "julab-router",
+  "version": "0.1.0",
+  "description": "solution for the julab-router",
   "dependencies": {
     "grunt": "^0.4.5",
     "lodash": "^2.4.1",
     "ee-first": "1.0.3",
     "express": ">4.13.0",
     "async": "^0.2.10"
+  },
+  "repository" :
+  { "type" : "git"
+  , "url" : "https://git.oschina.net/tankijong/julab-server.git"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
@@ -31,5 +35,11 @@
     "time-grunt": "^1.0.0",
     "grunt-node-inspector": "^0.2.0",
     "open": "^0.0.5"
+  },
+  "Private":"true",
+  "publishConfig":{
+    "scripts":{
+      "start": "node server.js"
+    }
   }
 }
