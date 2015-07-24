@@ -25,6 +25,11 @@
                     Ju+
                 </div>
             </li>
+
+            <li ui-sref-active="active">
+                <a ui-sref="content.index"><i class="fa fa-sitemap"></i> <span class="nav-label">{{ 'DASHBOARD' | translate }}</span></a>
+            </li>
+
 <!-- device -->
             <li ng-class="{active: $state.includes('content.device')}">
                 <a><i class="fa fa-sitemap"></i> <span class="nav-label">{{ 'ALLDEVICES' | translate }}</span><span class="fa arrow"></span></a>
