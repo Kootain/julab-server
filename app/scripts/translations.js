@@ -33,5 +33,5 @@ function translate($translateProvider) {
 }
 
 angular
-    .module('inspinia')
+    .module('julab')
     .config(translate)

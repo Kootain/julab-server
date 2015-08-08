@@ -22,19 +22,27 @@ function config($stateProvider, $urlRouterProvider) {
         .state('content.index', {
             url: "/index",
             templateUrl: "views/main.html",
+            controller: 'MainCtrl',
             data: { pageTitle: 'Dashboard' },
             ncyBreadcrumb:{
                 label:'Dashboard'
             }
         })
         //////////////////devices manage
-        .state('content.device-overview', {
-            url: "/device",
+        .state('content.devices', {
+            url: "/devices",
+            template: '<ui-view/>',
+            ncyBreadcrumb:{
+                label:'devices'
+            }
+        })
+        .state('content.devices.overview', {
+            url: "/overview",
             templateUrl: "views/device/overview.html",
+            controller: 'deviceOverviewCtrl as deviceOverview',
             data: { pageTitle: 'devices overview' },
             ncyBreadcrumb:{
-                label:'devices',
-                parent:'content'
+                label:'overview',
             },
             resolve: {
                 loadPlugin: function ($ocLazyLoad) {
@@ -64,13 +72,13 @@ function config($stateProvider, $urlRouterProvider) {
                 }
             }
         })
-        .state('content.device-online', {
-            url: "/is-online",
+        .state('content.devices.list', {
+            url: "/list",
             templateUrl: "views/device/devices_list.html",
+            controller: 'deviceCtrl as device',
             data: { pageTitle: 'online devices' },
             ncyBreadcrumb:{
-                label: 'online devices',
-                parent: 'content.device-overview'
+                label: 'device list',
             }
         })
         /////////////////reagent manage
@@ -95,7 +103,7 @@ function config($stateProvider, $urlRouterProvider) {
         })
 }
 angular
-    .module('inspinia')
+    .module('julab')
     .config(config)
     .run(function($rootScope, $state) {
         $rootScope.$state = $state;

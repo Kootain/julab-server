@@ -14,6 +14,29 @@ function MainCtrl() {
 
 };
 
+function deviceOverviewCtrl() {
+    
+    this.userName = 'tanki';
+    this.helloText = 'Welcome in SeedProject';
+    this.descriptionText = 'It is an application skeleton for a typical AngularJS web app. You can use it to quickly bootstrap your angular webapp projects and dev environment for these projects.';
+
+};
+
+function deviceCtrl($scope) {
+    
+    this.devices=[
+    {id:'aa',isOnline:false},
+    {id:'bb',isOnline:true}
+    ];
+
+    $scope.mustOnline=true;
+    this.deviceListFilter=function(v,i,a){ 
+        console.log(v,$scope.mustOnline,$scope.mustOnline||v.isOnline);
+        return !$scope.mustOnline||v.isOnline;
+    };
+
+};
+
 function widgetFlotChart() {
 
 
@@ -397,10 +420,12 @@ function chartJsCtrl() {
 };
 
 angular
-    .module('inspinia')
+    .module('julab')
     .controller('MainCtrl', MainCtrl)
     .controller('widgetFlotChart',widgetFlotChart)
-    .controller('chartJsCtrl',chartJsCtrl);
+    .controller('chartJsCtrl',chartJsCtrl)
+    .controller('deviceOverviewCtrl',deviceOverviewCtrl)
+    .controller('deviceCtrl',deviceCtrl);
 
 
 

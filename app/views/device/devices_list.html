@@ -8,9 +8,15 @@
     </div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row">
-        <div class="col-md-3">
-            <div class="ibox">
+    <div class="checkbox checkbox-primary">
+        <input id="online" type="checkbox"  ng-model="mustOnline">
+        <label for="online">
+            only show connected devices
+        </label>
+    </div>
+     <div class="row">
+        <div class="col-md-3" ng-repeat="d in device.devices|filter:device.deviceListFilter">
+            <div class="ibox" >
                 <div class="ibox-content product-box">
 
                     <div class="product-imitation">
@@ -21,7 +27,7 @@
                                     {{ 'LEARN_MORE' | translate }}
                                 </span>
                         <small class="text-muted">{{ 'CATEGORY' | translate }}</small>
-                        <a href="#" class="product-name"> ID: 0X23444 </a>
+                        <a href="#" class="product-name"> ID: {{ d.id }}</a> 
 
 
 
@@ -54,4 +60,6 @@
                 </div>
             </div>
         </div>
+    </div>
+
 </div>
