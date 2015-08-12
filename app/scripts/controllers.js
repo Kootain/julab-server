@@ -316,6 +316,19 @@ function chartJsCtrl() {
         barDatasetSpacing : 1
 };
 
+function addDevice($scope){
+    var deviceList;
+    this.scan=function(){
+        $http.get('env/devices/')
+        .success(function(data, status, headers, config){
+            deviceList=angular.fromJson(data);
+        })
+        .error(function(data, status, headers, config){
+
+        });
+    }
+}
+
     /**
      * Data for Bar chart
      */
