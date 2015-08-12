@@ -31,11 +31,11 @@
             </li>
 
 <!-- device -->
-            <li ng-class="{active: $state.includes('content.device')}">
+            <li ng-class="{active: $state.includes('content.devices')}">
                 <a><i class="fa fa-sitemap"></i> <span class="nav-label">{{ 'ALLDEVICES' | translate }}</span><span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level" ng-class="{in: $state.includes('content.device')}">
-                    <li ui-sref-active="active"><a ui-sref="content.device-overview">{{ 'OVERVIEW' | translate }}</a></li>
-                    <li ui-sref-active="active"><a ui-sref="content.device-online">{{ 'ONLINEDEVICE' | translate }}</a></li>
+                <ul class="nav nav-second-level" ng-class="{in: $state.includes('content.devices')}">
+                    <li ui-sref-active="active"><a ui-sref="content.devices.overview">{{ 'OVERVIEW' | translate }}</a></li>
+                    <li ui-sref-active="active"><a ui-sref="content.devices.list">{{ 'ONLINEDEVICE' | translate }}</a></li>
                 </ul>
             </li>
 <!-- device end -->

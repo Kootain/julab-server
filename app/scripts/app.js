@@ -3,7 +3,7 @@
  *
  */
 (function () {
-    angular.module('inspinia', [
+    angular.module('julab', [
         'ui.router',                    // Routing
         'ui.bootstrap',					// Bootstrap
         'pascalprecht.translate',       // translate
