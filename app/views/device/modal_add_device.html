@@ -1,0 +1,39 @@
+<div class="inmodal">
+    <div class="modal-header">
+        <h4 class="modal-title">add new device{{ deviceList }}</h4>
+    </div>
+    <div class="modal-body" id="list"style="padding: 0">
+        <ul class="dropdown-menu device-list" ng-hide="true">
+        {{ deviceList }}
+        <div ng-repeat="device in deviceList">
+             <li>
+                <a ui-sref="inbox">
+                    <div>
+                        <i class="fa fa-envelope fa-fw"></i> You have {{ device.x }} messages
+                        <span class="pull-right text-muted small">4 minutes ago</span>
+                    </div>
+                </a>
+            </li>
+            <li class="divider"></li>
+        </div>
+        </ul>
+    </div>
+    <div class="modal-footer">
+                <div class="text-center link-block">
+                <a ng-click="scan()">
+                    <strong>Refresh</strong>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+        <button type="button" class="btn btn-white" ng-click="cancel()">Close</button>
+        <button type="button" class="btn btn-primary" ng-click="ok()">Save changes</button>
+    </div>
+</div>
+<script>
+    $(function(){
+    $('#list').slimScroll({
+        height: '250px'
+    });
+});
+</script>
+
