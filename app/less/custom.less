@@ -1,6 +1,43 @@
-/* Only demo */
-@media (max-width: 1000px) {
-  .welcome-message {
-    display: none;
-  }
+.device-list li > a {
+  padding: 15px 20px;
+  color: #676a6c;
+  display: block;
+}
+
+.device-list li a:hover, .device-list li a:focus {
+  background-color: #f5f5f5;
+  color: @navy;
+}
+
+.device-list li.active {
+  background: #fff;
+  border: none;
+}
+.device-list li.active > a {
+  color: @navy;
+}
+.device-list .navbar-right {
+  margin-right: 10px;
+}
+
+.device-list{
+  box-shadow: none;
+  border: 1px solid #e7eaec;
+}
+
+.device-list li > a {
+  margin: 0;
+  padding: 7px 20px;
+}
+
+.device-list {
+  margin-top: 0px;
+  width: 100%;
+  position: static;
+  display: block;
+  float: none;
+}
+
+.device-list li > a, .device-list {
+  padding: 10px 15px 10px 20px;
 }

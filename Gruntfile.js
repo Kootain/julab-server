@@ -130,7 +130,7 @@ module.exports = function (grunt) {
         less: {
             development: {
                 options: {
-                    compress: true,
+                    compress: false,
                     optimization: 2
                 },
                 files: {
@@ -243,6 +243,12 @@ module.exports = function (grunt) {
                 cwd: '<%= inspinia.app %>/scripts',
                 dest: '<%= inspinia.dist %>/scripts/',
                 src: '*.js'
+            },
+            bower_denpendency: {
+                expand: true,
+                cwd: 'bower_components',
+                dest: 'denpendency',
+                src: '{,*/}*.js'
             },
             tmp: {
                 files:[

@@ -32,6 +32,7 @@
     "jquery.flot.spline": "https://raw.githubusercontent.com/AMKohn/flot/master/jquery.flot.spline.js",
     "Chart.js": "https://github.com/nnnick/Chart.js.git#~0.2.0",
     "oclazyload":"~1.0",
-    "angular-peity":"*"
+    "angular-peity":"*",
+    "angular-notify": "~2.0.2"
   }
 }

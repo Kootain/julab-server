@@ -8,6 +8,7 @@
         'ui.bootstrap',					// Bootstrap
         'pascalprecht.translate',       // translate
         'ncy-angular-breadcrumb',
-        'oc.lazyLoad'          
+        'oc.lazyLoad',
+        'cgNotify'          
     ])
 })();

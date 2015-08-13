@@ -6,12 +6,15 @@
 /**
  * MainCtrl - controller
  */
-function MainCtrl() {
+ tools={};
+function mainCtrl($scope,notify) {
 
     this.userName = 'tanki';
     this.helloText = 'Welcome in SeedProject';
     this.descriptionText = 'It is an application skeleton for a typical AngularJS web app. You can use it to quickly bootstrap your angular webapp projects and dev environment for these projects.';
-
+    tools.notify=function(type,msg){
+        notify({ message: msg, classes: type, templateUrl: 'views/common/notify.html'});
+    }
 };
 
 function deviceOverviewCtrl() {
@@ -22,7 +25,7 @@ function deviceOverviewCtrl() {
 
 };
 
-function deviceCtrl($scope) {
+function deviceCtrl($scope, $modal) {
     
     this.devices=[
     {id:'aa',isOnline:false},
@@ -31,8 +34,18 @@ function deviceCtrl($scope) {
 
     $scope.mustOnline=true;
     this.deviceListFilter=function(v,i,a){ 
-        console.log(v,$scope.mustOnline,$scope.mustOnline||v.isOnline);
+        //console.log(v,$scope.mustOnline,$scope.mustOnline||v.isOnline);
         return !$scope.mustOnline||v.isOnline;
+    };
+
+    $scope.addDeviceWizard = function () {
+        var modalInstance = $modal.open({
+            templateUrl: 'views/device/modal_add_device.html',
+            size: 'sm',
+            scope:$scope,
+            controller: 'addDevice'
+        });
+
     };
 
 };
@@ -163,7 +176,34 @@ function widgetFlotChart() {
     this.flotChartOptions3 = flotChartOptions3;
 
 
-}
+};
+
+function addDevice($scope, $http, $modalInstance){
+    $scope.deviceList=[{x:2},{x:2},{x:2}];
+    var modal={
+        ok: function () {
+            console.log('$scope work');
+                $modalInstance.close();
+            },
+
+        cancel: function () {
+                    $modalInstance.dismiss('cancel');
+                }
+        };
+    $scope.scan=function(){
+        $http.get('env/devices/')
+        .success(function(data, status, headers, config){
+            $scope.deviceList=angular.fromJson(data);
+        })
+        .error(function(data, status, headers, config){
+            tools.notify('alert-danger', 'get device list error,please try again.');
+        });
+    }
+    $scope.scan();
+    $scope.deviceDetail={};
+    $scope.ok=modal.ok;
+    $scope.cancel=modal.cancel;
+};
 
 /**
  * chartJsCtrl - Controller for data for ChartJs plugin
@@ -337,20 +377,7 @@ function chartJsCtrl() {
         barStrokeWidth : 2,
         barValueSpacing : 5,
         barDatasetSpacing : 1
-};
-
-function addDevice($scope){
-    var deviceList;
-    this.scan=function(){
-        $http.get('env/devices/')
-        .success(function(data, status, headers, config){
-            deviceList=angular.fromJson(data);
-        })
-        .error(function(data, status, headers, config){
-
-        });
-    }
-}
+    };
 
     /**
      * Data for Bar chart
@@ -428,18 +455,17 @@ function addDevice($scope){
         datasetStrokeWidth : 2,
         datasetFill : true
     };
-
-
 };
+
 
 angular
     .module('julab')
-    .controller('MainCtrl', MainCtrl)
+    .controller('mainCtrl', mainCtrl)
     .controller('widgetFlotChart',widgetFlotChart)
     .controller('chartJsCtrl',chartJsCtrl)
     .controller('deviceOverviewCtrl',deviceOverviewCtrl)
-    .controller('deviceCtrl',deviceCtrl);
-
+    .controller('deviceCtrl', deviceCtrl)
+    .controller('addDevice', addDevice);
 
 
 

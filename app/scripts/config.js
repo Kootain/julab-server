@@ -15,14 +15,24 @@ function config($stateProvider, $urlRouterProvider) {
             abstract: true,
             url: "/main",
             templateUrl: "views/common/content.html",
+            controller: 'mainCtrl',
             ncyBreadcrumb:{
                 label:'index'
+            },
+            resolve: {
+                loadPlugin: function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([
+                        {
+                            name: 'cgNotify',
+                            files: ['../bower_components/angular-notify/dist/angular-notify.min.css','../bower_components/angular-notify/dist/angular-notify.min.js']
+                        }
+                    ]);
+                }
             }
         })
         .state('content.index', {
             url: "/index",
             templateUrl: "views/main.html",
-            controller: 'MainCtrl',
             data: { pageTitle: 'Dashboard' },
             ncyBreadcrumb:{
                 label:'Dashboard'
@@ -30,6 +40,7 @@ function config($stateProvider, $urlRouterProvider) {
         })
         //////////////////devices manage
         .state('content.devices', {
+            abstract: true,
             url: "/devices",
             template: '<ui-view/>',
             ncyBreadcrumb:{
@@ -76,6 +87,15 @@ function config($stateProvider, $urlRouterProvider) {
             url: "/list",
             templateUrl: "views/device/devices_list.html",
             controller: 'deviceCtrl as device',
+            data: { pageTitle: 'online devices' },
+            ncyBreadcrumb:{
+                label: 'device list',
+            }
+        })
+        .state('content.devices.list.add',{
+            url: "/add",
+            templateUrl: "views/device/devices_list.html",
+            controller: 'addDevice',
             data: { pageTitle: 'online devices' },
             ncyBreadcrumb:{
                 label: 'device list',
