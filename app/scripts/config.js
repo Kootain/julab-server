@@ -111,11 +111,11 @@ function config($stateProvider, $urlRouterProvider) {
                     return $ocLazyLoad.load([
                         {
                             serie: true,
-                            files: ['../bower_components/dataTables/media/js/jquery.dataTables.js','../bower_components/dataTables/media/css/dataTables.bootstrap.css']
+                            files: ['../bower_components/datatables/media/js/jquery.dataTables.js','../bower_components/datatables/media/css/dataTables.bootstrap.css']
                         },
                         {
                             serie: true,
-                            files: ['../bower_components/dataTables/media/js/dataTables.bootstrap.js']
+                            files: ['../bower_components/datatables/media/js/dataTables.bootstrap.js']
                         },
                         {
                             name: 'datatables',
