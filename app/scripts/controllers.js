@@ -175,7 +175,7 @@ function widgetFlotChart() {
 };
 
 function deviceDetection($scope, $http, $modal, $modalInstance){
-    $scope.deviceList=undefined;
+    $scope.deviceList=[1,2,3];
     $scope.isLoading;
     var modal={
         ok: function () {
