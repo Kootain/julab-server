@@ -1,10 +1,4 @@
 /**
- * INSPINIA - Responsive Admin Theme
- *
- */
-
-
-/**
  * pageTitle - Directive for set Page title - mata title
  */
 function pageTitle($rootScope, $timeout) {
@@ -107,14 +101,15 @@ function minimalizaSidebar($timeout) {
 /**
  * chatSlimScroll - Directive for slim scroll for small chat
  */
-function chatSlimScroll($timeout) {
+function slimScroll($timeout) {
     return {
         restrict: 'A',
-        link: function(scope, element) {
+        link: function(scope, element,attr) {
             $timeout(function(){
                 element.slimscroll({
-                    height: '234px',
-                    railOpacity: 0.4
+                    height: attr.slimScroll,
+                    railOpacity: 0.4,
+                    railVisible:true
                 });
 
             });
@@ -131,5 +126,5 @@ angular
     .directive('pageTitle', pageTitle)
     .directive('sideNavigation', sideNavigation)
     .directive('iboxTools', iboxTools)
-    .directive('chatSlimScroll', chatSlimScroll)
+    .directive('slimScroll', slimScroll)
     .directive('minimalizaSidebar', minimalizaSidebar);

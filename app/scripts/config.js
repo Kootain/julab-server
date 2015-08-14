@@ -1,11 +1,3 @@
-/**
- * INSPINIA - Responsive Admin Theme
- *
- * Inspinia theme use AngularUI Router to manage routing and views
- * Each view are defined as state.
- * Initial there are written stat for all view in theme.
- *
- */
 function config($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise("/main/index");
 
@@ -92,33 +84,48 @@ function config($stateProvider, $urlRouterProvider) {
                 label: 'device list',
             }
         })
-        .state('content.devices.list.add',{
-            url: "/add",
-            templateUrl: "views/device/devices_list.html",
-            controller: 'addDevice',
-            data: { pageTitle: 'online devices' },
+        /////////////////reagent manage
+        .state('content.reagents', {
+            abstract: true,
+            url: "/reagents",
+            template: '<ui-view/>',
             ncyBreadcrumb:{
-                label: 'device list',
+                label:'reagents'
             }
         })
-        /////////////////reagent manage
-
-        .state('content.reagent-overview', {
-            url: "/reagent",
+        .state('content.reagents.overview', {
+            url: "/overview",
             templateUrl: "views/reagent/overview.html",
             data: { pageTitle: 'reagents overview' },
             ncyBreadcrumb:{
-                label:'reagents',
-                parent:'content'
+                label:'overview'
             }
         })
-        .state('content.reagent-add', {
-            url: "/add",
-            templateUrl: "views/device/devices_list.html",
-            data: { pageTitle: 'add reagents' },
+        .state('content.reagents.list', {
+            url: "/list",
+            controller: 'reagentCtrl',
+            templateUrl: "views/reagent/reagent_list.html",
+            data: { pageTitle: 'reagents list' },
+            resolve: {
+                loadPlugin: function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([
+                        {
+                            serie: true,
+                            files: ['../bower_components/dataTables/media/js/jquery.dataTables.js','../bower_components/dataTables/media/css/dataTables.bootstrap.css']
+                        },
+                        {
+                            serie: true,
+                            files: ['../bower_components/dataTables/media/js/dataTables.bootstrap.js']
+                        },
+                        {
+                            name: 'datatables',
+                            files: ['../bower_components/angular-datatables/dist/angular-datatables.min.js']
+                        }
+                    ]);
+                }
+            },
             ncyBreadcrumb:{
-                label: 'reagents list',
-                parent: 'content.reagent-overview'
+                label: 'list'
             }
         })
 }

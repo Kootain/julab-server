@@ -33,6 +33,8 @@
     "Chart.js": "https://github.com/nnnick/Chart.js.git#~0.2.0",
     "oclazyload":"~1.0",
     "angular-peity":"*",
-    "angular-notify": "~2.0.2"
+    "angular-notify": "~2.0.2",
+    "datatables": "~1.10.2",
+    "angular-datatables": "~0.1.1"
   }
 }

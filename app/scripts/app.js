@@ -1,7 +1,3 @@
-/**
- * INSPINIA - Responsive Admin Theme
- *
- */
 (function () {
     angular.module('julab', [
         'ui.router',                    // Routing

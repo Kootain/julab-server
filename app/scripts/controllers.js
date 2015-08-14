@@ -1,9 +1,4 @@
 /**
- * INSPINIA - Responsive Admin Theme
- *
- */
-
-/**
  * MainCtrl - controller
  */
  tools={};
@@ -12,6 +7,7 @@ function mainCtrl($scope,notify) {
     this.userName = 'tanki';
     this.helloText = 'Welcome in SeedProject';
     this.descriptionText = 'It is an application skeleton for a typical AngularJS web app. You can use it to quickly bootstrap your angular webapp projects and dev environment for these projects.';
+    notify.config({duration:1500});
     tools.notify=function(type,msg){
         notify({ message: msg, classes: type, templateUrl: 'views/common/notify.html'});
     }
@@ -38,12 +34,12 @@ function deviceCtrl($scope, $modal) {
         return !$scope.mustOnline||v.isOnline;
     };
 
-    $scope.addDeviceWizard = function () {
+    $scope.detectDevice = function () {
         var modalInstance = $modal.open({
             templateUrl: 'views/device/modal_add_device.html',
             size: 'sm',
-            scope:$scope,
-            controller: 'addDevice'
+            
+            controller: 'deviceDetection'
         });
 
     };
@@ -178,8 +174,9 @@ function widgetFlotChart() {
 
 };
 
-function addDevice($scope, $http, $modalInstance){
-    $scope.deviceList=[{x:2},{x:2},{x:2}];
+function deviceDetection($scope, $http, $modal, $modalInstance){
+    $scope.deviceList=undefined;
+    $scope.isLoading;
     var modal={
         ok: function () {
             console.log('$scope work');
@@ -191,11 +188,14 @@ function addDevice($scope, $http, $modalInstance){
                 }
         };
     $scope.scan=function(){
-        $http.get('env/devices/')
+        $scope.isLoading=true;
+        $http.get('env/devices')
         .success(function(data, status, headers, config){
             $scope.deviceList=angular.fromJson(data);
+            $scope.isLoading=false;
         })
         .error(function(data, status, headers, config){
+            $scope.isLoading=false;
             tools.notify('alert-danger', 'get device list error,please try again.');
         });
     }
@@ -203,8 +203,68 @@ function addDevice($scope, $http, $modalInstance){
     $scope.deviceDetail={};
     $scope.ok=modal.ok;
     $scope.cancel=modal.cancel;
+    $('#list').slimScroll({
+        height: '250px'
+    });
+
+    $scope.registerDevice=function (deviceInfo) {
+        $modal.open({
+            templateUrl: 'views/device/device_add_form.html',
+            size: 'md',
+            controller: 'addDevice',
+            resolve:{
+                'deviceInfo':function(){
+                    return deviceInfo;
+                }
+            }
+        });
+
+    };
 };
 
+function addDevice($scope, $modalInstance, deviceInfo){
+    console.log(deviceInfo);
+    $scope.formDetails={'deviceInfo':deviceInfo};
+    $scope.submit = function() {
+        if ($scope.detailForm.$valid) {
+            $http.post('api/devices', $scope.formDetails)
+            .success(function(data, status, headers, config){
+                tools.notify('alert-success','register device success');
+            })
+            .error(function(data, status, headers, config){
+                rools.notify('alert-danger','register device with error, please try again');
+            });
+        }
+    }
+}
+
+
+function reagentCtrl($scope, $modal) {
+    
+    $scope.reagents=
+    [{cas:'120-3112-44',rfid:'R0012313AB1234',ops:''},
+    {cas:'120-3112-44',rfid:'R0012313AB1234',ops:''},
+    {cas:'12234-3112-44',rfid:'R0xxx12313AB1234',ops:''},
+    {cas:'130-3112-44',rfid:'R0012313AB1234',ops:''},
+    {cas:'120-3112-44',rfid:'R0012313AB1234',ops:''}]
+
+    $scope.mustOnline=true;
+    this.deviceListFilter=function(v,i,a){ 
+        //console.log(v,$scope.mustOnline,$scope.mustOnline||v.isOnline);
+        return !$scope.mustOnline||v.isOnline;
+    };
+
+    $scope.detectDevice = function () {
+        var modalInstance = $modal.open({
+            templateUrl: 'views/device/modal_add_device.html',
+            size: 'sm',
+            
+            controller: 'deviceDetection'
+        });
+
+    };
+
+};
 /**
  * chartJsCtrl - Controller for data for ChartJs plugin
  * used in Chart.js view
@@ -463,9 +523,13 @@ angular
     .controller('mainCtrl', mainCtrl)
     .controller('widgetFlotChart',widgetFlotChart)
     .controller('chartJsCtrl',chartJsCtrl)
+
     .controller('deviceOverviewCtrl',deviceOverviewCtrl)
     .controller('deviceCtrl', deviceCtrl)
-    .controller('addDevice', addDevice);
+    .controller('deviceDetection', deviceDetection)
+    .controller('addDevice', addDevice)
+
+    .controller('reagentCtrl', reagentCtrl);
 
 
 

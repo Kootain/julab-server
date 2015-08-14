@@ -1,39 +1,40 @@
 <div class="inmodal">
-    <div class="modal-header">
-        <h4 class="modal-title">add new device{{ deviceList }}</h4>
-    </div>
-    <div class="modal-body" id="list"style="padding: 0">
-        <ul class="dropdown-menu device-list" ng-hide="true">
-        {{ deviceList }}
-        <div ng-repeat="device in deviceList">
-             <li>
-                <a ui-sref="inbox">
-                    <div>
-                        <i class="fa fa-envelope fa-fw"></i> You have {{ device.x }} messages
-                        <span class="pull-right text-muted small">4 minutes ago</span>
-                    </div>
-                </a>
-            </li>
-            <li class="divider"></li>
+    <div class="modal-header" style="border-bottom:1px solid #1ab394;padding-bottom:0">
+        <div class="ibox-tools" style="margin-top: -20px;">
+            <a ng-click="cancel()"><i class="fa fa-times"></i></a>
         </div>
+        <h4 class="modal-title">Online List</h4>
+        <p>select one online device to continue.</p>
+    </div>
+    <div class="modal-body" id="list" style="padding: 0" slim-scroll="250px">
+        <div class="empty-bg" ng-hide="deviceList">
+            <i class="fa fa-signal fa-5x"></i>
+            <div style="font-size: 20px;">empty</div>
+        </div>
+        <ul class="dropdown-menu device-list" ng-hide="!deviceList">
+            <div ng-repeat="device in deviceList">
+                 <li>
+                    <a ng-click="registerDevice(device)">
+                        <div>
+                            <i class="fa fa-envelope fa-fw"></i> You have {{ device.x }} messages
+                            <span class="pull-right text-muted small">4 minutes ago</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="divider"></li>
+            </div>
         </ul>
     </div>
     <div class="modal-footer">
-                <div class="text-center link-block">
-                <a ng-click="scan()">
+        <div class="text-center link-block" style="padding: 0">
+            <h5>
+                <a ng-click="isLoading?'':scan()">
+                    <i class="fa fa-refresh" ng-class="{'true':'fa-spin', 'false':''}[isLoading]"></i>
                     <strong>Refresh</strong>
-                    <i class="fa fa-angle-right"></i>
                 </a>
-            </div>
-        <button type="button" class="btn btn-white" ng-click="cancel()">Close</button>
-        <button type="button" class="btn btn-primary" ng-click="ok()">Save changes</button>
+            </h5>
+            <p>Can' t find your device? try refresh.</p>
+        </div>
     </div>
 </div>
-<script>
-    $(function(){
-    $('#list').slimScroll({
-        height: '250px'
-    });
-});
-</script>
 
