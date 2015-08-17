@@ -1,6 +1,11 @@
 {
   "db": {
+    "host": "120.24.174.100",
+    "port": 3306,
+    "database": "rooter_db",
+    "password": "zhangtianyi9425",
     "name": "db",
-    "connector": "memory"
+    "connector": "mysql",
+    "user": "root"
   }
 }

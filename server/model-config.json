@@ -31,5 +31,21 @@
   "Role": {
     "dataSource": "db",
     "public": false
+  },
+  "device": {
+    "dataSource": "db",
+    "public": true,
+    "$promise": {},
+    "$resolved": true
+  },
+  "scanner": {
+    "dataSource": null,
+    "public": true,
+    "$promise": {},
+    "$resolved": true
+  },
+  "rfid_info": {
+    "dataSource": null,
+    "public": true
   }
 }
