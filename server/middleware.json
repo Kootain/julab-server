@@ -20,6 +20,12 @@
   "final": {
     "loopback#urlNotFound": {}
   },
+  "files": {
+    "loopback#static": [
+      {"paths": "/", "params": "$!../src"},
+      {"paths": "/bower_components", "params": "$!../bower_components"}
+    ]
+  },
   "final:after": {
     "errorhandler": {}
   }

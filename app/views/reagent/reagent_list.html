@@ -29,7 +29,7 @@
                     <h5>{{ 'REAGENT' | translate }} {{ 'OVERVIEW' | translate }}</h5>
 
                     <div class="ibox-tools dropdown" dropdown="">
-                        <a ng-click="add()"><i class="fa fa-plus"></i></a>
+                        <a ng-click="add()"><i class="fa fa-plus text-navy"></i></a>
                         <a class="dropdown-toggle" href="" dropdown-toggle="" aria-haspopup="true" aria-expanded="false">
                             <i class="fa fa-wrench"></i>
                         </a>
@@ -43,7 +43,7 @@
                 </div>
                 </div>
                 <div class="ibox-content">
-                    <table datatable="ng" class="table table-striped table-bordered table-hover dataTables-example">
+                    <table datatable="ng" class="table table-striped table-bordered table-hover dataTables-example" id="reagents-table">
                         <thead>
                         <tr>
                             <th>CAS ID</th>

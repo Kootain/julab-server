@@ -175,7 +175,7 @@ function widgetFlotChart() {
 };
 
 function deviceDetection($scope, $http, $modal, $modalInstance){
-    $scope.deviceList=[1,2,3];
+    $scope.deviceList=[];
     $scope.isLoading;
     var modal={
         ok: function () {
@@ -239,8 +239,27 @@ function addDevice($scope, $modalInstance, deviceInfo){
 }
 
 
+
 function reagentCtrl($scope, $modal) {
-    
+    var randomStr=function (len) {
+    　　len = len || 32;
+    　　var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';    /****默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/
+    　　var maxPos = $chars.length;
+    　　var pwd = '';
+    　　for (i = 0; i < len; i++) {
+    　　　　pwd += $chars.charAt(Math.floor(Math.random() * maxPos));
+    　　}
+    　　return pwd;
+    }
+    $scope.add=function(){
+        var id=randomStr(10);
+        $('#reagents-table').dataTable().fnAddData(
+            ['<input type="text" id="CAS" class="form-control">',
+             '<input type="text" id="RFID" class="form-control">',
+             '<a ng-click="addReagent(\'{0}\')" class="btn btn-xs btn-outline btn-primary"><i class="fa fa-check"></i></a>&nbsp;&nbsp;'.format(id)+
+             '<a ng-click="close(\'{0}\')" class="btn btn-xs btn-outline btn-danger"><i class="fa fa-remove"></i></a>'.format(id)
+            ]);
+    }
     $scope.reagents=
     [{cas:'120-3112-44',rfid:'R0012313AB1234',ops:''},
     {cas:'120-3112-44',rfid:'R0012313AB1234',ops:''},

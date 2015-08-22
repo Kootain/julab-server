@@ -46,6 +46,8 @@
   },
   "rfid_info": {
     "dataSource": null,
-    "public": true
+    "public": true,
+    "$promise": {},
+    "$resolved": true
   }
 }
