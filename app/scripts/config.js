@@ -120,6 +120,10 @@ function config($stateProvider, $urlRouterProvider) {
                         {
                             name: 'datatables',
                             files: ['../bower_components/angular-datatables/dist/angular-datatables.min.js']
+                        },
+                        {
+                            name:'socketio',
+                            files: ['../node_modules/socket.io-client/socket.io.js']
                         }
                     ]);
                 }

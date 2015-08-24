@@ -241,6 +241,13 @@ function addDevice($scope, $modalInstance, deviceInfo){
 
 
 function reagentCtrl($scope, $modal) {
+    $scope.reagents=
+    [{cas:'120-3112-44',rfid:'R0012313AB1234',ops:''},
+    {cas:'120-3112-44',rfid:'R0012313AB1234',ops:''},
+    {cas:'12234-3112-44',rfid:'R0xxx12313AB1234',ops:''},
+    {cas:'130-3112-44',rfid:'R0012313AB1234',ops:''},
+    {cas:'120-3112-44',rfid:'R0012313AB1234',ops:''}]
+
     var randomStr=function (len) {
     　　len = len || 32;
     　　var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';    /****默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/
@@ -251,21 +258,25 @@ function reagentCtrl($scope, $modal) {
     　　}
     　　return pwd;
     }
+
     $scope.add=function(){
         var id=randomStr(10);
         $('#reagents-table').dataTable().fnAddData(
-            ['<input type="text" id="CAS" class="form-control">',
-             '<input type="text" id="RFID" class="form-control">',
+            ['<input id="cas-{0}" type="text" id="CAS" class="form-control">'.format(id),
+             '<input id="rfid-{0}" type="text" id="RFID" class="form-control">'.format(id),
              '<a ng-click="addReagent(\'{0}\')" class="btn btn-xs btn-outline btn-primary"><i class="fa fa-check"></i></a>&nbsp;&nbsp;'.format(id)+
              '<a ng-click="close(\'{0}\')" class="btn btn-xs btn-outline btn-danger"><i class="fa fa-remove"></i></a>'.format(id)
             ]);
+        socket.emit('web reagent add', { serial: id });
+        socket.on('reagent rfid result',function(data){
+            console.log(data);
+            if(data.serial!=id) return;
+            $('#rfid-'+id).val(data.rfid);
+        });
+
+        console.log($scope.reagents);
     }
-    $scope.reagents=
-    [{cas:'120-3112-44',rfid:'R0012313AB1234',ops:''},
-    {cas:'120-3112-44',rfid:'R0012313AB1234',ops:''},
-    {cas:'12234-3112-44',rfid:'R0xxx12313AB1234',ops:''},
-    {cas:'130-3112-44',rfid:'R0012313AB1234',ops:''},
-    {cas:'120-3112-44',rfid:'R0012313AB1234',ops:''}]
+
 
     $scope.mustOnline=true;
     this.deviceListFilter=function(v,i,a){ 

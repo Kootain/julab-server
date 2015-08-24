@@ -33,3 +33,6 @@ String.prototype.format = function(args) {
     }
     return result;
 }
+
+var socket = io.connect('http://localhost:3000');
+socket.emit('in',{type:'web'});
