@@ -16,7 +16,22 @@
   "auth": {},
   "parse": {},
   "routes": {},
-  "files": {},
+  "files": {
+    "loopback#static": [
+      {
+        "params": "$!../src",
+        "paths": "/"
+      },
+      {
+        "params": "$!../bower_components",
+        "paths": "/bower_components"
+      },
+      {
+        "params": "$!../node_modules",
+        "paths": "/node_modules"
+      }
+    ]
+  },
   "final": {
     "loopback#urlNotFound": {}
   },
