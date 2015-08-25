@@ -1,11 +1,16 @@
 {
-  "db": {
+  "mem": {
+    "name": "mem",
+    "connector": "memory"
+  },
+  "router-db": {
     "host": "120.24.174.100",
     "port": 3306,
-    "database": "rooter_db",
+    "url": "",
+    "database": "router_db",
     "password": "zhangtianyi9425",
-    "name": "db",
-    "connector": "mysql",
-    "user": "root"
+    "name": "router-db",
+    "user": "root",
+    "connector": "mysql"
   }
 }

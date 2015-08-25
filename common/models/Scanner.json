@@ -1,5 +1,5 @@
 {
-  "name": "scanner",
+  "name": "Scanner",
   "base": "PersistedModel",
   "strict": false,
   "idInjection": false,

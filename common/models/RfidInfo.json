@@ -1,29 +1,18 @@
 {
-  "name": "device",
+  "name": "RfidInfo",
   "base": "PersistedModel",
-  "strict": true,
+  "strict": false,
   "idInjection": false,
   "options": {
     "validateUpsert": true
   },
   "properties": {
-    "MAC": {
+    "rfid": {
       "type": "string",
       "required": true
     },
-    "gmt_add": {
-      "type": "date",
-      "required": true
-    },
-    "gmt_login": {
-      "type": "date",
-      "required": true
-    },
     "name": {
-      "type": "string"
-    },
-    "type": {
-      "type": "number",
+      "type": "string",
       "required": true
     }
   },

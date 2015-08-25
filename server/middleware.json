@@ -20,13 +20,6 @@
   "final": {
     "loopback#urlNotFound": {}
   },
-  "files": {
-    "loopback#static": [
-      {"paths": "/", "params": "$!../src"},
-      {"paths": "/bower_components", "params": "$!../bower_components"},
-      {"paths": "/node_modules", "params": "$!../node_modules"}
-    ]
-  },
   "final:after": {
     "errorhandler": {}
   }

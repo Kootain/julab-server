@@ -14,38 +14,38 @@
     ]
   },
   "User": {
-    "dataSource": "db"
+    "dataSource": "router-db"
   },
   "AccessToken": {
-    "dataSource": "db",
+    "dataSource": "router-db",
     "public": false
   },
   "ACL": {
-    "dataSource": "db",
+    "dataSource": "router-db",
     "public": false
   },
   "RoleMapping": {
-    "dataSource": "db",
+    "dataSource": "router-db",
     "public": false
   },
   "Role": {
-    "dataSource": "db",
+    "dataSource": "router-db",
     "public": false
   },
-  "device": {
-    "dataSource": "db",
+  "Device": {
+    "dataSource": "router-db",
     "public": true,
     "$promise": {},
     "$resolved": true
   },
-  "scanner": {
-    "dataSource": null,
+  "Scanner": {
+    "dataSource": "router-db",
     "public": true,
     "$promise": {},
     "$resolved": true
   },
-  "rfid_info": {
-    "dataSource": null,
+  "RfidInfo": {
+    "dataSource": "router-db",
     "public": true,
     "$promise": {},
     "$resolved": true

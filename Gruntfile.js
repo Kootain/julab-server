@@ -7,8 +7,6 @@ module.exports = function (grunt) {
     // Show grunt task time
     require('time-grunt')(grunt);
 
-    grunt.loadNpmTasks('grunt-express-server');
-
     // Configurable paths for the app
     var appConfig = {
         app: 'app',
@@ -17,10 +15,17 @@ module.exports = function (grunt) {
 
     // Grunt configuration
     grunt.initConfig({
-
+        pkg: grunt.file.readJSON('package.json'),
         // Project settings
         inspinia: appConfig,
-
+        loopback_sdk_angular: {
+            services: {
+                options: {
+                  input: 'server/server.js',
+                  output: 'app/scripts/lb-services.js'
+                }
+            }
+        },
         express: {
             options: {
               // Override defaults here 
@@ -31,7 +36,26 @@ module.exports = function (grunt) {
               }
             }
         },
-
+        docular: {
+            groups: [
+              {
+                groupTitle: 'LoopBack',
+                groupId: 'loopback',
+                sections: [
+                  {
+                    id: 'lbServices',
+                    title: 'LoopBack Services',
+                    scripts: [ 'app/scripts/lb-services.js' ]
+                  }
+                ]
+              }
+            ],
+            showDocularDocs: true,
+            showAngularDocs: true
+        },
+        docularserver: {
+            targetDir: 'docular_generated'
+        },
         'node-inspector': {
           dev: {
             options: {
@@ -305,8 +329,15 @@ module.exports = function (grunt) {
         }
     });
 
+    
+    grunt.loadNpmTasks('grunt-express-server');
+
+    grunt.loadNpmTasks('grunt-loopback-sdk-angular');
+    grunt.loadNpmTasks('grunt-docular');
+
     // Run live version of app
     grunt.registerTask('live', [
+        'loopback_sdk_angular',
         'clean:server',
         'copy:styles',
         'connect:livereload',
@@ -315,12 +346,14 @@ module.exports = function (grunt) {
 
     // Run build version of app
     grunt.registerTask('run', [
+        'loopback_sdk_angular',
         'build',
         'concurrent'
     ]);
 
         // Build version for production
     grunt.registerTask('build', [
+        'loopback_sdk_angular',
         'clean:dist',
         'less',
         'useminPrepare',
@@ -335,6 +368,7 @@ module.exports = function (grunt) {
 
     // Build version for production
     grunt.registerTask('release', [
+        'loopback_sdk_angular',
         'clean:dist',
         'less',
         'useminPrepare',
@@ -346,6 +380,11 @@ module.exports = function (grunt) {
         'inject',
         'usemin',
         'htmlmin'
+    ]);
+
+    grunt.registerTask('docs',[
+        'loopback_sdk_angular',
+        'docular'
     ]);
 
 };

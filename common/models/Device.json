@@ -1,0 +1,34 @@
+{
+  "name": "Device",
+  "base": "PersistedModel",
+  "strict": true,
+  "idInjection": false,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "MAC": {
+      "type": "string",
+      "required": true
+    },
+    "gmt_add": {
+      "type": "date",
+      "required": true
+    },
+    "gmt_login": {
+      "type": "date",
+      "required": true
+    },
+    "name": {
+      "type": "string"
+    },
+    "type": {
+      "type": "number",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}
