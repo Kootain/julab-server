@@ -251,11 +251,7 @@ function addDevice($scope, $modalInstance, deviceInfo){
 
 
 function reagentCtrl($scope, $modal, $compile, $timeout, RfidInfo, DTColumnBuilder, DTOptionsBuilder, DTColumnDefBuilder) {
-    var table=$('#reagents-table').dataTable({
-        columnDefs:[
-                    {targets:0,orderable:false,searchable:false}
-                   ]
-    });
+    var table=$('#reagents-table').dataTable();
     sel = 
     $scope.selected={};
     $scope.selectAll=false;
@@ -365,8 +361,9 @@ function reagentCtrl($scope, $modal, $compile, $timeout, RfidInfo, DTColumnBuild
 
     $scope.add=function(){
         var id=tools.randomStr(10);
-        table.fnAddData(
-            ['<input id="cas-{0}" type="text" id="CAS" class="form-control">'.format(id),
+        $('#reagents-table').dataTable().fnAddData(
+            ['',
+             '<input id="cas-{0}" type="text" id="CAS" class="form-control">'.format(id),
              '<input id="rfid-{0}" type="text" id="RFID" class="form-control">'.format(id),
              '<ops id="{0}"><ops>'.format(id)
             ]);
