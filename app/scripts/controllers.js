@@ -11,6 +11,16 @@ function mainCtrl($scope,notify) {
     tools.notify=function(type,msg){
         notify({ message: msg, classes: type, templateUrl: 'views/common/notify.html'});
     }
+    tools.randomStr=function (len) {
+    　　len = len || 32;
+    　　var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';    /****默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/
+    　　var maxPos = $chars.length;
+    　　var pwd = '';
+    　　for (i = 0; i < len; i++) {
+    　　　　pwd += $chars.charAt(Math.floor(Math.random() * maxPos));
+    　　}
+    　　return pwd;
+    }
 };
 
 function deviceOverviewCtrl() {
@@ -240,9 +250,63 @@ function addDevice($scope, $modalInstance, deviceInfo){
 
 
 
-function reagentCtrl($scope, $modal, $compile, $timeout, RfidInfo) {
-    
-    $scope.reagents=RfidInfo.find(function(){},
+function reagentCtrl($scope, $modal, $compile, $timeout, RfidInfo, DTColumnBuilder, DTOptionsBuilder, DTColumnDefBuilder) {
+    var table=$('#reagents-table').dataTable({
+        columnDefs:[
+                    {targets:0,orderable:false,searchable:false}
+                   ]
+    });
+    sel = 
+    $scope.selected={};
+    $scope.selectAll=false;
+
+    this.dtOptions = DTOptionsBuilder.newOptions()
+    .withPaginationType('full_numbers').withDisplayLength(10)
+    .withOption('rowCallback', function(nRow, aData, iDisplayIndex, iDisplayIndexFull){
+        $('td', nRow).unbind('click');
+        $('td', nRow).bind('click', function() {
+            console.log($('input',nRow).attr('id'));
+        });
+        return nRow;
+    });
+    this.dtColumnDefs = [
+        DTColumnDefBuilder.newColumnDef(0).notSortable(),
+        DTColumnDefBuilder.newColumnDef(1),
+        DTColumnDefBuilder.newColumnDef(2),
+        DTColumnDefBuilder.newColumnDef(3).notSortable(),
+    ];
+
+    $scope.toggleAll=function(selectAll, selected){
+        for(var x in selected) {
+            //if($('#'+x).length>0)
+                selected[x]=selectAll;
+            //else selected[x]=false;
+        }
+        console.log(selected);
+    };
+
+
+    $scope.toggleOne=function(id){
+        $scope.selected[id]=!$scope.selected[id];
+        console.log($scope.selected);
+    }
+
+    $scope.find=function(selected){
+        console.log(selected);
+        var toFind=[];
+        for(var i in selected) 
+            if(selected[i]) toFind.push(i);
+        socket.emit('search',{serial: tools.randomStr(10), list: toFind});
+        socket.on('search result',function(data){
+            console.log(data);
+        })
+    }
+    $scope.reagents=RfidInfo.find(
+        function(val){
+            console.log($scope.reagents);
+            for(var x=0;x<$scope.reagents.length;x++) 
+                $scope.selected[$scope.reagents[x].id]=false;
+        },
         function(res){
             tools.notify('alert-danger',res.data.error.message);
         });
@@ -251,17 +315,7 @@ function reagentCtrl($scope, $modal, $compile, $timeout, RfidInfo) {
     // {cas:'12234-3112-44',rfid:'R0xxx12313AB1234',ops:''},
     // {cas:'130-3112-44',rfid:'R0012313AB1234',ops:''},
     // {cas:'120-3112-44',rfid:'R0012313AB1234',ops:''}]
-
-    var randomStr=function (len) {
-    　　len = len || 32;
-    　　var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';    /****默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/
-    　　var maxPos = $chars.length;
-    　　var pwd = '';
-    　　for (i = 0; i < len; i++) {
-    　　　　pwd += $chars.charAt(Math.floor(Math.random() * maxPos));
-    　　}
-    　　return pwd;
-    }
+    
 
     $scope.refresh=function(){
         $('#reagent-box').addClass('animated fadeOut');
@@ -269,9 +323,9 @@ function reagentCtrl($scope, $modal, $compile, $timeout, RfidInfo) {
             $('#reagent-box').removeClass('animated fadeOut');
             $('#reagent-box').addClass('animated fadeIn');
         }
-        RfidInfo.find(
+        $scope.reagents= RfidInfo.find(
             function(val){
-                $timeout(function(){$scope.reagents=val;},1000)
+                console.log(val);
                 $timeout(display,1000);
             },
             function(res){
@@ -279,6 +333,7 @@ function reagentCtrl($scope, $modal, $compile, $timeout, RfidInfo) {
                 tools.notify('alert-danger',res.data.error.message);
                 display();
             });
+        for(var x=0;x<$scope.reagents.length;x++) $scope.selected[$scope.reagents[x]]=false;
         
     }
 
@@ -309,8 +364,8 @@ function reagentCtrl($scope, $modal, $compile, $timeout, RfidInfo) {
     }
 
     $scope.add=function(){
-        var id=randomStr(10);
-        $('#reagents-table').dataTable().fnAddData(
+        var id=tools.randomStr(10);
+        table.fnAddData(
             ['<input id="cas-{0}" type="text" id="CAS" class="form-control">'.format(id),
              '<input id="rfid-{0}" type="text" id="RFID" class="form-control">'.format(id),
              '<ops id="{0}"><ops>'.format(id)

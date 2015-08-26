@@ -48,10 +48,15 @@
                 </div>
                 </div>
                 <div class="ibox-content" id="reagent-box">
-                    <table datatable="ng" class="table table-striped table-bordered table-hover dataTables-example" id="reagents-table">
+                    <table datatable="ng" class="table table-striped table-bordered table-hover dataTables-example" 
+                    dt-options="r.dtOptions" dt-column-defs="r.dtColumnDefs" dt-instance="r.dtInstance" id="reagents-table">{{r.columnDefs}}
                         <thead>
                         <tr>
-                            <th></th>
+                            <th>
+                                <div class="checkbox">
+                                    <input ng-model="selectAll" type="checkbox" ng-click="toggleAll(selectAll,selected)"><label></label>
+                                </div>
+                            </th>
                             <th>CAS ID</th>
                             <th>RFID info.</th>
                             <th>Operation</th>
@@ -59,24 +64,23 @@
                         </thead>
                         <tbody>
                         <tr ng-repeat="reagent in reagents">
-                            <td><div class="checkbox">
-                                            <input id="{{ reagent.id }}" type="checkbox">
-                                            <label for="checkbox1">
-                                            </label>
-                                        </div></td>
+                            <td>
+                                <div class="checkbox">
+                                    <input id="{{ reagent.id }}" type="checkbox" ng-model="selected[reagent.id]"><label></label>
+                                </div>
+                            </td>
                             <td>{{ reagent.name }}&nbsp;&nbsp;<span class="badge badge-success" ng-if="reagent.flag">new</span></td>
                             <td>{{ reagent.rfid }}</td>
                             <td>
                             <a href="#" class="no-margin btn btn-xs btn-outline btn-primary">Edit</a>
-                            <a href="#" class="no-margin btn btn-xs btn-outline btn-success">Find this</a>
                             <a ng-click="deleteReagent('')" class="no-margin btn btn-xs btn-outline btn-danger">Delete</a>
                             </td>
                         </tr>
                         </tbody>
                     </table>
+                    <a ng-click="find(selected)" class="no-margin btn btn-success">Find selected items</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
-

@@ -104,7 +104,7 @@ function config($stateProvider, $urlRouterProvider) {
         })
         .state('content.reagents.list', {
             url: "/list",
-            controller: 'reagentCtrl',
+            controller: 'reagentCtrl as r',
             templateUrl: "views/reagent/reagent_list.html",
             data: { pageTitle: 'reagents list' },
             resolve: {
