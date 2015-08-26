@@ -9,5 +9,3 @@ ds.automigrate(Tables, function(er) {
   ds.disconnect();
 });
 
-
-\.exit

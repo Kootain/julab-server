@@ -240,13 +240,17 @@ function addDevice($scope, $modalInstance, deviceInfo){
 
 
 
-function reagentCtrl($scope, $modal) {
-    $scope.reagents=
-    [{cas:'120-3112-44',rfid:'R0012313AB1234',ops:''},
-    {cas:'120-3112-44',rfid:'R0012313AB1234',ops:''},
-    {cas:'12234-3112-44',rfid:'R0xxx12313AB1234',ops:''},
-    {cas:'130-3112-44',rfid:'R0012313AB1234',ops:''},
-    {cas:'120-3112-44',rfid:'R0012313AB1234',ops:''}]
+function reagentCtrl($scope, $modal, $compile, $timeout, RfidInfo) {
+    
+    $scope.reagents=RfidInfo.find(function(){},
+        function(res){
+            tools.notify('alert-danger',res.data.error.message);
+        });
+    // [{cas:'120-3112-44',rfid:'R0012313AB1234',ops:''},
+    // {cas:'120-3112-44',rfid:'R0012313AB1234',ops:''},
+    // {cas:'12234-3112-44',rfid:'R0xxx12313AB1234',ops:''},
+    // {cas:'130-3112-44',rfid:'R0012313AB1234',ops:''},
+    // {cas:'120-3112-44',rfid:'R0012313AB1234',ops:''}]
 
     var randomStr=function (len) {
     　　len = len || 32;
@@ -259,14 +263,63 @@ function reagentCtrl($scope, $modal) {
     　　return pwd;
     }
 
+    $scope.refresh=function(){
+        $('#reagent-box').addClass('animated fadeOut');
+        var display=function(){
+            $('#reagent-box').removeClass('animated fadeOut');
+            $('#reagent-box').addClass('animated fadeIn');
+        }
+        RfidInfo.find(
+            function(val){
+                $timeout(function(){$scope.reagents=val;},1000)
+                $timeout(display,1000);
+            },
+            function(res){
+                console.log(res);
+                tools.notify('alert-danger',res.data.error.message);
+                display();
+            });
+        
+    }
+
+    $scope.addReagent=function(id){
+        var info={
+            name: $('#cas-'+id).val(),
+            rfid:$('#rfid-'+id).val()
+        };
+        console.log(info);
+        RfidInfo.create(info,
+            function(val, resHeader){//success
+                $scope.close(id);
+                info.flag=true;
+                $scope.reagents.push(info);
+                console.log(val);
+                console.log(resHeader);
+            },
+            function(res){//error
+                console.log(res);
+                tools.notify('alert-danger', res.data.error.message);
+            });
+
+
+    };
+
+    $scope.close=function(id){
+        $(id).parents('tr').remove();
+    }
+
     $scope.add=function(){
         var id=randomStr(10);
         $('#reagents-table').dataTable().fnAddData(
             ['<input id="cas-{0}" type="text" id="CAS" class="form-control">'.format(id),
              '<input id="rfid-{0}" type="text" id="RFID" class="form-control">'.format(id),
+             '<ops id="{0}"><ops>'.format(id)
+            ]);
+        comp=$compile(
              '<a ng-click="addReagent(\'{0}\')" class="btn btn-xs btn-outline btn-primary"><i class="fa fa-check"></i></a>&nbsp;&nbsp;'.format(id)+
              '<a ng-click="close(\'{0}\')" class="btn btn-xs btn-outline btn-danger"><i class="fa fa-remove"></i></a>'.format(id)
-            ]);
+             )($scope);
+        $('ops#'+id).html(comp);
         socket.emit('web reagent add', { serial: id });
         socket.on('reagent rfid result',function(data){
             console.log(data);
@@ -276,6 +329,7 @@ function reagentCtrl($scope, $modal) {
 
         console.log($scope.reagents);
     }
+
 
 
     $scope.mustOnline=true;
