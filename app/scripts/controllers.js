@@ -21,6 +21,10 @@ function mainCtrl($scope,notify) {
     　　}
     　　return pwd;
     }
+
+    $scope.commingSoon=function(){
+        tools.notify('alert-info','this function will come soon.');
+    }
 };
 
 function deviceOverviewCtrl() {
@@ -186,6 +190,13 @@ function widgetFlotChart() {
 
 function deviceDetection($scope, $http, $modal, $modalInstance){
     $scope.deviceList=[];
+    $scope.iconType={
+        scanner: 'fa-bullseye',
+        scale: 'fa-bars',
+        mobile: 'fa-mobile-phone',
+        web: 'fa-laptop'
+    };
+
     $scope.isLoading;
     var modal={
         ok: function () {
@@ -292,7 +303,7 @@ function reagentCtrl($scope, $modal, $compile, $timeout, RfidInfo, DTColumnBuild
         var toFind=[];
         for(var i in selected) 
             if(selected[i]) toFind.push(i);
-        socket.emit('search',{serial: tools.randomStr(10), list: toFind});
+        socket.emit('submit job',{serial: tools.randomStr(10), list: toFind});
         socket.on('search result',function(data){
             console.log(data);
         })
@@ -318,18 +329,21 @@ function reagentCtrl($scope, $modal, $compile, $timeout, RfidInfo, DTColumnBuild
         var display=function(){
             $('#reagent-box').removeClass('animated fadeOut');
             $('#reagent-box').addClass('animated fadeIn');
+           // $scope.selected={};
+            //for(var x=0;x<$scope.reagents.length;x++) $scope.selected[$scope.reagents[x]]=false;
         }
         $scope.reagents= RfidInfo.find(
             function(val){
+                console.log('success');
                 console.log(val);
-                $timeout(display,1000);
             },
             function(res){
+                console.log('failed');
                 console.log(res);
                 tools.notify('alert-danger',res.data.error.message);
-                display();
-            });
-        for(var x=0;x<$scope.reagents.length;x++) $scope.selected[$scope.reagents[x]]=false;
+            })
+        $scope.reagents.$promise.then(display);
+        
         
     }
 
@@ -351,12 +365,32 @@ function reagentCtrl($scope, $modal, $compile, $timeout, RfidInfo, DTColumnBuild
                 console.log(res);
                 tools.notify('alert-danger', res.data.error.message);
             });
+    };
 
-
+    $scope.deleteReagent=function(selected){
+        var ids=[];
+        for( var i in selected) if(selected[i]) ids.push(i);
+        console.log(ids);
+        var _delete=function(_id){
+            RfidInfo.deleteById({id: _id},
+                function(){
+                        delete selected[_id];
+                        $scope.close(_id);
+                },
+                function(res){
+                    console.log(res);
+                    tools.notify('alert-danger', res.data.error.message);
+                }
+            );        
+        }
+        for(var x=0;x<ids.length;x++){
+            _delete(ids[x]);
+        }
+        
     };
 
     $scope.close=function(id){
-        $(id).parents('tr').remove();
+        $('#'+id).parents('tr').remove();
     }
 
     $scope.add=function(){
@@ -372,7 +406,7 @@ function reagentCtrl($scope, $modal, $compile, $timeout, RfidInfo, DTColumnBuild
              '<a ng-click="close(\'{0}\')" class="btn btn-xs btn-outline btn-danger"><i class="fa fa-remove"></i></a>'.format(id)
              )($scope);
         $('ops#'+id).html(comp);
-        socket.emit('web reagent add', { serial: id });
+        socket.emit('submit job', { serial: id, type:'add reagent' });
         socket.on('reagent rfid result',function(data){
             console.log(data);
             if(data.serial!=id) return;
@@ -405,6 +439,26 @@ function reagentCtrl($scope, $modal, $compile, $timeout, RfidInfo, DTColumnBuild
  * chartJsCtrl - Controller for data for ChartJs plugin
  * used in Chart.js view
  */
+
+function reagentOverviewCtrl($scope, RfidInfo){
+    $scope.color=['label-success', 'label-info', 'label-primary', 'label-default', 'label-primary'];
+    $scope.latestSearchedReagent=RfidInfo.find({order:'gmt_visited ASC', limit: 5 },
+        function(){
+        },
+        function(res){
+            tools.notify('alert-danger',res.data.error.message);
+        }
+        );
+    $scope.latestSearchedReagent.$promise.then(function(){
+        for(var x=0;x<$scope.latestSearchedReagent.length;x++){
+            $scope.latestSearchedReagent[x].gmt_visited=new Date($scope.latestSearchedReagent[x].gmt_visited);
+            console.log($scope.latestSearchedReagent[x]);
+        }
+    });
+
+
+    console.log($scope.latestSearchedReagent);
+}
 function chartJsCtrl() {
 
     /**
@@ -665,7 +719,8 @@ angular
     .controller('deviceDetection', deviceDetection)
     .controller('addDevice', addDevice)
 
-    .controller('reagentCtrl', reagentCtrl);
+    .controller('reagentCtrl', reagentCtrl)
+    .controller('reagentOverviewCtrl',reagentOverviewCtrl);
 
 
 

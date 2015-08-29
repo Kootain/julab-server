@@ -16,8 +16,8 @@
                  <li>
                     <a ng-click="registerDevice(device)">
                         <div>
-                            <i class="fa fa-envelope fa-fw"></i>{{ device.name }}
-                            <span class="pull-right text-muted small">{{ device.type }}</span>
+                            {{ device.name }}
+                            <span class="pull-right small text-success">{{ device.type }}&nbsp;<i class="fa fa-fw" ng-class="iconType[device.type]"></i></span>
                         </div>
                     </a>
                 </li>

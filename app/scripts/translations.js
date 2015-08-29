@@ -20,7 +20,7 @@ function translate($translateProvider) {
                 ADD_REAGENT: 'Add reagent',
             // Define some custom text
             OVERVIEW: 'Overview',
-            WELCOME: 'Welcome Amelia',
+            WELCOME: 'Welcome',
             LEARN_MORE: 'Leran more',
             DETAIL: 'Detail',
             MESSAGEINFO: 'You have 42 messages and 6 notifications.',

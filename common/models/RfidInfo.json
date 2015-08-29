@@ -14,6 +14,14 @@
     "name": {
       "type": "string",
       "required": true
+    },
+    "gmt_visited": {
+      "type": "date",
+      "required": true
+    },
+    "gmt_created": {
+      "type": "date",
+      "required": true
     }
   },
   "validations": [],

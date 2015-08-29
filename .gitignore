@@ -5,6 +5,7 @@ results
 bower_components
 
 .tmp
+tmp
 dist
 src
 

@@ -72,13 +72,13 @@
                             <td>{{ reagent.name }}&nbsp;&nbsp;<span class="badge badge-success" ng-if="reagent.flag">new</span></td>
                             <td>{{ reagent.rfid }}</td>
                             <td>
-                            <a href="#" class="no-margin btn btn-xs btn-outline btn-primary">Edit</a>
-                            <a ng-click="deleteReagent('')" class="no-margin btn btn-xs btn-outline btn-danger">Delete</a>
+                            <a ng-click="commingSoon()" class="no-margin btn btn-xs btn-outline btn-primary">Edit</a>
                             </td>
                         </tr>
                         </tbody>
                     </table>
                     <a ng-click="find(selected)" class="no-margin btn btn-success">Find selected items</a>
+                    <a ng-click="deleteReagent(selected)" class="no-margin btn btn-outline btn-danger">Delete selected items</a>
                 </div>
             </div>
         </div>

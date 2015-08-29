@@ -9,7 +9,7 @@ module.exports = function(server) {
   		{name:'scn3', type:'scanner'},
   		{name:'scale14', type:'scale'},
   		{name:'scn5', type:'scanner'},
-  		{name:'taptop', type:'computer'}
+  		{name:'taptop', type:'web'}
   		]);
   });
   

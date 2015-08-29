@@ -96,6 +96,7 @@ function config($stateProvider, $urlRouterProvider) {
         })
         .state('content.reagents.overview', {
             url: "/overview",
+            controller: 'reagentOverviewCtrl as r',
             templateUrl: "views/reagent/overview.html",
             data: { pageTitle: 'reagents overview' },
             ncyBreadcrumb:{

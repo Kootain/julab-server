@@ -43,7 +43,7 @@
 
 <!-- reagent -->
             <li ng-class="{active: $state.includes('content.reagent')}">
-                <a ui-sref="content.reagent"><i class="fa fa-sitemap"></i> <span class="nav-label">{{ 'REAGENT_MANAGEMENT' | translate }}</span><span class="fa arrow"></span></a>
+                <a ui-sref="content.reagent"><i class="fa fa-flask"></i> <span class="nav-label">{{ 'REAGENT_MANAGEMENT' | translate }}</span><span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level" ng-class="{in: $state.includes('content.reagent')}">
                     <li ui-sref-active="active"><a ui-sref="content.reagents.overview">{{ 'OVERVIEW' | translate }}</a></li>
                     <li ui-sref-active="active"><a ui-sref="content.reagents.list">{{ 'ADD_REAGENT' | translate }}</a></li>
