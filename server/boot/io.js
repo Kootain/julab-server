@@ -1,4 +1,3 @@
-
 module.exports = function io(app) {
 	app.io = require('socket.io')(app.start());
 	HashSet = require('../tools/HashSet');

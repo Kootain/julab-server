@@ -6,7 +6,12 @@
   "options": {
     "validateUpsert": true
   },
-  "properties": {},
+  "properties": {
+    "device_id": {
+      "type": "number",
+      "required": true
+    }
+  },
   "validations": [],
   "relations": {},
   "acls": [],

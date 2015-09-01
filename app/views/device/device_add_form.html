@@ -4,14 +4,14 @@
     <form role="form" name="detailForm" novalidate ng-submit="signupForm2()">
         <div class="form-group">
             <label>Name</label>
-            <input type="text" placeholder="Username" class="form-control" name="username2" ng-model="formDetails.name" ng-minlength="3" ng-maxlength="20" required>
+            <input type="text" placeholder="name" class="form-control" name="name" ng-model="formDetails.name" ng-minlength="3" ng-maxlength="20" required>
             <div class="m-t-xs" ng-show="detailForm.username2.$invalid && detailForm.username2.$dirty">
-                <small class="text-danger" ng-show="detailForm.username2.$error.required">Please input a username</small>
+                <small class="text-danger" ng-show="detailForm.username2.$error.required">Please input a name for device</small>
                 <small class="text-danger" ng-show="detailForm.username2.$error.minlength">Your username is required to be at least 3 characters</small>
                 <small class="text-danger" ng-show="detailForm.username2.$error.maxlength">Your username cannot be longer than 20 characters</small>
             </div>
         </div>
-        <div class="form-group">
+        <!-- <div class="form-group">
             <label>Email</label>
             <input type="email" placeholder="Enter email" class="form-control" name="email2" ng-model="email">
             <div class="m-t-xs" ng-show="detailForm.email2.$invalid && detailForm.email2.$dirty">
@@ -31,9 +31,9 @@
             <div class="m-t-xs" ng-show="detailForm.password2.$invalid && detailForm.password2.$dirty">
                 <small class="text-danger" ng-show="detailForm.password2.$error.required">Please input a password</small>
             </div>
-        </div>
+        </div> -->
         <div class="form-group">
-            <button class="btn btn-sm btn-primary" type="submit" ng-disabled="detailForm.$invalid"><strong>Submit form</strong></button>
+            <button class="btn btn-sm btn-primary" type="submit" ng-disabled="detailForm.$invalid"><strong>Submit</strong></button>
         </div>
     </form>
 

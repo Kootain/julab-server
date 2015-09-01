@@ -25,8 +25,23 @@ function mainCtrl($scope,notify) {
     $scope.commingSoon=function(){
         tools.notify('alert-info','this function will come soon.');
     }
+
+    $scope.webStatus=true;
+
+    Offline.on('confirmed-down', function () {
+        console.log('down');
+        $scope.webStatus=false;
+    });
+
+    Offline.on('confirmed-up', function () {
+        console.log('up');
+        $scope.webStatus=true;
+    });
 };
 
+function statusCtrl($scope){
+
+}
 function deviceOverviewCtrl() {
     
     this.userName = 'tanki';
@@ -243,17 +258,20 @@ function deviceDetection($scope, $http, $modal, $modalInstance){
     };
 };
 
-function addDevice($scope, $modalInstance, deviceInfo){
+function addDevice($scope, $modalInstance, deviceInfo, Device){
     console.log(deviceInfo);
-    $scope.formDetails={'deviceInfo':deviceInfo};
+    $scope.formDetails={};
     $scope.submit = function() {
         if ($scope.detailForm.$valid) {
-            $http.post('api/devices', $scope.formDetails)
-            .success(function(data, status, headers, config){
-                tools.notify('alert-success','register device success');
-            })
-            .error(function(data, status, headers, config){
-                rools.notify('alert-danger','register device with error, please try again');
+            Device.create(
+            {
+                MAC:deviceInfo.MAC,
+                name:formDetails.name,
+                type:deviceInfo.type
+            }
+            ,function (val,resHeader){}
+            ,function (res){
+                tools.notify('alert-danger',res.data.error.message);
             });
         }
     }
@@ -325,25 +343,28 @@ function reagentCtrl($scope, $modal, $compile, $timeout, RfidInfo, DTColumnBuild
     
 
     $scope.refresh=function(){
-        $('#reagent-box').addClass('animated fadeOut');
-        var display=function(){
-            $('#reagent-box').removeClass('animated fadeOut');
-            $('#reagent-box').addClass('animated fadeIn');
-           // $scope.selected={};
-            //for(var x=0;x<$scope.reagents.length;x++) $scope.selected[$scope.reagents[x]]=false;
-        }
-        $scope.reagents= RfidInfo.find(
-            function(val){
-                console.log('success');
-                console.log(val);
-            },
-            function(res){
-                console.log('failed');
-                console.log(res);
-                tools.notify('alert-danger',res.data.error.message);
-            })
-        $scope.reagents.$promise.then(display);
+        $('#reagent-box').fadeOut(function(){
+            var display=function(){
+                $('#reagent-box').fadeIn();
+                $scope.selected={};
+                for(var x=0;x<$scope.reagents.length;x++) $scope.selected[$scope.reagents[x]]=false;
+                console.log($scope.selected);
+            }
+            $scope.reagents= RfidInfo.find(
+                function(val){
+                    console.log('success');
+                    console.log(val);
+                    display();
+                },
+                function(res){
+                    console.log('failed');
+                    console.log(res);
+                    tools.notify('alert-danger','refresh reagent list error, please check your connection');
+                    display();
+                });
+
         
+        });
         
     }
 

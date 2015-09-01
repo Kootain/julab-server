@@ -7,14 +7,6 @@
     "validateUpsert": true
   },
   "properties": {
-    "MAC": {
-      "type": "string",
-      "required": true
-    },
-    "gmt_add": {
-      "type": "date",
-      "required": true
-    },
     "gmt_login": {
       "type": "date",
       "required": true
@@ -23,7 +15,15 @@
       "type": "string"
     },
     "type": {
-      "type": "number",
+      "type": "string",
+      "required": true
+    },
+    "MAC": {
+      "type": "string",
+      "required": true
+    },
+    "gmt_created": {
+      "type": "date",
       "required": true
     }
   },

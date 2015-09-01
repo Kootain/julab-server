@@ -13,6 +13,10 @@ function config($stateProvider, $urlRouterProvider) {
                 label:'index'
             },
             resolve: {
+                socket: function(){
+                    socket = io.connect('http://localhost:3000');
+                    socket.emit('in',{type:'web'});
+                },
                 loadPlugin: function ($ocLazyLoad) {
                     return $ocLazyLoad.load([
                         {

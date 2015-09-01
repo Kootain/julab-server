@@ -54,6 +54,4 @@ RegExp.$1.length==1? o[k] :
 return format;
 }
 
-var socket = io.connect('http://localhost:3000');
-socket.emit('in',{type:'web'});
 

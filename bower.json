@@ -36,6 +36,8 @@
     "angular-peity":"*",
     "angular-notify": "~2.0.2",
     "datatables": "~1.10.2",
-    "angular-datatables": "~0.1.1"
+    "angular-datatables": "~0.1.1",
+    "offline":"~0.7.14",
+    "offlinejs-simulate-ui": "~0.1.2"
   }
 }

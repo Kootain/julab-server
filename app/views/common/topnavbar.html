@@ -11,6 +11,11 @@
         <ul class="nav navbar-top-links navbar-right">
             <li>
                 <a href="">
+                    <i class="fa " ng-class="{true:'fa-signal text-info', false:'fa-spinner fa-pulse text-danger'}[webStatus]"></i>{{webStatus?'online':'offline'}}
+                </a>
+            </li>
+            <li>
+                <a href="">
                     <i class="fa fa-sign-out"></i> Log out
                 </a>
             </li>
