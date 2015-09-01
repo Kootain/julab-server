@@ -8,7 +8,7 @@ function config($stateProvider, $urlRouterProvider) {
             abstract: true,
             url: "/main",
             templateUrl: "views/common/content.html",
-            controller: 'mainCtrl',
+            controller: 'mainCtrl as main',
             ncyBreadcrumb:{
                 label:'index'
             },

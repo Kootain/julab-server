@@ -27,15 +27,17 @@ function mainCtrl($scope,notify) {
     }
 
     $scope.webStatus=true;
-
-    Offline.on('confirmed-down', function () {
+    Offline.on('down', function () {
         console.log('down');
         $scope.webStatus=false;
+        tools.notify('alert-danger','lose connection with router.');
+        $scope.$apply();
     });
-
-    Offline.on('confirmed-up', function () {
+    Offline.on('up', function () {
         console.log('up');
         $scope.webStatus=true;
+        tools.notify('alert-success','reconneted to the router.');
+        $scope.$apply();
     });
 };
 
@@ -50,12 +52,15 @@ function deviceOverviewCtrl() {
 
 };
 
-function deviceCtrl($scope, $modal) {
+function deviceCtrl($scope, $modal, Device) {
     
-    this.devices=[
-    {id:'aa',isOnline:false},
-    {id:'bb',isOnline:true}
-    ];
+    $scope.devices=Device.find(
+        function(val){
+            console.log(val);
+        },
+        function(res){
+            tools.notify('alert-danger','load devices failed, please try again.');
+    });
 
     $scope.mustOnline=true;
     this.deviceListFilter=function(v,i,a){ 
@@ -67,8 +72,8 @@ function deviceCtrl($scope, $modal) {
         var modalInstance = $modal.open({
             templateUrl: 'views/device/modal_add_device.html',
             size: 'sm',
-            
-            controller: 'deviceDetection'
+            controller: 'deviceDetection',
+            scope:$scope
         });
 
     };
@@ -252,7 +257,8 @@ function deviceDetection($scope, $http, $modal, $modalInstance){
                 'deviceInfo':function(){
                     return deviceInfo;
                 }
-            }
+            },
+            scope:$scope
         });
 
     };
@@ -260,16 +266,28 @@ function deviceDetection($scope, $http, $modal, $modalInstance){
 
 function addDevice($scope, $modalInstance, deviceInfo, Device){
     console.log(deviceInfo);
-    $scope.formDetails={};
+    $scope.formDetails={name:tools.randomStr(5)};
     $scope.submit = function() {
+        console.log('submit');
         if ($scope.detailForm.$valid) {
             Device.create(
             {
                 MAC:deviceInfo.MAC,
-                name:formDetails.name,
+                name:$scope.detailForm.name,
                 type:deviceInfo.type
             }
-            ,function (val,resHeader){}
+            ,function (val,resHeader){
+                $modalInstance.close();
+                tools.notify('alert-success','register device success');
+                $scope.$parent.$parent.devices=Device.find(
+                    function(val){
+                        debugger;
+                        $scope.$apply();
+                        console.log(val);
+                    },
+                    function(res){
+                });
+            }
             ,function (res){
                 tools.notify('alert-danger',res.data.error.message);
             });

@@ -1,14 +1,14 @@
 <div class="ibox-content">
 
     <h4> 完成填写剩余信息:</h4>
-    <form role="form" name="detailForm" novalidate ng-submit="signupForm2()">
+    <form role="form" name="detailForm" novalidate ng-submit="submit()">
         <div class="form-group">
             <label>Name</label>
             <input type="text" placeholder="name" class="form-control" name="name" ng-model="formDetails.name" ng-minlength="3" ng-maxlength="20" required>
-            <div class="m-t-xs" ng-show="detailForm.username2.$invalid && detailForm.username2.$dirty">
-                <small class="text-danger" ng-show="detailForm.username2.$error.required">Please input a name for device</small>
-                <small class="text-danger" ng-show="detailForm.username2.$error.minlength">Your username is required to be at least 3 characters</small>
-                <small class="text-danger" ng-show="detailForm.username2.$error.maxlength">Your username cannot be longer than 20 characters</small>
+            <div class="m-t-xs" ng-show="detailForm.name.$invalid && detailForm.name.$dirty">
+                <small class="text-danger" ng-show="detailForm.name.$error.required">Please input a name for device</small>
+                <small class="text-danger" ng-show="detailForm.name.$error.minlength">Your device name is required to be at least 3 characters</small>
+                <small class="text-danger" ng-show="detailForm.name.$error.maxlength">Your device name cannot be longer than 20 characters</small>
             </div>
         </div>
         <!-- <div class="form-group">
