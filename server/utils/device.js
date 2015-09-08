@@ -1,4 +1,4 @@
-module.exports =function device (name, ip, port){
+==module.exports =function device (name, ip, port){
 	var _name = name;
 	var _ip = ip;
 	var _port =port;

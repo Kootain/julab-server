@@ -7,10 +7,6 @@ module.exports = function io(app) {
 	 * web
 	 *
 	 */
-	app.connected={
-		scanner:{},
-		web:{}
-	}
 
 	app.todo={
 		scanner: new HashSet(),
