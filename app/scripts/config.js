@@ -21,7 +21,7 @@ function config($stateProvider, $urlRouterProvider) {
                     return $ocLazyLoad.load([
                         {
                             name: 'cgNotify',
-                            files: ['../bower_components/angular-notify/dist/angular-notify.min.css','../bower_components/angular-notify/dist/angular-notify.min.js']
+                            files: ['../bower_components/angular-notify/dist/angular-notify.min.css','../bower_components/angular-notify/dist/angular-notify.min.js','views/common/notify.html']
                         }
                     ]);
                 }
