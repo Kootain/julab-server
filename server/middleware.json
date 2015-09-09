@@ -29,6 +29,10 @@
       {
         "params": "$!../node_modules",
         "paths": "/node_modules"
+      },
+      {
+        "params": "$!../node_modules/socket.io/node_modules",
+        "paths": "/node_modules"
       }
     ]
   },

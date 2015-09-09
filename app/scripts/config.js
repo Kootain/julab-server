@@ -14,7 +14,7 @@ function config($stateProvider, $urlRouterProvider) {
             },
             resolve: {
                 socket: function(){
-                    socket = io.connect('http://localhost:3000');
+                    socket = io.connect(':3000/');
                     socket.emit('in',{type:'web'});
                 },
                 loadPlugin: function ($ocLazyLoad) {
@@ -100,11 +100,29 @@ function config($stateProvider, $urlRouterProvider) {
         })
         .state('content.reagents.overview', {
             url: "/overview",
-            controller: 'reagentOverviewCtrl as r',
+            controller: 'reagentOverviewCtrl as reagentOverview',
             templateUrl: "views/reagent/overview.html",
             data: { pageTitle: 'reagents overview' },
             ncyBreadcrumb:{
                 label:'overview'
+            },
+            resolve: {
+                loadPlugin: function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([
+                        {
+                            serie: true,
+                            name: 'angular-flot',
+                            files: [ '../bower_components/flot/jquery.flot.js', 
+                                     '../bower_components/flot/jquery.flot.time.js',
+                                     '../bower_components/flot.tooltip.pib/js/jquery.flot.tooltip.min.js', 
+                                     '../bower_components/jquery.flot.spline/index.js', 
+                                     '../bower_components/flot/jquery.flot.resize.js', 
+                                     '../bower_components/flot/jquery.flot.pie.js', 
+                                     '../bower_components/flot.curvedlines/curvedLines.js', 
+                                     '../bower_components/angular-flot/angular-flot.js', ]
+                        }
+                    ]);
+                }
             }
         })
         .state('content.reagents.list', {

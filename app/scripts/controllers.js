@@ -45,15 +45,10 @@ function statusCtrl($scope){
 
 }
 function deviceOverviewCtrl() {
-    
-    this.userName = 'tanki';
-    this.helloText = 'Welcome in SeedProject';
-    this.descriptionText = 'It is an application skeleton for a typical AngularJS web app. You can use it to quickly bootstrap your angular webapp projects and dev environment for these projects.';
-
-};
+}; 
 
 function deviceCtrl($scope, $modal, Device) {
-    
+
     $scope.devices=Device.find(
         function(val){
             console.log(val);
@@ -480,6 +475,63 @@ function reagentCtrl($scope, $modal, $compile, $timeout, RfidInfo, DTColumnBuild
  */
 
 function reagentOverviewCtrl($scope, RfidInfo){
+    this.reagentUsage=[
+        {
+            data:[[0,10000],[1,7563],[2,3650],[3,1324],[4,3641],[5,34577],[6,24356],[7,21237]],
+            //data:oilprices,
+            label:'reagentA'
+        },
+        {
+            data:[[0,1000],[1,2563],[2,7650],[3,5324],[4,2641],[5,4577],[6,1356],[7,11237]],
+            //data:exchangerates,
+            label:'reagentB'
+        },
+        {
+            data:[[0,1000],[1,22563],[2,12650],[3,9324],[4,5641],[5,2457],[6,4356],[7,1237]],
+            //data:oilprices,
+            label:'reagentA'
+        },
+        {
+            data:[[0,20300],[1,15634],[2,12650],[3,9324],[4,5641],[5,3577],[6,2356],[7,1237]],
+            //data:exchangerates,
+            label:'reagentB'
+        },
+    ]
+    this.option = {
+        series: {
+            lines: {
+                show: false,
+                fill: true
+            },
+            splines: {
+                show: true,
+                tension: 0.4,
+                lineWidth: 1,
+                fill: 0.4
+            },
+            points: {
+                radius: 0.2,
+                show: true
+            },
+            shadowSize: 2,
+            grow: {stepMode:"linear",stepDirection:"up",steps:80}
+        },
+        grow: {stepMode:"linear",stepDirection:"up",steps:80},
+        grid: {
+            hoverable: true,
+            clickable: true,
+            tickColor: "#d5d5d5",
+            borderWidth: 1,
+            color: '#d5d5d5'
+        },
+        colors: ["#1ab394", "#464f88"],
+        xaxis: {
+        },
+        yaxis: {
+            ticks: 4
+        },
+        tooltip: false
+    };
     $scope.color=['label-success', 'label-info', 'label-primary', 'label-default', 'label-primary'];
     $scope.latestSearchedReagent=RfidInfo.find({order:'gmt_visited ASC', limit: 5 },
         function(){
