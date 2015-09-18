@@ -1,5 +1,5 @@
 {
-  "name": "Scanner",
+  "name": "Weight",
   "base": "PersistedModel",
   "strict": false,
   "idInjection": false,
@@ -7,9 +7,17 @@
     "validateUpsert": true
   },
   "properties": {
-    "device_id": {
-      "type": "number",
-      "required": true
+    "scale_id": {
+      "type": "number"
+    },
+    "gmt_create": {
+      "type": "date"
+    },
+    "value": {
+      "type": "number"
+    },
+    "item_id": {
+      "type": "number"
     }
   },
   "validations": [],

@@ -117,6 +117,22 @@ function slimScroll($timeout) {
     };
 }
 
+
+/**
+ * ionRangeSlider - Directive for Ion Range Slider
+ */
+function ionRangeSlider() {
+    return {
+        restrict: 'A',
+        scope: {
+            rangeOptions: '='
+        },
+        link: function (scope, elem, attrs) {
+            elem.ionRangeSlider(scope.rangeOptions);
+        }
+    }
+}
+
 /**
  *
  * Pass all functions into module
@@ -127,4 +143,5 @@ angular
     .directive('sideNavigation', sideNavigation)
     .directive('iboxTools', iboxTools)
     .directive('slimScroll', slimScroll)
-    .directive('minimalizaSidebar', minimalizaSidebar);
+    .directive('minimalizaSidebar', minimalizaSidebar)
+    .directive('ionRangeSlider',ionRangeSlider);

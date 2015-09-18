@@ -37,6 +37,8 @@
     "angular-notify": "~2.0.2",
     "datatables": "~1.10.2",
     "angular-datatables": "~0.1.1",
-    "offline":"~0.7.14"
+    "offline":"~0.7.14",
+    "ionrangeslider": "~2.0.13",
+    "angular-chosen-localytics":"~1.0.6"
   }
 }

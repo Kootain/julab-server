@@ -49,5 +49,29 @@
     "public": true,
     "$promise": {},
     "$resolved": true
+  },
+  "Record": {
+    "dataSource": "router-db",
+    "public": true,
+    "$promise": {},
+    "$resolved": true
+  },
+  "Scale": {
+    "dataSource": "router-db",
+    "public": true,
+    "$promise": {},
+    "$resolved": true
+  },
+  "Weight": {
+    "dataSource": "router-db",
+    "public": true,
+    "$promise": {},
+    "$resolved": true
+  },
+  "Item": {
+    "dataSource": "router-db",
+    "public": true,
+    "$promise": {},
+    "$resolved": true
   }
 }

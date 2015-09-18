@@ -1,5 +1,5 @@
 {
-  "name": "Scanner",
+  "name": "Record",
   "base": "PersistedModel",
   "strict": false,
   "idInjection": false,
@@ -7,8 +7,16 @@
     "validateUpsert": true
   },
   "properties": {
-    "device_id": {
+    "gmt_create": {
+      "type": "date",
+      "required": true
+    },
+    "reference": {
       "type": "number",
+      "required": true
+    },
+    "type": {
+      "type": "string",
       "required": true
     }
   },

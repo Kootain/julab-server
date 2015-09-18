@@ -120,6 +120,15 @@ function config($stateProvider, $urlRouterProvider) {
                                      '../bower_components/flot/jquery.flot.pie.js', 
                                      '../bower_components/flot.curvedlines/curvedLines.js', 
                                      '../bower_components/angular-flot/angular-flot.js', ]
+                        },
+                        {
+                            name:'rangeSlider',
+                            files: ['../bower_components/ionRangeSlider/css/ion.rangeSlider.css','../bower_components/ionRangeSlider/css/ion.rangeSlider.skinFlat.css','../bower_components/ionRangeSlider/js/ion.rangeSlider.min.js']
+                        },
+                        {
+                            insertBefore: '#loadBefore',
+                            name: 'localytics.directives',
+                            files: ['../bower_components/chosen/chosen.css','../bower_components/chosen/chosen.jquery.js','../bower_components/angular-chosen-localytics/chosen.js']
                         }
                     ]);
                 }

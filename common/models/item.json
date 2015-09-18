@@ -1,5 +1,5 @@
 {
-  "name": "Scanner",
+  "name": "Item",
   "base": "PersistedModel",
   "strict": false,
   "idInjection": false,
@@ -7,9 +7,8 @@
     "validateUpsert": true
   },
   "properties": {
-    "device_id": {
-      "type": "number",
-      "required": true
+    "name": {
+      "type": "string"
     }
   },
   "validations": [],

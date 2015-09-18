@@ -1,5 +1,5 @@
 {
-  "name": "Scanner",
+  "name": "Scale",
   "base": "PersistedModel",
   "strict": false,
   "idInjection": false,
@@ -8,8 +8,7 @@
   },
   "properties": {
     "device_id": {
-      "type": "number",
-      "required": true
+      "type": "string"
     }
   },
   "validations": [],

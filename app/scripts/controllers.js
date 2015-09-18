@@ -474,8 +474,8 @@ function reagentCtrl($scope, $modal, $compile, $timeout, RfidInfo, DTColumnBuild
  * used in Chart.js view
  */
 
-function reagentOverviewCtrl($scope, RfidInfo){
-    this.reagentUsage=[
+function reagentOverviewCtrl($scope, RfidInfo, Weight){
+    $scope.reagentUsage=[
         {
             data:[[0,10000],[1,7563],[2,3650],[3,1324],[4,3641],[5,34577],[6,24356],[7,21237]],
             //data:oilprices,
@@ -496,8 +496,10 @@ function reagentOverviewCtrl($scope, RfidInfo){
             //data:exchangerates,
             label:'reagentB'
         },
-    ]
-    this.option = {
+    ];
+    $scope.from=new Date();
+    $scope.to=new Date();
+    $scope.option = {
         series: {
             lines: {
                 show: false,
@@ -532,12 +534,54 @@ function reagentOverviewCtrl($scope, RfidInfo){
         },
         tooltip: false
     };
+    this.sliderOptions = {
+        min: new Date("Aug 09 2015 19:14:24 GMT+0800 (CST)").getTime(),
+        max: new Date().getTime(),
+        type: 'double',
+        force_edges: true,
+        values_separator: '→',
+        grid: true,
+        prettify: function(num){
+            return new Date(num).format("yyyy-MM-dd");
+        },
+        onFinish: function(data){
+            $scope.from=new Date(data.from);
+            $scope.to=new Date(data.to);
+            // $scope.reagentUsage=weight.find({filter:
+            //     {where:{
+            //             gmt_create:{gt:newDate(data.from),lt:new Date(data.to)},
+            //             id:{inq:$scope.selectedReagents.map(function(e){return e.id})}
+            //         }
+            //     }
+            //     },
+            //     function(){},
+            //     function(err){
+            //         tools.notify('alert-danger',err.data.error.message);
+            //     });
+        }
+    };
+
+    $scope.reagents=[{name:'awetaw'},{name:'23wter'},{name:'awetaw'},{name:'23wter'},{name:'awetaw'},{name:'23wter'}];
+    $scope.selectedReagents=[];
+    // $scope.$watch('selectedReagents',function(oval,nval,scope){
+    //     $scope.reagentUsage=Weight.find({filter:
+    //             {where:{
+    //                     gmt_create:{gt: scope.from,lt: scope.to},
+    //                     id:{inq:scope.selectedReagents.map(function(e){return e.id})}
+    //                 }
+    //             }
+    //             },
+    //             function(){},
+    //             function(err){
+    //                 tools.notify('alert-danger',err.data.error.message);
+    //             });
+    // });
     $scope.color=['label-success', 'label-info', 'label-primary', 'label-default', 'label-primary'];
-    $scope.latestSearchedReagent=RfidInfo.find({order:'gmt_visited ASC', limit: 5 },
+    $scope.latestSearchedReagent=RfidInfo.find({filter:{order:'gmt_visited DESC',limit:5}},
         function(){
         },
-        function(res){
-            tools.notify('alert-danger',res.data.error.message);
+        function(err){
+            tools.notify('alert-danger',err.data.error.message);
         }
         );
     $scope.latestSearchedReagent.$promise.then(function(){
