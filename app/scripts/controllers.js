@@ -474,7 +474,8 @@ function reagentCtrl($scope, $modal, $compile, $timeout, RfidInfo, DTColumnBuild
  * used in Chart.js view
  */
 
-function reagentOverviewCtrl($scope, RfidInfo, Weight){
+function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale){
+    $scope.floor=window.Math.floor;
     $scope.reagentUsage=[
         {
             data:[[0,10000],[1,7563],[2,3650],[3,1324],[4,3641],[5,34577],[6,24356],[7,21237]],
@@ -590,10 +591,56 @@ function reagentOverviewCtrl($scope, RfidInfo, Weight){
             console.log($scope.latestSearchedReagent[x]);
         }
     });
-
+        a=$scope;
 
     console.log($scope.latestSearchedReagent);
+
+    // $http.post('api/scale/status').success(function(data){
+    //     $scope.reagentsScale = $data;
+    // });
+    $scope.scaleDetail = function (reagentName) {
+        var modalInstance = $modal.open({
+            templateUrl: 'views/reagent/reagent_detail.html',
+            controller: 'scaleDetail',
+            resolve :{
+                'reagentName':function(){
+                    return reagentName;
+                }
+            },
+        });
+
+    };
+
+    $scope.reagentScales = Scale.find();
+    console.log($scope.reagentScales);
+    $scope.reagentScales=[
+            {
+                id:'11',
+                reagent_name:'11',
+                weight:'20',
+                full_weight:'100'
+            },
+            {
+                id:'22',
+                reagent_name:'11',
+                weight:'20',
+                full_weight:'30'
+            },
+            {
+                id:'33',
+                reagent_name:'11',
+                weight:'20',
+                full_weight:'20'
+            }
+        ];
 }
+
+function scaleDetail($scope, reagentName, $modalInstance){
+    console.log($modalInstance);
+    $scope.reagentName = reagentName;
+    $scope.close = $modalInstance.close;
+};
+
 function chartJsCtrl() {
 
     /**
@@ -855,7 +902,8 @@ angular
     .controller('addDevice', addDevice)
 
     .controller('reagentCtrl', reagentCtrl)
-    .controller('reagentOverviewCtrl',reagentOverviewCtrl);
+    .controller('reagentOverviewCtrl',reagentOverviewCtrl)
+    .controller('scaleDetail',scaleDetail);
 
 
 

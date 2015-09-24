@@ -77,26 +77,13 @@
             </div>
             <div class="ibox-content">
             <div class="row">
-                <div class="col-md-2" style="text-align:center">
-                    <h2>50%</h2>
+                <div class="col-md-2" style="text-align:center"  ng-repeat="reagentScale in reagentScales " 
+                 ng-init="percent=reagentScale.weight / reagentScale.full_weight * 100" ng-click="scaleDetail(reagentScale.reagent_name)">
+                    <h2>{{  floor(percent)  }}%</h2>
                     <div class="progress progress-mini-vertical reagent-format">
-                        <div style="height: 50%;" class="progress-bar"></div>
+                        <div style="height: {{percent}}%;" class="progress-bar" ng-class="percent<=20?'low-warning':''"></div>
                     </div> 
-                    <h4>reagent name</h4>
-                </div>
-                <div class="col-md-2" style="text-align:center">
-                    <h2>18%</h2>
-                    <div class="progress progress-mini-vertical reagent-format">
-                        <div style="height: 18%;" class="progress-bar low-warning"></div>
-                    </div> 
-                    <h4>reagent name</h4>
-                </div>
-                <div class="col-md-2" style="text-align:center">
-                    <h2>90%</h2>
-                    <div class="progress progress-mini-vertical reagent-format">
-                        <div style="height: 90%;" class="progress-bar"></div>
-                    </div> 
-                    <h4>reagent name</h4>
+                    <h4>{{reagentScale.reagent_name}}</h4>
                 </div>
             </div>
                 
