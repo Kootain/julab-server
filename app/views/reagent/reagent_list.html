@@ -1,3 +1,12 @@
+    <style type="text/css">
+    .no-margin{
+        margin: 0;
+    }
+    .has-error{
+    border-color: #ed5565;
+    }
+
+    </style>
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
         <h2>{{ 'REAGENT' | translate }} {{ 'OVERVIEW' | translate }}</h2>
@@ -22,11 +31,7 @@
             </div>
         </div>
     </div>
-    <style type="text/css">
-    .no-margin{
-        margin: 0;
-    }
-    </style>
+
     <div  ng-if="reagents && !$.isEmptyObject(reagents)" class="row">
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
@@ -39,15 +44,16 @@
                             <i class="fa fa-wrench"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-user">
-                            <li><a href="">clear all</a>
+                            <li><a href="" ng-click="makedata()">clear all</a>
                             </li>
                             <li><a href="">Config option 2</a>
                             </li>
                         </ul>
                         <a ng-click="refresh()"><i class="fa fa-refresh"></i></a>
-                </div>
+                    </div>
                 </div>
                 <div class="ibox-content" id="reagent-box">
+                
                     <table datatable="ng" class="table table-striped table-bordered table-hover dataTables-example" 
                     dt-options="r.dtOptions" dt-column-defs="r.dtColumnDefs" dt-instance="r.dtInstance" id="reagents-table">{{r.columnDefs}}
                         <thead>
@@ -63,16 +69,17 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr ng-repeat="reagent in reagents">
+                        <tr ng-repeat="reagent in reagents" >
                             <td>
                                 <div class="checkbox">
                                     <input id="{{ reagent.id }}" type="checkbox" ng-model="selected[reagent.id]"><label></label>
                                 </div>
                             </td>
-                            <td>{{ reagent.name }}&nbsp;&nbsp;<span class="badge badge-success" ng-if="reagent.flag">new</span></td>
-                            <td>{{ reagent.rfid }}</td>
-                            <td>
-                            <a ng-click="commingSoon()" class="no-margin btn btn-xs btn-outline btn-primary">Edit</a>
+                            <td id="cas-{{reagent.id}}">{{ reagent.name }}<span class="badge badge-success" ng-if="reagent.flag">new</span></td>
+                            <td id="rfid-{{reagent.id}}">{{ reagent.rfid }}</td>
+                            <td id="ops">
+                            <a ng-click="editReagent(reagent.id)" class="no-margin btn btn-xs btn-outline btn-primary">Edit</a>
+                            <a ng-click="delReagent(reagent.id)" class="no-margin btn btn-xs btn-outline btn-danger">Delete</a>
                             </td>
                         </tr>
                         </tbody>
