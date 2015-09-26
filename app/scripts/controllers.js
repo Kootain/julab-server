@@ -1,7 +1,7 @@
 /**
  * MainCtrl - controller
  */
- tools={};
+tools={};
 function mainCtrl($scope,notify) {
 
     this.userName = 'tanki';
@@ -10,7 +10,7 @@ function mainCtrl($scope,notify) {
     notify.config({duration:1500});
     tools.notify=function(type,msg){
         notify({ message: msg, classes: type, templateUrl: 'views/common/notify.html'});
-    }
+    };
     tools.randomStr=function (len) {
     　　len = len || 32;
     　　var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';    /****默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/
@@ -42,8 +42,8 @@ function mainCtrl($scope,notify) {
 };
 
 function statusCtrl($scope){
+};
 
-}
 function deviceOverviewCtrl() {
 }; 
 
@@ -72,7 +72,6 @@ function deviceCtrl($scope, $modal, Device) {
         });
 
     };
-
 };
 
 function widgetFlotChart() {
@@ -199,8 +198,6 @@ function widgetFlotChart() {
     this.flotChartOptions2 = flotChartOptions2;
     this.flotChartData3 = flotChartData3;
     this.flotChartOptions3 = flotChartOptions3;
-
-
 };
 
 function deviceDetection($scope, $http, $modal, $modalInstance){
@@ -288,8 +285,7 @@ function addDevice($scope, $modalInstance, deviceInfo, Device){
             });
         }
     }
-}
-
+};
 
 
 function reagentCtrl($scope, $modal, $compile, $timeout, RfidInfo, DTColumnBuilder, DTOptionsBuilder, DTColumnDefBuilder) {
@@ -712,8 +708,7 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale){
                 full_weight:'20'
             }
         ];
-
-}
+};
 
 function scaleDetail($scope, reagentName, $modalInstance){
     console.log($modalInstance);
