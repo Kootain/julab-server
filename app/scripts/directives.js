@@ -133,6 +133,27 @@ function ionRangeSlider() {
     }
 }
 
+function ngMust(){
+    return {
+        restrict: 'ECMA',
+        link: function(scope,element,attr) {
+            console.log("called");
+            element.on('change',function(){
+                if(!element.val()){
+                    element.addClass("has-error");
+                    console.log("Empty");
+                }
+                if(!element.val()){
+                    element.addClass("has-error");
+                    console.log("Empty");
+                }
+            });
+
+            }
+        };
+}
+
+
 /**
  *
  * Pass all functions into module
@@ -144,4 +165,5 @@ angular
     .directive('iboxTools', iboxTools)
     .directive('slimScroll', slimScroll)
     .directive('minimalizaSidebar', minimalizaSidebar)
+    .directive('ngMust', ngMust)
     .directive('ionRangeSlider',ionRangeSlider);
