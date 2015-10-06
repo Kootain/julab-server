@@ -666,7 +666,6 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale){
             console.log($scope.latestSearchedReagent[x]);
         }
     });
-        a=$scope;
 
     console.log($scope.latestSearchedReagent);
 
@@ -675,7 +674,7 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale){
     // });
     $scope.scaleDetail = function (reagentName) {
         var modalInstance = $modal.open({
-            templateUrl: 'views/reagent/reagent_detail.html',
+            templateUrl: 'views/reagent/reagent_detail.html',a
             controller: 'scaleDetail',
             resolve :{
                 'reagentName':function(){
