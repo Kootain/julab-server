@@ -1,12 +1,22 @@
 var task= function task(app) {
 	var Device = require('../utils/device/device');
+  var tasks = {
+        Scale:require('../utils/device/scale')(app)
+      };
   var Async = require('async');
   var devices ={};
   //TODO get connected devices  devices={MACA:ipA,MACB:ipB.....}
   var MACs = devices.map(function(v){return v.MAC});
-	var knownDevices = app.models.Device
-		    .find({where:{MAC:{inq:MACs}}})
-        .map( function(e) { return {'MAC':e.MAC,'name':name,ip:''} });
+	
+
+  var knownDevices = [];
+  var deviceType=['Scale'];
+  for (var i = deviceType.length - 1; i >= 0; i--) {
+    knownDevices = knownDevices.concat(app.models[deviceType[i]]
+        .find({where:{MAC:{inq:MACs}}})
+        .map( function(e) { return {'MAC':e.MAC,'name':name,ip:'',type:deviceType[i]} }));
+  };
+  
   var unKownDevices=[];
 
   for (var i = knownDevices.length - 1; i >= 0; i--) {
@@ -25,41 +35,45 @@ var task= function task(app) {
                   .map(function(e){ return new Device(e.name, e.ip, 8001)});
   unKownDevices = unKownDevices.map(function(e){ return new Device('unknown', e.ip, 8001)})
 
-  Async.parallel([
-    function(){  //check unknown devices
-      for (var i = unKownDevices.length - 1; i >= 0; i--) {
-        unKownDevices[i].connect(function(d){
-          if(d) 
-            colorlog.log('add device to db'); 
-          unKownDevices[i].close(); 
-        });
-      };
-    },
-    function(){
-      for (var i = unKownDevices.length - 1; i >= 0; i--) {
-          unKownDevices[i].close(); 
-      };
-    },
-    function(){  //build socket connection
-      for (var i = knownDevices.length - 1; i >= 0; i--) {
-        //knownDevices[i].connect();
-        //TODO  use different callback to process different action of devices.
-      };
-    }
-  ]);
-/////////////TODO ansync block  use Q.
-
-
-
-
-
-
-///////////////
-
+  app.unKownDevices = unKownDevices;
+  // Async.parallel([
+  //   function(){  //check unknown devices
+  //     for (var i = unKownDevices.length - 1; i >= 0; i--) {
+  //       unKownDevices[i].connect(function(d){
+  //         if(!d) {
+  //           colorlog.log('unKown');
+  //         } else {
+  //           var certainDevice
+  //           app.models[deviceType[i]].create
+  //           //TODO 1.add to db 2.add to knownDevices 
+  //         }
+  //         unKownDevices[i].close(); 
+  //       });
+  //     };
+  //   },
+  //   function(){
+  //     for (var i = unKownDevices.length - 1; i >= 0; i--) {
+  //         unKownDevices[i].close(); 
+  //     };
+  //   },
+  //   function(){  //build socket connection
+  //     for (var i = knownDevices.length - 1; i >= 0; i--) {
+  //       Scale(knownDevices[i]);
+  //       //knownDevices[i].connect();
+  //       //TODO  use different callback to process different action of devices.
+  //     };
+  //   }
+  // ]);
+  function(){  //build socket connection
+    for (var i = knownDevices.length - 1; i >= 0; i--) {
+      tasks[knownDevices[i].type]Scale(knownDevices[i]);
+      //knownDevices[i].connect();
+      //TODO  use different callback to process different action of devices.
+    };
+  }
 }
 
-module.exports =  function  (app) {
-}
+//module.exports =  task;
 
 /*
 register a tasks to observe environment status.

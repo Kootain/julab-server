@@ -6,7 +6,15 @@ var device = function (name, ip, port){
 	var isConnected=false;
 	var colorlog = require('../tools/colorlog');
 
-	this.connect= function (callback){
+	this.getInfo = function (){
+		return {
+			name:_name,
+			ip:_ip
+		};
+
+	};
+
+	this.connect = function (callback){
 		console.log(_name +' '+_ip+ ' '+_port);
 		if(isConnected) {
 			colorlog.error(colorlog.log[_name, ' already connected']);

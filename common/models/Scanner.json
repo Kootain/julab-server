@@ -7,13 +7,30 @@
     "validateUpsert": true
   },
   "properties": {
-    "device_id": {
-      "type": "number",
+    "gmt_login": {
+      "type": "date",
+      "required": true
+    },
+    "name": {
+      "type": "string"
+    },
+    "MAC": {
+      "type": "string",
+      "required": true
+    },
+    "gmt_created": {
+      "type": "date",
       "required": true
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+    "device": {
+      "type": "belongsTo",
+      "model": "Device",
+      "foreignKey": "device_id"
+    }
+  },
   "acls": [],
   "methods": []
 }

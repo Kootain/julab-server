@@ -1,7 +1,7 @@
 var FREQUENCY=1000;//query data per 1s.
 
 
-var scale = function scale(app , device){
+var _scale = function scale(app , device){
   var colorlog=require('../../tools/colorlog');
   var _canHandle=true;
   setTimeout(function(){
@@ -21,8 +21,8 @@ var scale = function scale(app , device){
   });
 }
 
-module.exports = function (app){
+module.exports = function scale (app){
   return function(device){
-    scale(app, device);
+    _scale(app, device);
   }
 }
