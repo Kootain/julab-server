@@ -153,6 +153,10 @@ function config($stateProvider, $urlRouterProvider) {
                         {
                             name: 'datatables',
                             files: ['../bower_components/angular-datatables/dist/angular-datatables.min.js']
+                        },
+                        {
+                            name: 'oitozero.ngSweetAlert',
+                            files: ['../bower_components/ngSweetAlert/SweetAlert.js']
                         }
                     ]);
                 }

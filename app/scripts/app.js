@@ -55,3 +55,4 @@ return format;
 }
 
 
+var $a={};
