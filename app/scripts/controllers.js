@@ -655,7 +655,7 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale){
     // });
     $scope.scaleDetail = function (reagentName) {
         var modalInstance = $modal.open({
-            templateUrl: 'views/reagent/reagent_detail.html',a
+            templateUrl: 'views/reagent/reagent_detail.html',
             controller: 'scaleDetail',
             resolve :{
                 'reagentName':function(){

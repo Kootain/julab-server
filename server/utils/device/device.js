@@ -4,7 +4,7 @@ var device = function (name, ip, port){
 	var _port =port;
 	var client = new  require('net').Socket();
 	var isConnected=false;
-	var colorlog = require('../tools/colorlog');
+	var colorlog = require('../../tools/colorlog');
 
 	this.getInfo = function (){
 		return {
