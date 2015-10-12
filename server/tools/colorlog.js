@@ -1,6 +1,9 @@
-function colorlog() {
+var colorlog = function () {
+};
 
-}
+var merge=function(strArr){
+    return String.prototype.concat.apply('',strArr);
+};
 
 colorlog.bold = function(str) {
     return '\033[1m'+str+'\033[0m';
@@ -23,21 +26,20 @@ colorlog.blue = function(str) {
 };
 
 colorlog.log = function(strArr){
-    var str=String.prototype.concat.apply("",strArr);
-    str = colorlog.bold(str);
+    var str = colorlog.bold(merge(strArr));
     console.log(str);
 }
 
-colorlog.info =function(str){
-    console.log(colorlog.bold('[info]\t')+colorlog.blue(str));
+colorlog.info =function(strArr){
+    console.log(colorlog.bold('[info]\t')+colorlog.blue(merge(strArr)));
 }
 
-colorlog.error =function(str){
-    console.log(colorlog.bold('[error]\t')+colorlog.red(str));
+colorlog.error =function(strArr){
+    console.log(colorlog.bold('[error]\t')+colorlog.red(merge(strArr)));
 }
 
-colorlog.warning =function(str){
-    console.log(colorlog.bold('[warning]\t')+colorlog.yellow(str));
+colorlog.warning =function(strArr){
+    console.log(colorlog.bold('[warning]\t')+colorlog.yellow(merge(strArr)));
 }
 
-module.exports = colorlog
+module.exports = colorlog;

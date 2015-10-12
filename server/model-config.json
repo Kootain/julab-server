@@ -32,12 +32,6 @@
     "dataSource": "router-db",
     "public": false
   },
-  "Device": {
-    "dataSource": "router-db",
-    "public": true,
-    "$promise": {},
-    "$resolved": true
-  },
   "Scanner": {
     "dataSource": "router-db",
     "public": true,
