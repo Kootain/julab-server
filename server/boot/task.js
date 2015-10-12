@@ -20,8 +20,8 @@ var task= function task(app) {
     var knownDevices = [], unKownDevices=[];
     var deviceType=['Scale'];
     for (var i = deviceType.length - 1; i >= 0; i--) {
-      devs=app.models[deviceType[i]]
-              .find({where:{MAC:{inq:MACs}}});
+      app.models[deviceType[i]]
+              .find({where:{MAC:{inq:MACs}}},);
       knownDevices = knownDevices.concat(devs);
           //.map( function(e) { return {'MAC':e.MAC,'name':name,ip:'',type:deviceType[i]} }));
     };
@@ -80,7 +80,7 @@ var task= function task(app) {
   });
 }
 
-module.exports =  task;
+//module.exports =  task;
 
 /*
 register a tasks to observe environment status.
