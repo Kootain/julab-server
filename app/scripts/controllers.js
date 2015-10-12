@@ -296,27 +296,29 @@ function addDevice($scope, $modalInstance, deviceInfo, Device){
 };
 
 
-function reagentCtrl($scope, $modal, $compile, $timeout, $sce, RfidInfo, SweetAlert, DTColumnBuilder, DTOptionsBuilder, DTColumnDefBuilder) {
+function reagentCtrl($scope, $modal, $compile, $timeout, $sce, RfidInfo ,ngTableParams, DTColumnBuilder, DTOptionsBuilder, DTColumnDefBuilder) {
     var table=$('#reagents-table').dataTable();
 
     $scope.selectAll=false;
     $scope.reagentsAdd=[];
 
-    this.dtOptions = DTOptionsBuilder.newOptions()
-    .withPaginationType('full_numbers').withDisplayLength(10)
-    .withOption('rowCallback', function(nRow, aData, iDisplayIndex, iDisplayIndexFull){
-        $('td', nRow).unbind('click');
-        $('td', nRow).bind('click', function() {
-            // console.log($('input',nRow).attr('id'));
-        });
-        return nRow;
-    });
-    this.dtColumnDefs = [
-        DTColumnDefBuilder.newColumnDef(0).notSortable(),
-        DTColumnDefBuilder.newColumnDef(1),
-        DTColumnDefBuilder.newColumnDef(2),
-        DTColumnDefBuilder.newColumnDef(3).notSortable(),
-    ];
+    // this.dtOptions = DTOptionsBuilder.newOptions()
+    // .withPaginationType('full_numbers').withDisplayLength(10)
+    // .withOption('rowCallback', function(nRow, aData, iDisplayIndex, iDisplayIndexFull){
+    //     $('td', nRow).unbind('click');
+    //     $('td', nRow).bind('click', function() {
+    //         // console.log($('input',nRow).attr('id'));
+    //     });
+    //     return nRow;
+    // });
+    // this.dtColumnDefs = [
+    //     DTColumnDefBuilder.newColumnDef(0).notSortable(),
+    //     DTColumnDefBuilder.newColumnDef(1),
+    //     DTColumnDefBuilder.newColumnDef(2),
+    //     DTColumnDefBuilder.newColumnDef(3).notSortable(),
+    // ];
+
+ 
 
     $scope.toggleAll=function(){
         $scope.selectAll=!$scope.selectAll;
@@ -351,11 +353,22 @@ function reagentCtrl($scope, $modal, $compile, $timeout, $sce, RfidInfo, SweetAl
         .$promise.then(function(){
             $scope.reagentsBak=angular.copy($scope.reagents);
             if(cb)cb();
+            return $scope.reagents;
         });
         
     }
 
     $scope.queryReagents();
+
+    $scope.talbeParams = new ngTableParams(
+        {page:1, count:9},
+        {
+            getData: function($defer, params){
+                $defer.resolve($scope.reagents);
+            }
+        }
+    );
+    console.log($scope.talbeParams);
 
     $scope.refresh=function(){
         $('#reagent-box').fadeOut(function(){
@@ -412,26 +425,26 @@ function reagentCtrl($scope, $modal, $compile, $timeout, $sce, RfidInfo, SweetAl
         // table.fnDraw();
     };
 
-    $scope.deleteConfirm = function(id){
-        SweetAlert.swal({
-                title: "Are you sure?",
-                text: "Your will not be able to recover this imaginary file!",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "Yes, delete it!",
-                cancelButtonText: "No, cancel plx!",
-                closeOnConfirm: false,
-                closeOnCancel: false },
-            function (isConfirm) {
-                if (isConfirm) {
-                    SweetAlert.swal("Deleted!", "Your imaginary file has been deleted.", "success");
-                    $scope.deleteReagent(id);
-                } else {
-                    SweetAlert.swal("Cancelled", "Your imaginary file is safe :)", "error");
-                }
-        });
-    }
+    // $scope.deleteConfirm = function(id){
+    //     SweetAlert.swal({
+    //             title: "Are you sure?",
+    //             text: "Your will not be able to recover this imaginary file!",
+    //             type: "warning",
+    //             showCancelButton: true,
+    //             confirmButtonColor: "#DD6B55",
+    //             confirmButtonText: "Yes, delete it!",
+    //             cancelButtonText: "No, cancel plx!",
+    //             closeOnConfirm: false,
+    //             closeOnCancel: false },
+    //         function (isConfirm) {
+    //             if (isConfirm) {
+    //                 SweetAlert.swal("Deleted!", "Your imaginary file has been deleted.", "success");
+    //                 $scope.deleteReagent(id);
+    //             } else {
+    //                 SweetAlert.swal("Cancelled", "Your imaginary file is safe :)", "error");
+    //             }
+    //     });
+    // }
 
     $scope.deleteReagents=function(){
         for(var x=$scope.reagents.length-1;x>=0;x--){

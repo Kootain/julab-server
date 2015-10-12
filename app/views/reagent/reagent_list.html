@@ -61,8 +61,7 @@ margin: 0;
             </div>
             <form class="myValidate" novalidate>
             <div class="ibox-content" id="reagent-box">
-                <table datatable="ng" class="table table-striped table-bordered table-hover dataTables-example"
-                    dt-options="r.dtOptions" dt-column-defs="r.dtColumnDefs" dt-instance="r.dtInstance" id="reagents-table">{{r.columnDefs}}
+                <table ng-table-dynamic="talbeParams with cols" class="table" id="reagents-table">
                     <thead>
                         <tr>
                             <th>  
@@ -93,7 +92,7 @@ margin: 0;
                                 <a ng-click="close($index)" class="btn btn-xs btn-outline btn-danger">Cancel</a>
                             </td>
                         </tr>
-                        <tr ng-repeat="reagent in reagents" >
+                        <tr ng-repeat="reagent in $data" >
                             <td>
                                 <div class="checkbox">
                                     <input id="{{ $index }}" type="checkbox" ng-model="reagent.selected"><label></label>
