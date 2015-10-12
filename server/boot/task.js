@@ -21,7 +21,7 @@ var task= function task(app) {
     var deviceType=['Scale'];
     for (var i = deviceType.length - 1; i >= 0; i--) {
       app.models[deviceType[i]]
-              .find({where:{MAC:{inq:MACs}}},);
+              .find({where:{MAC:{inq:MACs}}});
       knownDevices = knownDevices.concat(devs);
           //.map( function(e) { return {'MAC':e.MAC,'name':name,ip:'',type:deviceType[i]} }));
     };
