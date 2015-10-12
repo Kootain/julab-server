@@ -57,9 +57,10 @@ function deviceCtrl($scope, $modal, Device) {
             tools.notify('alert-danger','load devices failed, please try again.');
     });
 
+
     $scope.mustOnline=true;
     this.deviceListFilter=function(v,i,a){ 
-        //console.log(v,$scope.mustOnline,$scope.mustOnline||v.isOnline);
+        // console.log(v,!$scope.mustOnline||v.isOnline);
         return !$scope.mustOnline||v.isOnline;
     };
 
@@ -254,26 +255,32 @@ function deviceDetection($scope, $http, $modal, $modalInstance){
         });
 
     };
+
+    $a=$scope;
 };
 
 function addDevice($scope, $modalInstance, deviceInfo, Device){
     console.log(deviceInfo);
-    $scope.formDetails={name:tools.randomStr(5)};
+    $scope.formDetails={
+                        name:deviceInfo.name,
+                        MAC:deviceInfo.MAC,
+                        type:deviceInfo.type
+                    };
     $scope.submit = function() {
-        console.log('submit');
+        console.log($scope.detailForm.name.$viewValue);
         if ($scope.detailForm.$valid) {
             Device.create(
             {
                 MAC:deviceInfo.MAC,
-                name:$scope.detailForm.name,
-                type:deviceInfo.type
+                name:$scope.detailForm.name.$viewValue,
+                type:$scope.detailForm.type.$viewValue
             }
             ,function (val,resHeader){
                 $modalInstance.close();
                 tools.notify('alert-success','register device success');
                 $scope.$parent.$parent.devices=Device.find(
                     function(val){
-                        debugger;
+                        // debugger;
                         $scope.$apply();
                         console.log(val);
                     },
@@ -285,11 +292,13 @@ function addDevice($scope, $modalInstance, deviceInfo, Device){
             });
         }
     }
+    $a=$scope;
 };
 
 
 function reagentCtrl($scope, $modal, $compile, $timeout, $sce, RfidInfo, SweetAlert, DTColumnBuilder, DTOptionsBuilder, DTColumnDefBuilder) {
     var table=$('#reagents-table').dataTable();
+
     $scope.selectAll=false;
     $scope.reagentsAdd=[];
 
