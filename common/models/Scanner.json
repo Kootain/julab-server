@@ -28,7 +28,7 @@
     "device": {
       "type": "belongsTo",
       "model": "Device",
-      "foreignKey": "device_id"
+      "foreignKey": "scale_id"
     }
   },
   "acls": [],
