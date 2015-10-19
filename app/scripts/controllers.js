@@ -7,10 +7,14 @@ function mainCtrl($scope,notify) {
     this.userName = 'tanki';
     this.helloText = 'Welcome in SeedProject';
     this.descriptionText = 'It is an application skeleton for a typical AngularJS web app. You can use it to quickly bootstrap your angular webapp projects and dev environment for these projects.';
-    notify.config({duration:1500});
     tools.notify=function(type,msg){
+        notify.config({duration:1500});
         notify({ message: msg, classes: type, templateUrl: 'views/common/notify.html'});
     };
+    tools.deletenotify=function(type,msg,dur,_scope){
+        notify.config({duration:dur});
+        notify({ message: msg, classes: type, scope: _scope, templateUrl: 'views/common/deletenotify.html'});
+    }
     tools.randomStr=function (len) {
     　　len = len || 32;
     　　var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';    /****默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/
@@ -57,9 +61,10 @@ function deviceCtrl($scope, $modal, Device) {
             tools.notify('alert-danger','load devices failed, please try again.');
     });
 
+
     $scope.mustOnline=true;
     this.deviceListFilter=function(v,i,a){ 
-        //console.log(v,$scope.mustOnline,$scope.mustOnline||v.isOnline);
+        // console.log(v,!$scope.mustOnline||v.isOnline);
         return !$scope.mustOnline||v.isOnline;
     };
 
@@ -254,26 +259,47 @@ function deviceDetection($scope, $http, $modal, $modalInstance){
         });
 
     };
+
+    //$a=$scope;
 };
 
-function addDevice($scope, $modalInstance, deviceInfo, Device){
-    console.log(deviceInfo);
-    $scope.formDetails={name:tools.randomStr(5)};
+function addDevice($scope, $modalInstance, deviceInfo, Scale, RfidInfo){
+    $scope.formDetails={
+                        name:deviceInfo.name,
+                        MAC:deviceInfo.MAC,
+                        type:deviceInfo.type,
+                        reagent: ""
+                    };
+    $scope.reagents=[{'name':'oooops, nothing','id':-1}];
+    $scope.selectedReagents=[];
+    $scope.search = function(keyword){
+        console.log(keyword);
+        return RfidInfo.find({filter:{ "order":"id desc","where":{"name":{"like":"%"+keyword+"%"}}}},function(val){
+            $scope.reagents=val;
+            console.log();
+        },
+        function(res){
+             tools.notify('alert-danger',res.data.error.message);
+        }).$promise;
+    };
+
+    $a=$scope;
+    
     $scope.submit = function() {
-        console.log('submit');
         if ($scope.detailForm.$valid) {
-            Device.create(
+            Scale.create(
             {
                 MAC:deviceInfo.MAC,
-                name:$scope.detailForm.name,
-                type:deviceInfo.type
+                name:$scope.formDetails.name,
+                type:deviceInfo.type,
+                // reagent: $scope.formDetails.reagent
             }
             ,function (val,resHeader){
                 $modalInstance.close();
                 tools.notify('alert-success','register device success');
                 $scope.$parent.$parent.devices=Device.find(
                     function(val){
-                        debugger;
+                        // debugger;
                         $scope.$apply();
                         console.log(val);
                     },
@@ -285,100 +311,107 @@ function addDevice($scope, $modalInstance, deviceInfo, Device){
             });
         }
     }
+    var refreshChosen=function(){
+        $('#myChosen').chosen('destroy').chosen({max_selected_options: 1});
+        $('.search-field input').on('keyup',function(){
+            var ele= $('.search-field input');
+            var key = ele.val();
+            $scope.search(key).then(function(){
+                console.log('wetraewrrser');
+                ele.val(key);
+            });
+        });
+    };
+    RfidInfo.find({filter:{ "order":"id desc","where":{"name":{"like":"%"+''+"%"}}}},function(val){
+            $scope.reagents=val;
+            console.log();
+        },
+        function(res){
+             tools.notify('alert-danger',res.data.error.message);
+        }).$promise.then(refreshChosen,refreshChosen);
+
 };
 
 
-function reagentCtrl($scope, $modal, $compile, $timeout, RfidInfo, DTColumnBuilder, DTOptionsBuilder, DTColumnDefBuilder) {
+function reagentCtrl($scope, $modal, $compile, $timeout, $sce, RfidInfo ,ngTableParams, DTColumnBuilder, DTOptionsBuilder, DTColumnDefBuilder) {
     var table=$('#reagents-table').dataTable();
-    sel = 
-    $scope.selected={};
+
     $scope.selectAll=false;
+    $scope.reagentsAdd=[];
 
-    this.dtOptions = DTOptionsBuilder.newOptions()
-    .withPaginationType('full_numbers').withDisplayLength(10)
-    .withOption('rowCallback', function(nRow, aData, iDisplayIndex, iDisplayIndexFull){
-        $('td', nRow).unbind('click');
-        $('td', nRow).bind('click', function() {
-            // console.log($('input',nRow).attr('id'));
-        });
-        return nRow;
-    });
-    this.dtColumnDefs = [
-        DTColumnDefBuilder.newColumnDef(0).notSortable(),
-        DTColumnDefBuilder.newColumnDef(1),
-        DTColumnDefBuilder.newColumnDef(2),
-        DTColumnDefBuilder.newColumnDef(3).notSortable(),
-    ];
+    // this.dtOptions = DTOptionsBuilder.newOptions()
+    // .withPaginationType('full_numbers').withDisplayLength(10)
+    // .withOption('rowCallback', function(nRow, aData, iDisplayIndex, iDisplayIndexFull){
+    //     $('td', nRow).unbind('click');
+    //     $('td', nRow).bind('click', function() {
+    //         // console.log($('input',nRow).attr('id'));
+    //     });
+    //     return nRow;
+    // });
+    // this.dtColumnDefs = [
+    //     DTColumnDefBuilder.newColumnDef(0).notSortable(),
+    //     DTColumnDefBuilder.newColumnDef(1),
+    //     DTColumnDefBuilder.newColumnDef(2),
+    //     DTColumnDefBuilder.newColumnDef(3).notSortable(),
+    // ];
 
-    $scope.toggleAll=function(selectAll, selected){
-        console.log("check");
-        for(var x in selected) {
-            //if($('#'+x).length>0)
-                selected[x]=selectAll;
-            //else selected[x]=false;
+ 
+
+    $scope.toggleAll=function(){
+        $scope.selectAll=!$scope.selectAll;
+        for(var x=0;x<$scope.reagents.length;x++) {
+            $scope.reagents[x].selected = $scope.selectAll;
         }
-        console.log(selected);
     };
 
-
-    $scope.toggleOne=function(id){
-        console.log("check");
-        $scope.selected[id]=!$scope.selected[id];
-        console.log($scope.selected);
-    }
-
-    $scope.find=function(selected){
-        console.log(selected);
+    $scope.find=function(){
         var toFind=[];
-        for(var i in selected) 
-            if(selected[i]) toFind.push(i);
+        for(var x=0;x<$scope.reagents.length;x++){ 
+            if($scope.reagents[x].selected) toFind.push($scope.reagents[x].id);
+        }
         socket.emit('submit job',{serial: tools.randomStr(10), list: toFind});
         socket.on('search result',function(data){
             console.log(data);
         })
     }
-    $scope.queryReagents=function(){
-        $scope.reagents=RfidInfo.find(function(val){
-            for(var x=0;x<$scope.reagents.length;x++) 
-                 $scope.selected[$scope.reagents[x].id]=false;
+
+    $scope.queryReagents=function(cb){
+        $scope.reagentsAdd=[];
+        RfidInfo.find({filter:{"order":"id desc"}},function(val){
+            $scope.reagents=val;
+            for(var x=0;x<$scope.reagents.length;x++) {
+                $scope.reagents[x].selected = false;
+                $scope.reagents[x].readonly = true;
+            }
         },
         function(res){
              tools.notify('alert-danger',res.data.error.message);
+        })
+        .$promise.then(function(){
+            $scope.reagentsBak=angular.copy($scope.reagents);
+            if(cb)cb();
         });
     }
+
     $scope.queryReagents();
-    // [{cas:'120-3112-44',rfid:'R0012313AB1234',ops:''},
-    // {cas:'120-3112-44',rfid:'R0012313AB1234',ops:''},
-    // {cas:'12234-3112-44',rfid:'R0xxx12313AB1234',ops:''},
-    // {cas:'130-3112-44',rfid:'R0012313AB1234',ops:''},
-    // {cas:'120-3112-44',rfid:'R0012313AB1234',ops:''}]
-    
+
+    $scope.talbeParams = new ngTableParams(
+        {page:1, count:9},
+        {
+            getData: function($defer, params){
+                $defer.resolve($scope.reagents);
+            }
+        }
+    );
+    $scope.searchFilter="";
 
     $scope.refresh=function(){
         $('#reagent-box').fadeOut(function(){
-            var display=function(){
-                $('#reagent-box').fadeIn();
-                $scope.selected={};
-                for(var x=0;x<$scope.reagents.length;x++) $scope.selected[$scope.reagents[x]]=false;
-                console.log($scope.selected);
-            }
-            $scope.reagents= RfidInfo.find(
-                function(val){
-                    console.log('success');
-                    console.log(val);
-                    display();
-                },
-                function(res){
-                    console.log('failed');
-                    console.log(res);
-                    tools.notify('alert-danger','refresh reagent list error, please check your connection');
-                    display();
-                });
-
-        
+            $scope.queryReagents(function(){$('#reagent-box').fadeIn();});
         });
-        
+        console.log("Refresh");
     }
+
 
     $scope.makedata=function(){
         for(var i=0;i<20;i++){
@@ -390,9 +423,8 @@ function reagentCtrl($scope, $modal, $compile, $timeout, RfidInfo, DTColumnBuild
             function(val, resHeader){//success
                 //$scope.close(id);
                 val.flag=true;
-                $scope.reagents.push(val);
-                console.log(val);
-                console.log(resHeader);
+                val.readonly=true;
+                $scope.reagents.unshift(val);
             },
             function(res){//error
                 console.log(res);
@@ -401,132 +433,145 @@ function reagentCtrl($scope, $modal, $compile, $timeout, RfidInfo, DTColumnBuild
         }
     };
 
-    $scope.addReagent=function(id){
-
-         if(!$('#cas-'+id).val()||!$('#cas-'+id).val()){
-            return;
-        }
-
-        var info={
-            name: $('#cas-'+id).val(),
-            rfid:$('#rfid-'+id).val()
-        };
-        RfidInfo.create(info,
-            function(val, resHeader){//success
-                //$scope.close(id);
-                val.flag=true;
-                $scope.reagents.push(val);
-                console.log(val);
-                console.log(resHeader);
-            },
-            function(res){//error
-                console.log(res);
-                tools.notify('alert-danger', res.data.error.message);
-            });
-    };
-
-    $scope.deleteReagent=function(selected){
-        console.log(selected);
-        var ids=[];
-        for( var i in selected) if(selected[i]) ids.push(i);
-        var _delete=function(_id){
-            RfidInfo.deleteById({id: _id},
+    
+    $a=$scope;
+    $scope.deletea=function(_id,cb){
+            RfidInfo.deleteById({id: $scope.reagents[_id].id},
                 function(){
-                        //delete selected[_id];
-                        //$scope.close(_id);
+                    $scope.reagentsBak.splice(_id,1);
+                    console.log("delete");
+                    if(cb){
+                        console.log("confirm cb");
+                        cb;
+                    }
                 },
-                function(res){
-                    console.log(res);
+                function(res,_id){
+                    console.log("delete failed");
+                    $scope.reagents.unshift($scope.reagentsBak[_id]);
+                    $scope.reagentsBak.unshift($scope.reagents.splice(0,1));
                     tools.notify('alert-danger', res.data.error.message);
                 }
-            );        
-        }
-        for(var x=0;x<ids.length;x++){
-            _delete(ids[x]);
-            $scope.queryReagents();
-        }
-        
+            );
+            $scope.reagents.splice(_id,1);
     };
 
-    $scope.delReagent=function(id){
-        selected={};
-        selected[id]=true;
-        $scope.deleteReagent(selected);
+    $scope.deleteReagent=function(id,cb){
+        var _delete=function(_id,cb){
+            RfidInfo.deleteById({id: ['1','2']},
+                function(){
+                    console.log("delete"+_id);
+                    if(cb){
+                        console.log("confirm cb");
+                        cb;
+                    }
+                },
+                function(res,_id){
+                    console.log("delete failed");
+                    tools.notify('alert-danger', res.data.error.message);
+                }
+            );
+            // $scope.reagents.splice(_id,1);
+        }
+        if(id||id==0){
+            //_delete(id,cb);
+            _childScope=$scope.$new();
+            _childScope.reagentDeleted=$scope.reagents[id];
+            tools.deletenotify('alert-success',$scope.reagents[id].name+' Delete Success!',3000,_childScope);
+            _childScope.undo=function(){
+                $timeout.cancel(this.deleteSet);
+                $scope.reagents.unshift(this.reagentDeleted);
+                $scope.reagentsBak.unshift(this.reagentDeleted);
+            }
+            _childScope.job=function(){
+                this.deleteSet=$timeout(_delete.bind(null,this.reagentDeleted.id,cb),3000);
+            }
+            _childScope.job();
+            $scope.reagents.splice(id,1);
+            $scope.reagentsBak.splice(id,1);
+        }else{
+            for(var x=$scope.reagents.length-1;x>=0;x--){
+                if($scope.reagents[x].selected){
+                    _delete($scope.reagents[x].id,cb);
+                    $scope.reagents.splice(x,1);
+                    $scope.reagentsBak.splice(x,1);
+                }
+            }
+        }
     };
 
-    $scope.editReagent=function(id){
-        // console.log(id);
-        var oTable=$('#reagents-table').dataTable();
-        cas='<input id="cas-{0}" type="text" class="form-control" value="{1}" style="height:27px;padding-left: 0px; width:95%">'.format(id,$("#cas-"+id).text());
-        rfid='<input id="rfid-{0}" type="text" class="form-control" value="{1}" style="height:27px;padding-left: 0px; width:95%"">'.format(id,$("#rfid-"+id).text());
-        ops='<ops id="{0}"><ops>'.format(id);
-        oTable.fnUpdate(cas,oTable.fnGetPosition($('#cas-'+id)[0])[0],1);
-        oTable.fnUpdate(rfid,oTable.fnGetPosition($('#cas-'+id)[0])[0],2);
-        oTable.fnUpdate(ops,oTable.fnGetPosition($('#cas-'+id)[0])[0],3);
-        console.log("ops");
-        $('#cas-{0}'.format(id)).replaceWith($compile($('#cas-{0}'.format(id)))($scope));
-        $('#rfid-{0}'.format(id)).replaceWith($compile($('#rfid-{0}'.format(id)))($scope));
-        // console.log(cas,rfid);
-        // console.log(a.reagent.rfid);
-        comp=$compile(
-             '<a ng-click="saveReagent(\'{0}\')" class="btn btn-xs btn-outline btn-primary"><i class="fa fa-check"></i></a>&nbsp;&nbsp;'.format(id)+
-             '<a ng-click="cancel(\'{0}\')" class="btn btn-xs btn-outline btn-danger"><i class="fa fa-remove"></i></a>'.format(id)
-             )($scope);
-        $('ops').html(comp);
-    }
+
+
+    $scope.deleteReagents=function(){
+        $scope.deleteReagent();
+    };
 
     $scope.saveReagent = function(id){
         data={
-            "rfid": $("input#rfid-"+id).val(),
-            "name": $("input#cas-"+id).val(),
-            "id": id
+            "rfid": $scope.reagents[id].rfid,
+            "name": $scope.reagents[id].name,
+            "id": $scope.reagents[id].id,
             };
-        RfidInfo.update({"where" : {"id":id}},data,function(val, resHeader){//success
-            $scope.queryReagents();
+            if(!(data.name)||(!data.rfid)){
+                tools.notify('alert-danger', "Name or Rfid can't be empty!");
+                return;
+            }
+            RfidInfo.update({"where" : {"id":$scope.reagents[id].id}},data,function(val, resHeader){//success
+            //$scope.queryReagents();            
+            $scope.reagents[id].readonly = true;
         },function(res){//error
             tools.notify('alert-danger', res.data.error.message);
         });
     }
 
-    $scope.cancel = function(){
-        // $scope.reagents=RfidInfo.find(function(val){
-        //     for(var x=0;x<$scope.reagents.length;x++) 
-        //         $scope.selected[$scope.reagents[x].id]=false;
-        // },function(res){
-        //     tools.notify('alert-danger',res.data.error.message);
-        // });
-        $scope.queryReagents();
+    $scope.cancel = function(id){
+        $scope.reagents[id].name = $scope.reagentsBak[id].name;
+        $scope.reagents[id].rfid = $scope.reagentsBak[id].rfid;
+        $scope.reagents[id].readonly = true;
     }
 
-    $scope.close=function(id){
-        $('#reagents-table').dataTable().fnDeleteRow(
-            $('#reagents-table').dataTable().fnGetPosition($('#'+id).parents('td')[0])[0]);
+    $scope.close = function(id){
+        $scope.reagentsAdd.splice(id,1);
     }
 
     $scope.add=function(){
-        var id=tools.randomStr(10);
-        $('#reagents-table').dataTable().fnAddData(
-            ['',
-             '<input id="cas-{0}" type="text" class="form-control" style="height:27px;padding-left: 0px;width:95%">'.format(id),
-             '<input id="rfid-{0}" type="text" class="form-control" style="height:27px;padding-left: 0px;width:95%">'.format(id),
-             '<ops id="{0}"><ops>'.format(id)
-            ]);
-        comp=$compile(
-             '<a ng-click="addReagent(\'{0}\')" class="btn btn-xs btn-outline btn-primary"><i class="fa fa-check"></i></a>&nbsp;&nbsp;'.format(id)+
-             '<a ng-click="close(\'{0}\')" class="btn btn-xs btn-outline btn-danger"><i class="fa fa-remove"></i></a>'.format(id)
-             )($scope);
-        $('#cas-{0}'.format(id)).replaceWith($compile($('#cas-{0}'.format(id)))($scope));
-        $('#rfid-{0}'.format(id)).replaceWith($compile($('#rfid-{0}'.format(id)))($scope));
-        $('ops#'+id).html(comp);
-        socket.emit('submit job', { serial: id, type:'add reagent' });
-        socket.on('reagent rfid result',function(data){
-            console.log(data);
-            if(data.serial!=id) return;
-            $('#rfid-'+id).val(data.rfid);
-        });
-
-        console.log($scope.reagents);
+        var rid=tools.randomStr(10);
+        var data={
+            name : "",
+            rfid : "",
+            id : rid
+        };
+        $scope.reagentsAdd.unshift(data);
     }
+
+    $scope.addReagent=function(id){
+        if(!$scope.reagentsAdd[id].name||!$scope.reagentsAdd[id].rfid){
+            tools.notify('alert-danger', "Name or Rfid can't be empty!");
+            return;
+        }
+
+        var info={
+             name: $scope.reagentsAdd[id].name,
+             rfid: $scope.reagentsAdd[id].rfid
+        };
+        RfidInfo.create(info,
+            function(val, resHeader){//success
+                //$scope.close(id);
+                $scope.reagentsBak.unshift(val);
+                $scope.reagentsAdd.splice(id,1);
+                val.flag=true;
+                val.readonly=true;
+                $scope.reagents.unshift(val);
+             },
+            function(res){//error
+                console.log(res);
+                tools.notify('alert-danger', res.data.error.message);
+            });
+
+    };
+
+ 
+
+
 
     $scope.mustOnline=true;
     this.deviceListFilter=function(v,i,a){ 

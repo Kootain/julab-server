@@ -42,6 +42,17 @@ function config($stateProvider, $urlRouterProvider) {
             template: '<ui-view/>',
             ncyBreadcrumb:{
                 label:'devices'
+            },
+            resolve: {
+                loadPlugin: function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([
+                        {
+                            insertBefore: '#loadBefore',
+                            name: 'localytics.directives',
+                            files: ['../bower_components/chosen/chosen.css','../bower_components/chosen/chosen.jquery.js','../bower_components/angular-chosen-localytics/chosen.js']
+                        }
+                    ]);
+                }
             }
         })
         .state('content.devices.overview', {
@@ -153,7 +164,12 @@ function config($stateProvider, $urlRouterProvider) {
                         {
                             name: 'datatables',
                             files: ['../bower_components/angular-datatables/dist/angular-datatables.min.js']
-                        }
+                        },
+                        {
+                            name: 'ngTable',
+                            files: ['../bower_components/ng-table/dist/ng-table.js']
+                        },
+                        
                     ]);
                 }
             },
