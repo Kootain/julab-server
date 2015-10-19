@@ -133,6 +133,17 @@ function ionRangeSlider() {
     }
 }
 
+// function mySelect(){
+//     return{
+//         restrict: '',
+//         scope:{
+
+//         },
+//         link: function(scope, elem ,attrs){
+//             elem.
+//         }
+//     }
+// }
 /**
  *
  * Pass all functions into module

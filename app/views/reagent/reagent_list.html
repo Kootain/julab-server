@@ -1,20 +1,23 @@
 <style type="text/css">
 .no-margin{
-margin: 0;
+    margin: 0;
 }
 
 .myValidate input.ng-invalid.ng-dirty.active {
-  background-color: #ed5565;
+    background-color: #ed5565;
 }
 
 .myValidate input.ng-valid.ng-dirty.active {
-  background-color: #78FA8E;
+    background-color: #78FA8E;
 }
 .inactive {
     background-color: inherit;
+    height: 27px;
+    padding-left: 0px;
+    width:95%;
 }
 .active{
-  background-color: #fff;
+    background-color: #fff;
 }
 </style>
 <div class="row wrapper border-bottom white-bg page-heading">
@@ -45,6 +48,7 @@ margin: 0;
                 <div class="ibox-title">
                     <h5>{{ 'REAGENT' | translate }} {{ 'OVERVIEW' | translate }}</h5>
                     <div class="ibox-tools dropdown" dropdown="">
+                        <input class="search" ng-model="searchFilter"/>
                         <a ng-click="add()"><i class="fa fa-plus text-navy"></i></a>
                         <a class="dropdown-toggle" href="" dropdown-toggle="" aria-haspopup="true" aria-expanded="false">
                             <i class="fa fa-wrench"></i>
@@ -61,17 +65,17 @@ margin: 0;
             </div>
             <form class="myValidate" novalidate>
             <div class="ibox-content" id="reagent-box">
-                <table ng-table-dynamic="talbeParams with cols" class="table" id="reagents-table">
+                <table ng-table="talbeParams" class="table" id="reagents-table" show-filter="true">
                     <thead>
                         <tr>
-                            <th>  
+                            <th style="width:10%">  
                                 <div class="checkbox">
                                     <input ng-model="selectAll" type="checkbox" ng-click="toggleAll(selectAll)"><label></label>
                                 </div>
                             </th>
-                            <th>CAS ID</th>
-                            <th>RFID info.</th>
-                            <th>Operation</th>
+                            <th style="width:35%">CAS ID</th>
+                            <th style="width:35%">RFID info.</th>
+                            <th style="width:20%">Operation</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -82,29 +86,29 @@ margin: 0;
                                 </div>
                             </td>
                             <td id="cas-{{reagent.id}}" >
-                                <input type="text" ng-model="reagent.name" style="height:27px;padding-left: 0px;width:95%" class="active" required />
+                                <input type="text" ng-model="reagent.name" class="active" required />
                             </td>
                             <td id="rfid-{{reagent.id}}"> 
-                                <input type="text" ng-model="reagent.rfid" style="height:27px;padding-left: 0px;width:95%" class="active" required  />
+                                <input type="text" ng-model="reagent.rfid" class="active" required  />
                             </td>
                             <td id="ops">
                                 <a ng-click="addReagent($index)" class="btn btn-xs btn-outline btn-primary">&nbsp;Add&nbsp;</a>
                                 <a ng-click="close($index)" class="btn btn-xs btn-outline btn-danger">Cancel</a>
                             </td>
                         </tr>
-                        <tr ng-repeat="reagent in $data" >
+                        <tr ng-repeat="reagent in reagents | filter: {name :searchFilter}" >
                             <td>
                                 <div class="checkbox">
                                     <input id="{{ $index }}" type="checkbox" ng-model="reagent.selected"><label></label>
                                 </div>
                             </td>
-                            <td id="cas-{{reagent.id}}" >
-                                <input ng-if="!reagent.readonly" type="text" ng-model="reagent.name" ng-readonly="reagent.readonly" style="height:27px;padding-left: 0px;width:95%" ng-class="{true: 'inactive', false: 'active'}[reagent.readonly]" required />
+                            <td id="cas-{{reagent.id}}">
+                                <input ng-if="!reagent.readonly" type="text" ng-model="reagent.name" class="active" required />
                                 {{reagent.readonly?reagent.name:""}}
                                 <span class="badge badge-success" ng-if="reagent.flag">new</span>
                             </td>
                             <td id="rfid-{{reagent.id}}"> 
-                                <input ng-if="!reagent.readonly" type="text" ng-model="reagent.rfid" ng-readonly="reagent.readonly" style="height:27px;padding-left: 0px;width:95%" ng-class="{true: 'inactive', false: 'active'}[reagent.readonly]" required/>
+                                <input ng-if="!reagent.readonly" type="text" ng-model="reagent.rfid" class="active" required/>
                                 {{reagent.readonly?reagent.rfid:""}}
                             </td>
                             <td id="ops" ng-if="reagent.readonly">

@@ -7,10 +7,14 @@ function mainCtrl($scope,notify) {
     this.userName = 'tanki';
     this.helloText = 'Welcome in SeedProject';
     this.descriptionText = 'It is an application skeleton for a typical AngularJS web app. You can use it to quickly bootstrap your angular webapp projects and dev environment for these projects.';
-    notify.config({duration:1500});
     tools.notify=function(type,msg){
+        notify.config({duration:1500});
         notify({ message: msg, classes: type, templateUrl: 'views/common/notify.html'});
     };
+    tools.deletenotify=function(type,msg,dur,_scope){
+        notify.config({duration:dur});
+        notify({ message: msg, classes: type, scope: _scope, templateUrl: 'views/common/deletenotify.html'});
+    }
     tools.randomStr=function (len) {
     　　len = len || 32;
     　　var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';    /****默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/
@@ -256,24 +260,39 @@ function deviceDetection($scope, $http, $modal, $modalInstance){
 
     };
 
-    $a=$scope;
+    //$a=$scope;
 };
 
-function addDevice($scope, $modalInstance, deviceInfo, Device){
-    console.log(deviceInfo);
+function addDevice($scope, $modalInstance, deviceInfo, Scale, RfidInfo){
     $scope.formDetails={
                         name:deviceInfo.name,
                         MAC:deviceInfo.MAC,
-                        type:deviceInfo.type
+                        type:deviceInfo.type,
+                        reagent: ""
                     };
+    $scope.reagents=[{'name':'oooops, nothing','id':-1}];
+    $scope.selectedReagents=[];
+    $scope.search = function(keyword){
+        console.log(keyword);
+        return RfidInfo.find({filter:{ "order":"id desc","where":{"name":{"like":"%"+keyword+"%"}}}},function(val){
+            $scope.reagents=val;
+            console.log();
+        },
+        function(res){
+             tools.notify('alert-danger',res.data.error.message);
+        }).$promise;
+    };
+
+    $a=$scope;
+    
     $scope.submit = function() {
-        console.log($scope.detailForm.name.$viewValue);
         if ($scope.detailForm.$valid) {
-            Device.create(
+            Scale.create(
             {
                 MAC:deviceInfo.MAC,
-                name:$scope.detailForm.name.$viewValue,
-                type:$scope.detailForm.type.$viewValue
+                name:$scope.formDetails.name,
+                type:deviceInfo.type,
+                // reagent: $scope.formDetails.reagent
             }
             ,function (val,resHeader){
                 $modalInstance.close();
@@ -292,7 +311,25 @@ function addDevice($scope, $modalInstance, deviceInfo, Device){
             });
         }
     }
-    $a=$scope;
+    var refreshChosen=function(){
+        $('#myChosen').chosen('destroy').chosen({max_selected_options: 1});
+        $('.search-field input').on('keyup',function(){
+            var ele= $('.search-field input');
+            var key = ele.val();
+            $scope.search(key).then(function(){
+                console.log('wetraewrrser');
+                ele.val(key);
+            });
+        });
+    };
+    RfidInfo.find({filter:{ "order":"id desc","where":{"name":{"like":"%"+''+"%"}}}},function(val){
+            $scope.reagents=val;
+            console.log();
+        },
+        function(res){
+             tools.notify('alert-danger',res.data.error.message);
+        }).$promise.then(refreshChosen,refreshChosen);
+
 };
 
 
@@ -353,9 +390,7 @@ function reagentCtrl($scope, $modal, $compile, $timeout, $sce, RfidInfo ,ngTable
         .$promise.then(function(){
             $scope.reagentsBak=angular.copy($scope.reagents);
             if(cb)cb();
-            return $scope.reagents;
         });
-        
     }
 
     $scope.queryReagents();
@@ -368,7 +403,7 @@ function reagentCtrl($scope, $modal, $compile, $timeout, $sce, RfidInfo ,ngTable
             }
         }
     );
-    console.log($scope.talbeParams);
+    $scope.searchFilter="";
 
     $scope.refresh=function(){
         $('#reagent-box').fadeOut(function(){
@@ -400,12 +435,11 @@ function reagentCtrl($scope, $modal, $compile, $timeout, $sce, RfidInfo ,ngTable
 
     
     $a=$scope;
-    $scope.deleteReagent=function(id,cb){
-        console.log(id);
-        var _delete=function(_id,cb){
+    $scope.deletea=function(_id,cb){
             RfidInfo.deleteById({id: $scope.reagents[_id].id},
                 function(){
                     $scope.reagentsBak.splice(_id,1);
+                    console.log("delete");
                     if(cb){
                         console.log("confirm cb");
                         cb;
@@ -419,39 +453,56 @@ function reagentCtrl($scope, $modal, $compile, $timeout, $sce, RfidInfo ,ngTable
                 }
             );
             $scope.reagents.splice(_id,1);
-        }
-        // console.log("delete");
-        _delete(id,cb);
-        // table.fnDraw();
     };
 
-    // $scope.deleteConfirm = function(id){
-    //     SweetAlert.swal({
-    //             title: "Are you sure?",
-    //             text: "Your will not be able to recover this imaginary file!",
-    //             type: "warning",
-    //             showCancelButton: true,
-    //             confirmButtonColor: "#DD6B55",
-    //             confirmButtonText: "Yes, delete it!",
-    //             cancelButtonText: "No, cancel plx!",
-    //             closeOnConfirm: false,
-    //             closeOnCancel: false },
-    //         function (isConfirm) {
-    //             if (isConfirm) {
-    //                 SweetAlert.swal("Deleted!", "Your imaginary file has been deleted.", "success");
-    //                 $scope.deleteReagent(id);
-    //             } else {
-    //                 SweetAlert.swal("Cancelled", "Your imaginary file is safe :)", "error");
-    //             }
-    //     });
-    // }
-
-    $scope.deleteReagents=function(){
-        for(var x=$scope.reagents.length-1;x>=0;x--){
-            if($scope.reagents[x].selected){
-                $scope.deleteReagent(x);
+    $scope.deleteReagent=function(id,cb){
+        var _delete=function(_id,cb){
+            RfidInfo.deleteById({id: ['1','2']},
+                function(){
+                    console.log("delete"+_id);
+                    if(cb){
+                        console.log("confirm cb");
+                        cb;
+                    }
+                },
+                function(res,_id){
+                    console.log("delete failed");
+                    tools.notify('alert-danger', res.data.error.message);
+                }
+            );
+            // $scope.reagents.splice(_id,1);
+        }
+        if(id||id==0){
+            //_delete(id,cb);
+            _childScope=$scope.$new();
+            _childScope.reagentDeleted=$scope.reagents[id];
+            tools.deletenotify('alert-success',$scope.reagents[id].name+' Delete Success!',3000,_childScope);
+            _childScope.undo=function(){
+                $timeout.cancel(this.deleteSet);
+                $scope.reagents.unshift(this.reagentDeleted);
+                $scope.reagentsBak.unshift(this.reagentDeleted);
+            }
+            _childScope.job=function(){
+                this.deleteSet=$timeout(_delete.bind(null,this.reagentDeleted.id,cb),3000);
+            }
+            _childScope.job();
+            $scope.reagents.splice(id,1);
+            $scope.reagentsBak.splice(id,1);
+        }else{
+            for(var x=$scope.reagents.length-1;x>=0;x--){
+                if($scope.reagents[x].selected){
+                    _delete($scope.reagents[x].id,cb);
+                    $scope.reagents.splice(x,1);
+                    $scope.reagentsBak.splice(x,1);
+                }
             }
         }
+    };
+
+
+
+    $scope.deleteReagents=function(){
+        $scope.deleteReagent();
     };
 
     $scope.saveReagent = function(id){

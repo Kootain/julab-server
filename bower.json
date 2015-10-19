@@ -41,6 +41,7 @@
     "ionrangeslider": "~2.0.13",
     "angular-chosen-localytics": "~1.0.6",
     "ngSweetAlert": "angular-sweetalert#~1.1.0",
-    "ng-table": "~0.8.3"
+    "ng-table": "~0.8.3",
+    "ng-sweet-alert": "~1.0.4"
   }
 }
