@@ -10,7 +10,7 @@
     "scale_id": {
       "type": "number"
     },
-    "gmt_create": {
+    "gmt_created": {
       "type": "date"
     },
     "value": {
