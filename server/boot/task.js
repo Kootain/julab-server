@@ -10,6 +10,10 @@ module.exports = function (app) {
   var Q = require('q');  
     //TODO get connected devices  devices={MACA:ipA,MACB:ipB.....}
 
+  app.onlineDevices = {
+          list: [],
+          connectors: []
+        };
   var exec = require('child_process').exec;
   exec('arp -a',function(err,stdout,stderr){
     //if(err) throw new Error(err)
@@ -17,7 +21,7 @@ module.exports = function (app) {
     console.log('=========');
     console.log(stdout);
     console.log('=========');
-    if( new RegExp(/win.*/).test(process.platform)){
+    if( new RegExp(/^win.*/).test(process.platform)){
       var ips = stdout.match(/(\d+\.){3}\d+/g);
       ips.shift();
       var MACs = stdout.match(/([0-9a-zA-Z]{2}\-){5}[0-9a-zA-Z]+/g);
@@ -30,8 +34,8 @@ module.exports = function (app) {
     for (var i = ips.length - 1; i >= 0; i--) {
       devices[MACs[i]]=ips[i];
     };
-    var onlineDevices = [],    // [{MAC:??, ip:??, name:??, type:??}, ... ]
-        offlineDevices=[],     // [{MAC:??, name:??}, ... ]
+    var onlineDevices = [],    // [{MAC:??, ip:??, name:??, type:??, ip: ??}, ... ]
+        offlineDevices=[],     // [{MAC:??, name:??, type: ??}, ... ]
         unKnownDevices=[];      // [{MAC：??, ip:??}, ... ]
     var deviceType=['Scale'];
 
@@ -43,9 +47,22 @@ module.exports = function (app) {
           if(devices[data[i].MAC]){   //if exist in 'devices' => online  else  offline
             devices[data[i].MAC]['known']=true;
             data[i]['type']=type;
-            onlineDevices.push(data[i]);
+            var aDevice={
+              'MAC' : data[i].MAC, 
+              'name' : data[i].name, 
+              'type' : type,
+              'ip' : devices[data[i].MAC]  
+            };
+            app.onlineDevices.list.push(aDevice);
+            var connector=new Device(aDevice.name, aDevice.ip, SERVER_PORT);
+            app.onlineDevices.connectors.push(connector);
+            tasks[type](connector,data[i]);
           } else {
-            offlineDevices.push(data[i]);
+            offlineDevices.push({
+              'MAC' : data[i].MAC, 
+              'name' : data[i].name, 
+              'type' : type 
+            });
           }
         };
         deferred.resolve();
@@ -65,20 +82,20 @@ module.exports = function (app) {
         if(!devices[mac]['known']) unKnownDevices.push({MAC:mac,ip:devices[mac]});
       } 
 
-      //generate devices socket, bind on app
-      process.nextTick(function(){
-        app.onlineDevices = {
-          list: onlineDevices,
-          connectors: onlineDevices.map(function(e){ return new Device(e.name, e.ip, SERVER_PORT)})
-        };
+      // //generate devices socket, bind on app
+      // process.nextTick(function(){
+      //   app.onlineDevices = {
+      //     list: onlineDevices,
+      //     connectors: onlineDevices.map(function(e){ return new Device(e.name, e.ip, SERVER_PORT)})
+      //   };
 
-        console.log("KNOWN\t",app.onlineDevices);
+      //   console.log("KNOWN\t",app.onlineDevices);
 
-        // register task for online devices.
-        for (var i = app.onlineDevices.list.length - 1; i >= 0; i--) {
-          tasks[app.onlineDevices.list[i]['type']](app.onlineDevices.connectors[i]);
-        }
-      });
+      //   // register task for online devices.
+      //   for (var i = app.onlineDevices.list.length - 1; i >= 0; i--) {
+      //     tasks[app.onlineDevices.list[i]['type']](app.onlineDevices.connectors[i],{app.onlineDevices.list[i]});
+      //   }
+      // });
 
       process.nextTick(function(){
         app.unKnownDevices ={
