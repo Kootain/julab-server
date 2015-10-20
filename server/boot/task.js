@@ -12,7 +12,11 @@ module.exports = function (app) {
 
   var exec = require('child_process').exec;
   exec('arp -a',function(err,stdout,stderr){
-    
+    //if(err) throw new Error(err)
+    stdout='192.168.100.105  0x1         0x2         ac:bc:32:8d:9d:5d     *        br-lan';
+    console.log('=========');
+    console.log(stdout);
+    console.log('=========');
     if( new RegExp(/win.*/).test(process.platform)){
       var ips = stdout.match(/(\d+\.){3}\d+/g);
       ips.shift();

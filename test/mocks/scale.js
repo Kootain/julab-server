@@ -9,12 +9,9 @@ var PORT = 8001;
 var server = net.createServer();
 server.listen(PORT, HOST);
 
-console.log('Server listening on ' +
-    server.address().address + ':' + server.address().port);
-
 server.on('connection', function(sock) {
-    console.log('CONNECTED: ' + sock.remoteAddress +':'+ sock.remotePort);
-    setTimeout(()=>sock.write('20 kg'),3000);
+    //console.log('CONNECTED: ' + sock.remoteAddress +':'+ sock.remotePort);
+    setInterval(()=>{sock.write('20 kg');},3000);
     // 其它内容与前例相同
 
 });
