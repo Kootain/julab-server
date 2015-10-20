@@ -20,13 +20,13 @@ module.exports = function (app) {
     };
     var onlineDevices = [],    // [{MAC:??, ip:??, name:??, type:??}, ... ]
         offlineDevices=[],     // [{MAC:??, name:??}, ... ]
-        unKownDevices=[];      // [{MAC：??, ip:??}, ... ]
+        unKnownDevices=[];      // [{MAC：??, ip:??}, ... ]
     var deviceType=['Scale'];
 
     function getDeviceListOfAType(type){  
       var deferred = Q.defer();//
-      app.models[type].find({where:{MAC:{inq:MACs}}},
-      function(data){
+      app.models[type].find({where:{MAC:{inq:MACs}}})
+      .then(function(data){
         for (var i = data.length - 1; i >= 0; i--) {
           if(devices[data[i].MAC]){   //if exist in 'devices' => online  else  offline
             devices[data[i].MAC]['known']=true;
@@ -43,41 +43,41 @@ module.exports = function (app) {
 
     var jobs=[];
     for (var i = deviceType.length - 1; i >= 0; i--) {
-      jobs.push(getDeviceListOfAType().bind(null,deviceType[i]));
+      jobs.push(getDeviceListOfAType(deviceType[i]));
     };
 
     Q.all(jobs)  
     .done(function(){   
       //mark unknown
       for(var mac in devices){
-        if(!devices[mac]['known']) unKownDevices.push(mac);
+        if(!devices[mac]['known']) unKnownDevices.push({MAC:mac,ip:devices[mac]});
       } 
 
       //generate devices socket, bind on app
       process.nextTick(function(){
         app.onlineDevices = {
-          list:onlineDevices,
-          connectors:onlineDevices.map(function(e){ return new Device(e.name, e.ip, SERVER_PORT)})
+          list: onlineDevices,
+          connectors: onlineDevices.map(function(e){ return new Device(e.name, e.ip, SERVER_PORT)})
         };
 
-        cosole.log(app.onlineDevices);
+        console.log("KNOWN\t",app.onlineDevices);
 
         // register task for online devices.
-        for (var i = knownDevices.length - 1; i >= 0; i--) {
+        for (var i = app.onlineDevices.list.length - 1; i >= 0; i--) {
           tasks[app.onlineDevices.list[i]['type']](app.onlineDevices.connectors[i]);
         }
       });
 
       process.nextTick(function(){
-        app.unKownDevices ={
-          list:unKownDevices,
-          connctors:unKownDevices.map(function(e){ return new Device('unknown', e.ip, SERVER_PORT)})
+        app.unKnownDevices ={
+          list: unKnownDevices,
+          connectors: unKnownDevices.map(function(e){ return new Device('unknown', e.ip, SERVER_PORT)})
         };
       });
 
       app.offlineDevices = offlineDevices;
 
-      cosole.log(app.unKownDevices);
+      console.log("UNKNOWN\t",app.unKnownDevices);
 
     });
   });
