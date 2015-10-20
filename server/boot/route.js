@@ -1,15 +1,17 @@
-module.exports = function(server,app) {
-  var router = server.loopback.Router();
+module.exports = function(app) {
+  var router = app.loopback.Router();
 
-  router.get('/status', server.loopback.status());
+  router.get('/status', app.loopback.status());
 
   router.get('/env/devices',function(req,res,value){
   	//TODO use native api
-    var onlines=app.onlineDevices.list || [];
-    var offlines=app.offlineDevices || [];
+    var onlines = app.onlineDevices.list || [];
+    var unKnown = app.unKnownDevices.list || [];
+    var offlines = app.offlineDevices || [];
     var data={
       'online':onlines,
-      'offline':offlines
+      'offline':offlines,
+      'unKnown':unKnown
     }
 
     /* data example
@@ -23,5 +25,5 @@ module.exports = function(server,app) {
 
   router.get('')
   
-  server.use(router);
+  app.use(router);
 };
