@@ -1,9 +1,10 @@
 var FREQUENCY=1000;//query data per 1s.
 
 
-var _scale = function scale(app , device){
+var _scale = function scale(app , device, params){
   var colorlog=require('../../tools/colorlog');
   var _canHandle=true;
+  var _params=params;
   setTimeout(function(){
     _canHandle=true;
   },FREQUENCY);
@@ -13,16 +14,16 @@ var _scale = function scale(app , device){
     var weight = data.toString().match('[0-9]+')[0];
     app.models.Weight.create(
       {
-        scale_id:device.scaleId,
-        value:weight,
-        item_id:device.itemId
+        'scale_id':_params.scaleId,
+        'value':weight,
+        'item_id':_params.itemId
       }
       ,function(err){colorlog.error(err.msg)});
   });
 }
 
 module.exports = function scale (app){
-  return function(device){
-    _scale(app, device);
+  return function(device,params){
+    _scale(app, device,params);
   }
 }

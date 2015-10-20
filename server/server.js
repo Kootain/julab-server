@@ -6,6 +6,9 @@ var app = module.exports = loopback();
 		web:{},
 		scale:{}
 	}
+app.env={
+  devices:{}
+};
 app.start = function() {
   // start the web server
   return app.listen(function() {
@@ -23,5 +26,5 @@ boot(app, __dirname, function(err) {
 
   // start the server if `$ node server.js`
   // if (require.main === module)
-  //   app.start();
+  app.start();
 });

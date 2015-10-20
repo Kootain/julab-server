@@ -4,6 +4,7 @@ var device = function (name, ip, port){
 	var _port =port;
 	var client = new  require('net').Socket();
 	var isConnected=false;
+	var _info=null;
 	var colorlog = require('../../tools/colorlog');
 
 	this.getInfo = function (){
@@ -12,6 +13,16 @@ var device = function (name, ip, port){
 			ip:_ip
 		};
 
+	};
+
+	this.getDeviceDetails = function (model,MAC){
+		model.finc({'where': {'MAC': MAC}},function(data){
+			if(data.length != 1){
+				throw new error('duplicate result returned');
+			} else {
+				_info = data[0];
+			}
+		});
 	};
 
 	this.connect = function (callback){

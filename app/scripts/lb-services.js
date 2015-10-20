@@ -1099,589 +1099,6 @@ module.factory(
 
 /**
  * @ngdoc object
- * @name lbServices.Device
- * @header lbServices.Device
- * @object
- *
- * @description
- *
- * A $resource object for interacting with the `Device` model.
- *
- * ## Example
- *
- * See
- * {@link http://docs.angularjs.org/api/ngResource.$resource#example $resource}
- * for an example of using this object.
- *
- */
-module.factory(
-  "Device",
-  ['LoopBackResource', 'LoopBackAuth', '$injector', function(Resource, LoopBackAuth, $injector) {
-    var R = Resource(
-      urlBase + "/Devices/:id",
-      { 'id': '@id' },
-      {
-
-        /**
-         * @ngdoc method
-         * @name lbServices.Device#create
-         * @methodOf lbServices.Device
-         *
-         * @description
-         *
-         * Create a new instance of the model and persist it into the data source.
-         *
-         * @param {Object=} parameters Request parameters.
-         *
-         *   This method does not accept any parameters.
-         *   Supply an empty object or omit this argument altogether.
-         *
-         * @param {Object} postData Request data.
-         *
-         * This method expects a subset of model properties as request parameters.
-         *
-         * @param {function(Object,Object)=} successCb
-         *   Success callback with two arguments: `value`, `responseHeaders`.
-         *
-         * @param {function(Object)=} errorCb Error callback with one argument:
-         *   `httpResponse`.
-         *
-         * @returns {Object} An empty reference that will be
-         *   populated with the actual data once the response is returned
-         *   from the server.
-         *
-         * <em>
-         * (The remote method definition does not provide any description.
-         * This usually means the response is a `Device` object.)
-         * </em>
-         */
-        "create": {
-          url: urlBase + "/Devices",
-          method: "POST"
-        },
-
-        /**
-         * @ngdoc method
-         * @name lbServices.Device#createMany
-         * @methodOf lbServices.Device
-         *
-         * @description
-         *
-         * Create a new instance of the model and persist it into the data source.
-         *
-         * @param {Object=} parameters Request parameters.
-         *
-         *   This method does not accept any parameters.
-         *   Supply an empty object or omit this argument altogether.
-         *
-         * @param {Object} postData Request data.
-         *
-         * This method expects a subset of model properties as request parameters.
-         *
-         * @param {function(Array.<Object>,Object)=} successCb
-         *   Success callback with two arguments: `value`, `responseHeaders`.
-         *
-         * @param {function(Object)=} errorCb Error callback with one argument:
-         *   `httpResponse`.
-         *
-         * @returns {Array.<Object>} An empty reference that will be
-         *   populated with the actual data once the response is returned
-         *   from the server.
-         *
-         * <em>
-         * (The remote method definition does not provide any description.
-         * This usually means the response is a `Device` object.)
-         * </em>
-         */
-        "createMany": {
-          isArray: true,
-          url: urlBase + "/Devices",
-          method: "POST"
-        },
-
-        /**
-         * @ngdoc method
-         * @name lbServices.Device#upsert
-         * @methodOf lbServices.Device
-         *
-         * @description
-         *
-         * Update an existing model instance or insert a new one into the data source.
-         *
-         * @param {Object=} parameters Request parameters.
-         *
-         *   This method does not accept any parameters.
-         *   Supply an empty object or omit this argument altogether.
-         *
-         * @param {Object} postData Request data.
-         *
-         * This method expects a subset of model properties as request parameters.
-         *
-         * @param {function(Object,Object)=} successCb
-         *   Success callback with two arguments: `value`, `responseHeaders`.
-         *
-         * @param {function(Object)=} errorCb Error callback with one argument:
-         *   `httpResponse`.
-         *
-         * @returns {Object} An empty reference that will be
-         *   populated with the actual data once the response is returned
-         *   from the server.
-         *
-         * <em>
-         * (The remote method definition does not provide any description.
-         * This usually means the response is a `Device` object.)
-         * </em>
-         */
-        "upsert": {
-          url: urlBase + "/Devices",
-          method: "PUT"
-        },
-
-        /**
-         * @ngdoc method
-         * @name lbServices.Device#exists
-         * @methodOf lbServices.Device
-         *
-         * @description
-         *
-         * Check whether a model instance exists in the data source.
-         *
-         * @param {Object=} parameters Request parameters.
-         *
-         *  - `id` – `{*}` - Model id
-         *
-         * @param {function(Object,Object)=} successCb
-         *   Success callback with two arguments: `value`, `responseHeaders`.
-         *
-         * @param {function(Object)=} errorCb Error callback with one argument:
-         *   `httpResponse`.
-         *
-         * @returns {Object} An empty reference that will be
-         *   populated with the actual data once the response is returned
-         *   from the server.
-         *
-         * Data properties:
-         *
-         *  - `exists` – `{boolean=}` - 
-         */
-        "exists": {
-          url: urlBase + "/Devices/:id/exists",
-          method: "GET"
-        },
-
-        /**
-         * @ngdoc method
-         * @name lbServices.Device#findById
-         * @methodOf lbServices.Device
-         *
-         * @description
-         *
-         * Find a model instance by id from the data source.
-         *
-         * @param {Object=} parameters Request parameters.
-         *
-         *  - `id` – `{*}` - Model id
-         *
-         *  - `filter` – `{object=}` - Filter defining fields and include
-         *
-         * @param {function(Object,Object)=} successCb
-         *   Success callback with two arguments: `value`, `responseHeaders`.
-         *
-         * @param {function(Object)=} errorCb Error callback with one argument:
-         *   `httpResponse`.
-         *
-         * @returns {Object} An empty reference that will be
-         *   populated with the actual data once the response is returned
-         *   from the server.
-         *
-         * <em>
-         * (The remote method definition does not provide any description.
-         * This usually means the response is a `Device` object.)
-         * </em>
-         */
-        "findById": {
-          url: urlBase + "/Devices/:id",
-          method: "GET"
-        },
-
-        /**
-         * @ngdoc method
-         * @name lbServices.Device#find
-         * @methodOf lbServices.Device
-         *
-         * @description
-         *
-         * Find all instances of the model matched by filter from the data source.
-         *
-         * @param {Object=} parameters Request parameters.
-         *
-         *  - `filter` – `{object=}` - Filter defining fields, where, include, order, offset, and limit
-         *
-         * @param {function(Array.<Object>,Object)=} successCb
-         *   Success callback with two arguments: `value`, `responseHeaders`.
-         *
-         * @param {function(Object)=} errorCb Error callback with one argument:
-         *   `httpResponse`.
-         *
-         * @returns {Array.<Object>} An empty reference that will be
-         *   populated with the actual data once the response is returned
-         *   from the server.
-         *
-         * <em>
-         * (The remote method definition does not provide any description.
-         * This usually means the response is a `Device` object.)
-         * </em>
-         */
-        "find": {
-          isArray: true,
-          url: urlBase + "/Devices",
-          method: "GET"
-        },
-
-        /**
-         * @ngdoc method
-         * @name lbServices.Device#findOne
-         * @methodOf lbServices.Device
-         *
-         * @description
-         *
-         * Find first instance of the model matched by filter from the data source.
-         *
-         * @param {Object=} parameters Request parameters.
-         *
-         *  - `filter` – `{object=}` - Filter defining fields, where, include, order, offset, and limit
-         *
-         * @param {function(Object,Object)=} successCb
-         *   Success callback with two arguments: `value`, `responseHeaders`.
-         *
-         * @param {function(Object)=} errorCb Error callback with one argument:
-         *   `httpResponse`.
-         *
-         * @returns {Object} An empty reference that will be
-         *   populated with the actual data once the response is returned
-         *   from the server.
-         *
-         * <em>
-         * (The remote method definition does not provide any description.
-         * This usually means the response is a `Device` object.)
-         * </em>
-         */
-        "findOne": {
-          url: urlBase + "/Devices/findOne",
-          method: "GET"
-        },
-
-        /**
-         * @ngdoc method
-         * @name lbServices.Device#updateAll
-         * @methodOf lbServices.Device
-         *
-         * @description
-         *
-         * Update instances of the model matched by where from the data source.
-         *
-         * @param {Object=} parameters Request parameters.
-         *
-         *  - `where` – `{object=}` - Criteria to match model instances
-         *
-         * @param {Object} postData Request data.
-         *
-         * This method expects a subset of model properties as request parameters.
-         *
-         * @param {function(Object,Object)=} successCb
-         *   Success callback with two arguments: `value`, `responseHeaders`.
-         *
-         * @param {function(Object)=} errorCb Error callback with one argument:
-         *   `httpResponse`.
-         *
-         * @returns {Object} An empty reference that will be
-         *   populated with the actual data once the response is returned
-         *   from the server.
-         *
-         * This method returns no data.
-         */
-        "updateAll": {
-          url: urlBase + "/Devices/update",
-          method: "POST"
-        },
-
-        /**
-         * @ngdoc method
-         * @name lbServices.Device#deleteById
-         * @methodOf lbServices.Device
-         *
-         * @description
-         *
-         * Delete a model instance by id from the data source.
-         *
-         * @param {Object=} parameters Request parameters.
-         *
-         *  - `id` – `{*}` - Model id
-         *
-         * @param {function(Object,Object)=} successCb
-         *   Success callback with two arguments: `value`, `responseHeaders`.
-         *
-         * @param {function(Object)=} errorCb Error callback with one argument:
-         *   `httpResponse`.
-         *
-         * @returns {Object} An empty reference that will be
-         *   populated with the actual data once the response is returned
-         *   from the server.
-         *
-         * This method returns no data.
-         */
-        "deleteById": {
-          url: urlBase + "/Devices/:id",
-          method: "DELETE"
-        },
-
-        /**
-         * @ngdoc method
-         * @name lbServices.Device#count
-         * @methodOf lbServices.Device
-         *
-         * @description
-         *
-         * Count instances of the model matched by where from the data source.
-         *
-         * @param {Object=} parameters Request parameters.
-         *
-         *  - `where` – `{object=}` - Criteria to match model instances
-         *
-         * @param {function(Object,Object)=} successCb
-         *   Success callback with two arguments: `value`, `responseHeaders`.
-         *
-         * @param {function(Object)=} errorCb Error callback with one argument:
-         *   `httpResponse`.
-         *
-         * @returns {Object} An empty reference that will be
-         *   populated with the actual data once the response is returned
-         *   from the server.
-         *
-         * Data properties:
-         *
-         *  - `count` – `{number=}` - 
-         */
-        "count": {
-          url: urlBase + "/Devices/count",
-          method: "GET"
-        },
-
-        /**
-         * @ngdoc method
-         * @name lbServices.Device#prototype$updateAttributes
-         * @methodOf lbServices.Device
-         *
-         * @description
-         *
-         * Update attributes for a model instance and persist it into the data source.
-         *
-         * @param {Object=} parameters Request parameters.
-         *
-         *  - `id` – `{*}` - PersistedModel id
-         *
-         * @param {Object} postData Request data.
-         *
-         * This method expects a subset of model properties as request parameters.
-         *
-         * @param {function(Object,Object)=} successCb
-         *   Success callback with two arguments: `value`, `responseHeaders`.
-         *
-         * @param {function(Object)=} errorCb Error callback with one argument:
-         *   `httpResponse`.
-         *
-         * @returns {Object} An empty reference that will be
-         *   populated with the actual data once the response is returned
-         *   from the server.
-         *
-         * <em>
-         * (The remote method definition does not provide any description.
-         * This usually means the response is a `Device` object.)
-         * </em>
-         */
-        "prototype$updateAttributes": {
-          url: urlBase + "/Devices/:id",
-          method: "PUT"
-        },
-
-        /**
-         * @ngdoc method
-         * @name lbServices.Device#createChangeStream
-         * @methodOf lbServices.Device
-         *
-         * @description
-         *
-         * Create a change stream.
-         *
-         * @param {Object=} parameters Request parameters.
-         *
-         *   This method does not accept any parameters.
-         *   Supply an empty object or omit this argument altogether.
-         *
-         * @param {Object} postData Request data.
-         *
-         *  - `options` – `{object=}` - 
-         *
-         * @param {function(Object,Object)=} successCb
-         *   Success callback with two arguments: `value`, `responseHeaders`.
-         *
-         * @param {function(Object)=} errorCb Error callback with one argument:
-         *   `httpResponse`.
-         *
-         * @returns {Object} An empty reference that will be
-         *   populated with the actual data once the response is returned
-         *   from the server.
-         *
-         * Data properties:
-         *
-         *  - `changes` – `{ReadableStream=}` - 
-         */
-        "createChangeStream": {
-          url: urlBase + "/Devices/change-stream",
-          method: "POST"
-        },
-      }
-    );
-
-
-
-        /**
-         * @ngdoc method
-         * @name lbServices.Device#updateOrCreate
-         * @methodOf lbServices.Device
-         *
-         * @description
-         *
-         * Update an existing model instance or insert a new one into the data source.
-         *
-         * @param {Object=} parameters Request parameters.
-         *
-         *   This method does not accept any parameters.
-         *   Supply an empty object or omit this argument altogether.
-         *
-         * @param {Object} postData Request data.
-         *
-         * This method expects a subset of model properties as request parameters.
-         *
-         * @param {function(Object,Object)=} successCb
-         *   Success callback with two arguments: `value`, `responseHeaders`.
-         *
-         * @param {function(Object)=} errorCb Error callback with one argument:
-         *   `httpResponse`.
-         *
-         * @returns {Object} An empty reference that will be
-         *   populated with the actual data once the response is returned
-         *   from the server.
-         *
-         * <em>
-         * (The remote method definition does not provide any description.
-         * This usually means the response is a `Device` object.)
-         * </em>
-         */
-        R["updateOrCreate"] = R["upsert"];
-
-        /**
-         * @ngdoc method
-         * @name lbServices.Device#update
-         * @methodOf lbServices.Device
-         *
-         * @description
-         *
-         * Update instances of the model matched by where from the data source.
-         *
-         * @param {Object=} parameters Request parameters.
-         *
-         *  - `where` – `{object=}` - Criteria to match model instances
-         *
-         * @param {Object} postData Request data.
-         *
-         * This method expects a subset of model properties as request parameters.
-         *
-         * @param {function(Object,Object)=} successCb
-         *   Success callback with two arguments: `value`, `responseHeaders`.
-         *
-         * @param {function(Object)=} errorCb Error callback with one argument:
-         *   `httpResponse`.
-         *
-         * @returns {Object} An empty reference that will be
-         *   populated with the actual data once the response is returned
-         *   from the server.
-         *
-         * This method returns no data.
-         */
-        R["update"] = R["updateAll"];
-
-        /**
-         * @ngdoc method
-         * @name lbServices.Device#destroyById
-         * @methodOf lbServices.Device
-         *
-         * @description
-         *
-         * Delete a model instance by id from the data source.
-         *
-         * @param {Object=} parameters Request parameters.
-         *
-         *  - `id` – `{*}` - Model id
-         *
-         * @param {function(Object,Object)=} successCb
-         *   Success callback with two arguments: `value`, `responseHeaders`.
-         *
-         * @param {function(Object)=} errorCb Error callback with one argument:
-         *   `httpResponse`.
-         *
-         * @returns {Object} An empty reference that will be
-         *   populated with the actual data once the response is returned
-         *   from the server.
-         *
-         * This method returns no data.
-         */
-        R["destroyById"] = R["deleteById"];
-
-        /**
-         * @ngdoc method
-         * @name lbServices.Device#removeById
-         * @methodOf lbServices.Device
-         *
-         * @description
-         *
-         * Delete a model instance by id from the data source.
-         *
-         * @param {Object=} parameters Request parameters.
-         *
-         *  - `id` – `{*}` - Model id
-         *
-         * @param {function(Object,Object)=} successCb
-         *   Success callback with two arguments: `value`, `responseHeaders`.
-         *
-         * @param {function(Object)=} errorCb Error callback with one argument:
-         *   `httpResponse`.
-         *
-         * @returns {Object} An empty reference that will be
-         *   populated with the actual data once the response is returned
-         *   from the server.
-         *
-         * This method returns no data.
-         */
-        R["removeById"] = R["deleteById"];
-
-
-    /**
-    * @ngdoc property
-    * @name lbServices.Device#modelName
-    * @propertyOf lbServices.Device
-    * @description
-    * The name of the model represented by this $resource,
-    * i.e. `Device`.
-    */
-    R.modelName = "Device";
-
-
-    return R;
-  }]);
-
-/**
- * @ngdoc object
  * @name lbServices.Scanner
  * @header lbServices.Scanner
  * @object
@@ -3454,6 +2871,58 @@ module.factory(
       { 'id': '@id' },
       {
 
+        // INTERNAL. Use Scale.weight.findById() instead.
+        "prototype$__findById__weight": {
+          params: {
+          'fk': '@fk'
+          },
+          url: urlBase + "/Scales/:id/weight/:fk",
+          method: "GET"
+        },
+
+        // INTERNAL. Use Scale.weight.destroyById() instead.
+        "prototype$__destroyById__weight": {
+          params: {
+          'fk': '@fk'
+          },
+          url: urlBase + "/Scales/:id/weight/:fk",
+          method: "DELETE"
+        },
+
+        // INTERNAL. Use Scale.weight.updateById() instead.
+        "prototype$__updateById__weight": {
+          params: {
+          'fk': '@fk'
+          },
+          url: urlBase + "/Scales/:id/weight/:fk",
+          method: "PUT"
+        },
+
+        // INTERNAL. Use Scale.weight() instead.
+        "prototype$__get__weight": {
+          isArray: true,
+          url: urlBase + "/Scales/:id/weight",
+          method: "GET"
+        },
+
+        // INTERNAL. Use Scale.weight.create() instead.
+        "prototype$__create__weight": {
+          url: urlBase + "/Scales/:id/weight",
+          method: "POST"
+        },
+
+        // INTERNAL. Use Scale.weight.destroyAll() instead.
+        "prototype$__delete__weight": {
+          url: urlBase + "/Scales/:id/weight",
+          method: "DELETE"
+        },
+
+        // INTERNAL. Use Scale.weight.count() instead.
+        "prototype$__count__weight": {
+          url: urlBase + "/Scales/:id/weight/count",
+          method: "GET"
+        },
+
         /**
          * @ngdoc method
          * @name lbServices.Scale#create
@@ -4008,6 +3477,307 @@ module.factory(
     */
     R.modelName = "Scale";
 
+    /**
+     * @ngdoc object
+     * @name lbServices.Scale.weight
+     * @header lbServices.Scale.weight
+     * @object
+     * @description
+     *
+     * The object `Scale.weight` groups methods
+     * manipulating `Weight` instances related to `Scale`.
+     *
+     * Call {@link lbServices.Scale#weight Scale.weight()}
+     * to query all related instances.
+     */
+
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Scale#weight
+         * @methodOf lbServices.Scale
+         *
+         * @description
+         *
+         * Queries weight of Scale.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - PersistedModel id
+         *
+         *  - `filter` – `{object=}` - 
+         *
+         * @param {function(Array.<Object>,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Array.<Object>} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * <em>
+         * (The remote method definition does not provide any description.
+         * This usually means the response is a `Weight` object.)
+         * </em>
+         */
+        R.weight = function() {
+          var TargetResource = $injector.get("Weight");
+          var action = TargetResource["::get::Scale::weight"];
+          return action.apply(R, arguments);
+        };
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Scale.weight#count
+         * @methodOf lbServices.Scale.weight
+         *
+         * @description
+         *
+         * Counts weight of Scale.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - PersistedModel id
+         *
+         *  - `where` – `{object=}` - Criteria to match model instances
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * Data properties:
+         *
+         *  - `count` – `{number=}` - 
+         */
+        R.weight.count = function() {
+          var TargetResource = $injector.get("Weight");
+          var action = TargetResource["::count::Scale::weight"];
+          return action.apply(R, arguments);
+        };
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Scale.weight#create
+         * @methodOf lbServices.Scale.weight
+         *
+         * @description
+         *
+         * Creates a new instance in weight of this model.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - PersistedModel id
+         *
+         * @param {Object} postData Request data.
+         *
+         * This method expects a subset of model properties as request parameters.
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * <em>
+         * (The remote method definition does not provide any description.
+         * This usually means the response is a `Weight` object.)
+         * </em>
+         */
+        R.weight.create = function() {
+          var TargetResource = $injector.get("Weight");
+          var action = TargetResource["::create::Scale::weight"];
+          return action.apply(R, arguments);
+        };
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Scale.weight#createMany
+         * @methodOf lbServices.Scale.weight
+         *
+         * @description
+         *
+         * Creates a new instance in weight of this model.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - PersistedModel id
+         *
+         * @param {Object} postData Request data.
+         *
+         * This method expects a subset of model properties as request parameters.
+         *
+         * @param {function(Array.<Object>,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Array.<Object>} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * <em>
+         * (The remote method definition does not provide any description.
+         * This usually means the response is a `Weight` object.)
+         * </em>
+         */
+        R.weight.createMany = function() {
+          var TargetResource = $injector.get("Weight");
+          var action = TargetResource["::createMany::Scale::weight"];
+          return action.apply(R, arguments);
+        };
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Scale.weight#destroyAll
+         * @methodOf lbServices.Scale.weight
+         *
+         * @description
+         *
+         * Deletes all weight of this model.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - PersistedModel id
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * This method returns no data.
+         */
+        R.weight.destroyAll = function() {
+          var TargetResource = $injector.get("Weight");
+          var action = TargetResource["::delete::Scale::weight"];
+          return action.apply(R, arguments);
+        };
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Scale.weight#destroyById
+         * @methodOf lbServices.Scale.weight
+         *
+         * @description
+         *
+         * Delete a related item by id for weight.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - PersistedModel id
+         *
+         *  - `fk` – `{*}` - Foreign key for weight
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * This method returns no data.
+         */
+        R.weight.destroyById = function() {
+          var TargetResource = $injector.get("Weight");
+          var action = TargetResource["::destroyById::Scale::weight"];
+          return action.apply(R, arguments);
+        };
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Scale.weight#findById
+         * @methodOf lbServices.Scale.weight
+         *
+         * @description
+         *
+         * Find a related item by id for weight.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - PersistedModel id
+         *
+         *  - `fk` – `{*}` - Foreign key for weight
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * <em>
+         * (The remote method definition does not provide any description.
+         * This usually means the response is a `Weight` object.)
+         * </em>
+         */
+        R.weight.findById = function() {
+          var TargetResource = $injector.get("Weight");
+          var action = TargetResource["::findById::Scale::weight"];
+          return action.apply(R, arguments);
+        };
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Scale.weight#updateById
+         * @methodOf lbServices.Scale.weight
+         *
+         * @description
+         *
+         * Update a related item by id for weight.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - PersistedModel id
+         *
+         *  - `fk` – `{*}` - Foreign key for weight
+         *
+         * @param {Object} postData Request data.
+         *
+         * This method expects a subset of model properties as request parameters.
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * <em>
+         * (The remote method definition does not provide any description.
+         * This usually means the response is a `Weight` object.)
+         * </em>
+         */
+        R.weight.updateById = function() {
+          var TargetResource = $injector.get("Weight");
+          var action = TargetResource["::updateById::Scale::weight"];
+          return action.apply(R, arguments);
+        };
 
     return R;
   }]);
@@ -4456,43 +4226,122 @@ module.factory(
           method: "POST"
         },
 
-        /**
-         * @ngdoc method
-         * @name lbServices.Weight#greet
-         * @methodOf lbServices.Weight
-         *
-         * @description
-         *
-         * <em>
-         * (The remote method definition does not provide any description.)
-         * </em>
-         *
-         * @param {Object=} parameters Request parameters.
-         *
-         *   This method does not accept any parameters.
-         *   Supply an empty object or omit this argument altogether.
-         *
-         * @param {Object} postData Request data.
-         *
-         *  - `msg` – `{string=}` - 
-         *
-         * @param {function(Object,Object)=} successCb
-         *   Success callback with two arguments: `value`, `responseHeaders`.
-         *
-         * @param {function(Object)=} errorCb Error callback with one argument:
-         *   `httpResponse`.
-         *
-         * @returns {Object} An empty reference that will be
-         *   populated with the actual data once the response is returned
-         *   from the server.
-         *
-         * Data properties:
-         *
-         *  - `greeting` – `{string=}` - 
-         */
-        "greet": {
-          url: urlBase + "/Weights/greet",
+        // INTERNAL. Use Scale.weight.findById() instead.
+        "::findById::Scale::weight": {
+          params: {
+          'fk': '@fk'
+          },
+          url: urlBase + "/Scales/:id/weight/:fk",
+          method: "GET"
+        },
+
+        // INTERNAL. Use Scale.weight.destroyById() instead.
+        "::destroyById::Scale::weight": {
+          params: {
+          'fk': '@fk'
+          },
+          url: urlBase + "/Scales/:id/weight/:fk",
+          method: "DELETE"
+        },
+
+        // INTERNAL. Use Scale.weight.updateById() instead.
+        "::updateById::Scale::weight": {
+          params: {
+          'fk': '@fk'
+          },
+          url: urlBase + "/Scales/:id/weight/:fk",
+          method: "PUT"
+        },
+
+        // INTERNAL. Use Scale.weight() instead.
+        "::get::Scale::weight": {
+          isArray: true,
+          url: urlBase + "/Scales/:id/weight",
+          method: "GET"
+        },
+
+        // INTERNAL. Use Scale.weight.create() instead.
+        "::create::Scale::weight": {
+          url: urlBase + "/Scales/:id/weight",
           method: "POST"
+        },
+
+        // INTERNAL. Use Scale.weight.createMany() instead.
+        "::createMany::Scale::weight": {
+          isArray: true,
+          url: urlBase + "/Scales/:id/weight",
+          method: "POST"
+        },
+
+        // INTERNAL. Use Scale.weight.destroyAll() instead.
+        "::delete::Scale::weight": {
+          url: urlBase + "/Scales/:id/weight",
+          method: "DELETE"
+        },
+
+        // INTERNAL. Use Scale.weight.count() instead.
+        "::count::Scale::weight": {
+          url: urlBase + "/Scales/:id/weight/count",
+          method: "GET"
+        },
+
+        // INTERNAL. Use Item.weight.findById() instead.
+        "::findById::Item::weight": {
+          params: {
+          'fk': '@fk'
+          },
+          url: urlBase + "/Items/:id/weight/:fk",
+          method: "GET"
+        },
+
+        // INTERNAL. Use Item.weight.destroyById() instead.
+        "::destroyById::Item::weight": {
+          params: {
+          'fk': '@fk'
+          },
+          url: urlBase + "/Items/:id/weight/:fk",
+          method: "DELETE"
+        },
+
+        // INTERNAL. Use Item.weight.updateById() instead.
+        "::updateById::Item::weight": {
+          params: {
+          'fk': '@fk'
+          },
+          url: urlBase + "/Items/:id/weight/:fk",
+          method: "PUT"
+        },
+
+        // INTERNAL. Use Item.weight() instead.
+        "::get::Item::weight": {
+          isArray: true,
+          url: urlBase + "/Items/:id/weight",
+          method: "GET"
+        },
+
+        // INTERNAL. Use Item.weight.create() instead.
+        "::create::Item::weight": {
+          url: urlBase + "/Items/:id/weight",
+          method: "POST"
+        },
+
+        // INTERNAL. Use Item.weight.createMany() instead.
+        "::createMany::Item::weight": {
+          isArray: true,
+          url: urlBase + "/Items/:id/weight",
+          method: "POST"
+        },
+
+        // INTERNAL. Use Item.weight.destroyAll() instead.
+        "::delete::Item::weight": {
+          url: urlBase + "/Items/:id/weight",
+          method: "DELETE"
+        },
+
+        // INTERNAL. Use Item.weight.count() instead.
+        "::count::Item::weight": {
+          url: urlBase + "/Items/:id/weight/count",
+          method: "GET"
         },
       }
     );
@@ -4658,6 +4507,58 @@ module.factory(
       urlBase + "/Items/:id",
       { 'id': '@id' },
       {
+
+        // INTERNAL. Use Item.weight.findById() instead.
+        "prototype$__findById__weight": {
+          params: {
+          'fk': '@fk'
+          },
+          url: urlBase + "/Items/:id/weight/:fk",
+          method: "GET"
+        },
+
+        // INTERNAL. Use Item.weight.destroyById() instead.
+        "prototype$__destroyById__weight": {
+          params: {
+          'fk': '@fk'
+          },
+          url: urlBase + "/Items/:id/weight/:fk",
+          method: "DELETE"
+        },
+
+        // INTERNAL. Use Item.weight.updateById() instead.
+        "prototype$__updateById__weight": {
+          params: {
+          'fk': '@fk'
+          },
+          url: urlBase + "/Items/:id/weight/:fk",
+          method: "PUT"
+        },
+
+        // INTERNAL. Use Item.weight() instead.
+        "prototype$__get__weight": {
+          isArray: true,
+          url: urlBase + "/Items/:id/weight",
+          method: "GET"
+        },
+
+        // INTERNAL. Use Item.weight.create() instead.
+        "prototype$__create__weight": {
+          url: urlBase + "/Items/:id/weight",
+          method: "POST"
+        },
+
+        // INTERNAL. Use Item.weight.destroyAll() instead.
+        "prototype$__delete__weight": {
+          url: urlBase + "/Items/:id/weight",
+          method: "DELETE"
+        },
+
+        // INTERNAL. Use Item.weight.count() instead.
+        "prototype$__count__weight": {
+          url: urlBase + "/Items/:id/weight/count",
+          method: "GET"
+        },
 
         /**
          * @ngdoc method
@@ -5213,6 +5114,307 @@ module.factory(
     */
     R.modelName = "Item";
 
+    /**
+     * @ngdoc object
+     * @name lbServices.Item.weight
+     * @header lbServices.Item.weight
+     * @object
+     * @description
+     *
+     * The object `Item.weight` groups methods
+     * manipulating `Weight` instances related to `Item`.
+     *
+     * Call {@link lbServices.Item#weight Item.weight()}
+     * to query all related instances.
+     */
+
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Item#weight
+         * @methodOf lbServices.Item
+         *
+         * @description
+         *
+         * Queries weight of Item.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - PersistedModel id
+         *
+         *  - `filter` – `{object=}` - 
+         *
+         * @param {function(Array.<Object>,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Array.<Object>} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * <em>
+         * (The remote method definition does not provide any description.
+         * This usually means the response is a `Weight` object.)
+         * </em>
+         */
+        R.weight = function() {
+          var TargetResource = $injector.get("Weight");
+          var action = TargetResource["::get::Item::weight"];
+          return action.apply(R, arguments);
+        };
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Item.weight#count
+         * @methodOf lbServices.Item.weight
+         *
+         * @description
+         *
+         * Counts weight of Item.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - PersistedModel id
+         *
+         *  - `where` – `{object=}` - Criteria to match model instances
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * Data properties:
+         *
+         *  - `count` – `{number=}` - 
+         */
+        R.weight.count = function() {
+          var TargetResource = $injector.get("Weight");
+          var action = TargetResource["::count::Item::weight"];
+          return action.apply(R, arguments);
+        };
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Item.weight#create
+         * @methodOf lbServices.Item.weight
+         *
+         * @description
+         *
+         * Creates a new instance in weight of this model.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - PersistedModel id
+         *
+         * @param {Object} postData Request data.
+         *
+         * This method expects a subset of model properties as request parameters.
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * <em>
+         * (The remote method definition does not provide any description.
+         * This usually means the response is a `Weight` object.)
+         * </em>
+         */
+        R.weight.create = function() {
+          var TargetResource = $injector.get("Weight");
+          var action = TargetResource["::create::Item::weight"];
+          return action.apply(R, arguments);
+        };
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Item.weight#createMany
+         * @methodOf lbServices.Item.weight
+         *
+         * @description
+         *
+         * Creates a new instance in weight of this model.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - PersistedModel id
+         *
+         * @param {Object} postData Request data.
+         *
+         * This method expects a subset of model properties as request parameters.
+         *
+         * @param {function(Array.<Object>,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Array.<Object>} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * <em>
+         * (The remote method definition does not provide any description.
+         * This usually means the response is a `Weight` object.)
+         * </em>
+         */
+        R.weight.createMany = function() {
+          var TargetResource = $injector.get("Weight");
+          var action = TargetResource["::createMany::Item::weight"];
+          return action.apply(R, arguments);
+        };
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Item.weight#destroyAll
+         * @methodOf lbServices.Item.weight
+         *
+         * @description
+         *
+         * Deletes all weight of this model.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - PersistedModel id
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * This method returns no data.
+         */
+        R.weight.destroyAll = function() {
+          var TargetResource = $injector.get("Weight");
+          var action = TargetResource["::delete::Item::weight"];
+          return action.apply(R, arguments);
+        };
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Item.weight#destroyById
+         * @methodOf lbServices.Item.weight
+         *
+         * @description
+         *
+         * Delete a related item by id for weight.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - PersistedModel id
+         *
+         *  - `fk` – `{*}` - Foreign key for weight
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * This method returns no data.
+         */
+        R.weight.destroyById = function() {
+          var TargetResource = $injector.get("Weight");
+          var action = TargetResource["::destroyById::Item::weight"];
+          return action.apply(R, arguments);
+        };
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Item.weight#findById
+         * @methodOf lbServices.Item.weight
+         *
+         * @description
+         *
+         * Find a related item by id for weight.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - PersistedModel id
+         *
+         *  - `fk` – `{*}` - Foreign key for weight
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * <em>
+         * (The remote method definition does not provide any description.
+         * This usually means the response is a `Weight` object.)
+         * </em>
+         */
+        R.weight.findById = function() {
+          var TargetResource = $injector.get("Weight");
+          var action = TargetResource["::findById::Item::weight"];
+          return action.apply(R, arguments);
+        };
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Item.weight#updateById
+         * @methodOf lbServices.Item.weight
+         *
+         * @description
+         *
+         * Update a related item by id for weight.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - PersistedModel id
+         *
+         *  - `fk` – `{*}` - Foreign key for weight
+         *
+         * @param {Object} postData Request data.
+         *
+         * This method expects a subset of model properties as request parameters.
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * <em>
+         * (The remote method definition does not provide any description.
+         * This usually means the response is a `Weight` object.)
+         * </em>
+         */
+        R.weight.updateById = function() {
+          var TargetResource = $injector.get("Weight");
+          var action = TargetResource["::updateById::Item::weight"];
+          return action.apply(R, arguments);
+        };
 
     return R;
   }]);

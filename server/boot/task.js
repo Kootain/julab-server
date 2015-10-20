@@ -1,5 +1,6 @@
 var SERVER_PORT = 8001;
-var task= function task(app) {
+module.exports = function (app) {
+  console.log('called');
 	var Device = require('../utils/device/device');
   var tasks = {
         Scale:require('../utils/device/scale')(app)
@@ -24,64 +25,64 @@ var task= function task(app) {
 
     function getDeviceListOfAType(type){  
       var deferred = Q.defer();//
-      app.models[type]
-              .find(
-                {where:{MAC:{inq:MACs}}},
-                function(data){
-                  for (var i = data.length - 1; i >= 0; i--) {
-                    if(devices[data[i].MAC]){   //if exist in 'devices' => online  else  offline
-                      devices[data[i].MAC]['known']=true;
-                      data[i]['type']=type;
-                      onlineDevices.push(data[i]);
-                    } else {
-                      offlineDevices.push(data[i]);
-                    }
-                  };
-                  deferred.resolve();
-                });
+      app.models[type].find({where:{MAC:{inq:MACs}}},
+      function(data){
+        for (var i = data.length - 1; i >= 0; i--) {
+          if(devices[data[i].MAC]){   //if exist in 'devices' => online  else  offline
+            devices[data[i].MAC]['known']=true;
+            data[i]['type']=type;
+            onlineDevices.push(data[i]);
+          } else {
+            offlineDevices.push(data[i]);
+          }
+        };
+        deferred.resolve();
+      });
       return deferred.promise;
     }
 
     var jobs=[];
     for (var i = deviceType.length - 1; i >= 0; i--) {
-      jobs.push(getDeviceListOfAType(deviceType[i]));
+      jobs.push(getDeviceListOfAType().bind(null,deviceType[i]));
     };
 
     Q.all(jobs)  
     .done(function(){   
-      //mark unknown 
+      //mark unknown
       for(var mac in devices){
         if(!devices[mac]['known']) unKownDevices.push(mac);
       } 
 
       //generate devices socket, bind on app
-      setTimeout(function(){
-          app.onlineDevices = {
-            list:onlineDevices,
-            connectors:onlineDevices.map(function(e){ return new Device(e.name, e.ip, SERVER_PORT)})
-          };
-      },0);
+      process.nextTick(function(){
+        app.onlineDevices = {
+          list:onlineDevices,
+          connectors:onlineDevices.map(function(e){ return new Device(e.name, e.ip, SERVER_PORT)})
+        };
 
-      setTimeout(function(){
-          app.unKownDevices ={
-            list:unKownDevices,
-            connctors:unKownDevices.map(function(e){ return new Device('unknown', e.ip, SERVER_PORT)})
-          };
-      },0);
-      
-      
+        cosole.log(app.onlineDevices);
+
+        // register task for online devices.
+        for (var i = knownDevices.length - 1; i >= 0; i--) {
+          tasks[app.onlineDevices.list[i]['type']](app.onlineDevices.connectors[i]);
+        }
+      });
+
+      process.nextTick(function(){
+        app.unKownDevices ={
+          list:unKownDevices,
+          connctors:unKownDevices.map(function(e){ return new Device('unknown', e.ip, SERVER_PORT)})
+        };
+      });
 
       app.offlineDevices = offlineDevices;
 
-      // register task for online devices.
-      for (var i = knownDevices.length - 1; i >= 0; i--) {
-        tasks[app.onlineDevices.list[i]['type']](app.onlineDevices.connectors[i]);
-      }
+      cosole.log(app.unKownDevices);
+
     });
   });
 }
 
-//module.exports =  task;
 
 /*
 register a tasks to observe environment status.

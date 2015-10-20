@@ -45,7 +45,7 @@
     "grunt-inject": "^0.1.1",
     "grunt-usemin": "^2.4.0",
     "grunt-loopback-sdk-angular": "*",
-    "docular": "0.7.2",
+    "docular": "0.6.6",
     "grunt-docular": "0.1.2",
     "jshint-stylish": "^1.0.0",
     "load-grunt-tasks": "^0.6.0",

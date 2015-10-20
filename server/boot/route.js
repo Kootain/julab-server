@@ -1,17 +1,27 @@
-module.exports = function(server) {
+module.exports = function(server,app) {
   var router = server.loopback.Router();
 
   router.get('/status', server.loopback.status());
 
   router.get('/env/devices',function(req,res,value){
   	//TODO use native api
-  	res.json([
-  		{name:'scn3', type:'scanner',MAC:'23B2A4C2222124'},
-  		{name:'scale14', type:'scale',MAC:'23B2A4C2D27117'},
-  		{name:'scn5', type:'scanner',MAC:'23B2A4C2027914'},
-  		{name:'taptop', type:'web',MAC:'23B2A4C22A8124'}
-  		]);
+    var onlines=app.onlineDevices.list || [];
+    var offlines=app.offlineDevices || [];
+    var data={
+      'online':onlines,
+      'offline':offlines
+    }
+
+    /* data example
+    {
+      online:[{MAC:??, ip:??, name:??, type:??}, ... ]
+      offline:[{MAC:??, name:??}, ... ]
+    }
+     */
+  	res.json(data);
   });
+
+  router.get('')
   
   server.use(router);
 };

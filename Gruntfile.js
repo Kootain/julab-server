@@ -53,9 +53,6 @@ module.exports = function (grunt) {
             showDocularDocs: true,
             showAngularDocs: true
         },
-        docularserver: {
-            targetDir: 'docular_generated'
-        },
         'node-inspector': {
           dev: {
             options: {
@@ -331,7 +328,6 @@ module.exports = function (grunt) {
 
     
     grunt.loadNpmTasks('grunt-express-server');
-
     grunt.loadNpmTasks('grunt-loopback-sdk-angular');
     grunt.loadNpmTasks('grunt-docular');
 
@@ -384,7 +380,8 @@ module.exports = function (grunt) {
 
     grunt.registerTask('docs',[
         'loopback_sdk_angular',
-        'docular'
+        'docular',
+        'docular-server'
     ]);
 
 };
