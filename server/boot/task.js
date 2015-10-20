@@ -15,7 +15,7 @@ module.exports = function (app) {
     
     if( new RegExp(/win.*/).test(process.platform)){
       var ips = stdout.match(/(\d+\.){3}\d+/g);
-      ip.shift();
+      ips.shift();
       var MACs = stdout.match(/([0-9a-zA-Z]{2}\-){5}[0-9a-zA-Z]+/g);
       MACs = MACs.map(function(e){ return e.replace('-',':')});
     } else {

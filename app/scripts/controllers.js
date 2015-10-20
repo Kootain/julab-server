@@ -51,37 +51,32 @@ function statusCtrl($scope){
 function deviceOverviewCtrl() {
 }; 
 
-function deviceCtrl($scope, $modal, Scale) {
+function deviceCtrl($scope, $http, $modal, Scale) {
 
     //task:modify API
-    $scope.devicesList=Scale.find(
-        function(val){
-            console.log(val);
-        },
-        function(res){
-            tools.notify('alert-danger','load devices failed, please try again.');
-    });
     $scope.queryDevice=function(){
-        // for (var i in $scope.devicesList.online){
-        //     i.isOnline = true;
-        // }
-        // for (var i in $scope.devicesList.offline){
-        //     i.isOnline = false;
-        // }
-        // $scope.devices=[];
-        // $scope.devices.concat($scope.devicesList.online,$scope.devicesList.offlie);
+        $http.get('env/devices')
+        .success(function(data, status, headers, config){
+            $scope.devicesList=angular.fromJson(data);
+            $scope.devicesList.online=$scope.devicesList.online.map(function(e){
+                e.isOnline=true;
+                return e;
+            });
+            $scope.devicesList.offline=$scope.devicesList.offline.map(function(e){
+                e.isOnline = false;
+                return e;
+            });
+            $scope.devices=$scope.devices.concat($scope.devicesList.online,$scope.devicesList.offline);
+            $scope.isLoading=false;
+        })
+        .error(function(data, status, headers, config){
+            $scope.isLoading=false;
+            tools.notify('alert-danger','load devices failed, please try again.');
+        });
     }
 
-    $scope.devices=[
-        {
-            MAC:'testMAC',
-            name:'testname',
-            ip:'192.168.1.1',
-            type:'Scale',
-            isOnline:true
-        },
-    ];
-
+    $scope.devices=[];
+    $scope.queryDevice();
     $scope.mustOnline=true;
     this.deviceListFilter=function(v,i,a){ 
         // console.log(v,!$scope.mustOnline||v.isOnline);
@@ -97,6 +92,7 @@ function deviceCtrl($scope, $modal, Scale) {
         });
 
     };
+    $a=$scope;
 };
 
 function widgetFlotChart() {
@@ -226,7 +222,7 @@ function widgetFlotChart() {
 };
 
 function deviceDetection($scope, $http, $modal, $modalInstance){
-    $scope.deviceList=[];
+    $scope.devicesUnknown=[];
     $scope.iconType={
         scanner: 'fa-bullseye',
         scale: 'fa-bars',
@@ -249,16 +245,16 @@ function deviceDetection($scope, $http, $modal, $modalInstance){
         $scope.isLoading=true;
         $http.get('env/devices')
         .success(function(data, status, headers, config){
-            $scope.deviceList=angular.fromJson(data);
+            $scope.devicesList=angular.fromJson(data);
+            $scope.devicesUnknown=$scope.devicesList.unKnown;
+            $scope.devicesUnknown=$scope.devicesUnknown.map(function(e){
+                e.type='scale';
+                e.name=e.MAC;
+                return e});
             $scope.isLoading=false;
         })
         .error(function(data, status, headers, config){
             $scope.isLoading=false;
-            $scope.deviceList=[{
-                name: 'test',
-                type: 'scale',
-                MAC: '321321321321'
-            }];
             tools.notify('alert-danger', 'get device list error,please try again.');
         });
     }
@@ -321,14 +317,15 @@ function addDevice($scope, $modalInstance, deviceInfo, Scale, Item){
                 $modalInstance.close();
                 tools.notify('alert-success','register device success');
                 //task
-                $scope.$parent.$parent.devices=Scale.find(
-                    function(val){
-                        // debugger;
-                        $scope.$apply();
-                        console.log(val);
-                    },
-                    function(res){
-                });
+                // $scope.$parent.$parent.devices=Scale.find(
+                //     function(val){
+                //         // debugger;
+                //         $scope.$apply();
+                //         console.log(val);
+                //     },
+                //     function(res){
+                // });
+                $scope.$parent.$parent.queryDevice();
             }
             ,function (res){
                 tools.notify('alert-danger',res.data.error.message);
