@@ -7,12 +7,12 @@
         <p>select one online device to continue.</p>
     </div>
     <div class="modal-body" id="list" style="padding: 0" slim-scroll="250px">
-        <div class="empty-bg" ng-hide="deviceList">
+        <div class="empty-bg" ng-hide="devicesUnknown">
             <i class="fa fa-signal fa-5x"></i>
             <div style="font-size: 20px;">empty</div>
         </div>
-        <ul class="dropdown-menu device-list" ng-hide="!deviceList">
-            <div ng-repeat="device in deviceList">
+        <ul class="dropdown-menu device-list" ng-hide="!devicesUnknown">
+            <div ng-repeat="device in devicesUnknown">
                  <li>
                     <a ng-click="registerDevice(device)">
                         <div>

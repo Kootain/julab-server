@@ -51,17 +51,32 @@ function statusCtrl($scope){
 function deviceOverviewCtrl() {
 }; 
 
-function deviceCtrl($scope, $modal, Device) {
+function deviceCtrl($scope, $http, $modal, Scale) {
 
-    $scope.devices=Device.find(
-        function(val){
-            console.log(val);
-        },
-        function(res){
+    //task:modify API
+    $scope.queryDevice=function(){
+        $http.get('env/devices')
+        .success(function(data, status, headers, config){
+            $scope.devicesList=angular.fromJson(data);
+            $scope.devicesList.online=$scope.devicesList.online.map(function(e){
+                e.isOnline=true;
+                return e;
+            });
+            $scope.devicesList.offline=$scope.devicesList.offline.map(function(e){
+                e.isOnline = false;
+                return e;
+            });
+            $scope.devices=$scope.devices.concat($scope.devicesList.online,$scope.devicesList.offline);
+            $scope.isLoading=false;
+        })
+        .error(function(data, status, headers, config){
+            $scope.isLoading=false;
             tools.notify('alert-danger','load devices failed, please try again.');
-    });
+        });
+    }
 
-
+    $scope.devices=[];
+    $scope.queryDevice();
     $scope.mustOnline=true;
     this.deviceListFilter=function(v,i,a){ 
         // console.log(v,!$scope.mustOnline||v.isOnline);
@@ -77,6 +92,7 @@ function deviceCtrl($scope, $modal, Device) {
         });
 
     };
+    $a=$scope;
 };
 
 function widgetFlotChart() {
@@ -206,7 +222,7 @@ function widgetFlotChart() {
 };
 
 function deviceDetection($scope, $http, $modal, $modalInstance){
-    $scope.deviceList=[];
+    $scope.devicesUnknown=[];
     $scope.iconType={
         scanner: 'fa-bullseye',
         scale: 'fa-bars',
@@ -229,7 +245,12 @@ function deviceDetection($scope, $http, $modal, $modalInstance){
         $scope.isLoading=true;
         $http.get('env/devices')
         .success(function(data, status, headers, config){
-            $scope.deviceList=angular.fromJson(data);
+            $scope.devicesList=angular.fromJson(data);
+            $scope.devicesUnknown=$scope.devicesList.unKnown;
+            $scope.devicesUnknown=$scope.devicesUnknown.map(function(e){
+                e.type='scale';
+                e.name=e.MAC;
+                return e});
             $scope.isLoading=false;
         })
         .error(function(data, status, headers, config){
@@ -260,10 +281,10 @@ function deviceDetection($scope, $http, $modal, $modalInstance){
 
     };
 
-    //$a=$scope;
+    $a=$scope;
 };
 
-function addDevice($scope, $modalInstance, deviceInfo, Scale, RfidInfo){
+function addDevice($scope, $modalInstance, deviceInfo, Scale, Item){
     $scope.formDetails={
                         name:deviceInfo.name,
                         MAC:deviceInfo.MAC,
@@ -272,18 +293,16 @@ function addDevice($scope, $modalInstance, deviceInfo, Scale, RfidInfo){
                     };
     $scope.reagents=[{'name':'oooops, nothing','id':-1}];
     $scope.selectedReagents=[];
+
     $scope.search = function(keyword){
-        console.log(keyword);
-        return RfidInfo.find({filter:{ "order":"id desc","where":{"name":{"like":"%"+keyword+"%"}}}},function(val){
+        return Item.find({filter:{ "order":"id desc","where":{"name":{"like":"%"+keyword+"%"}}}},function(val){
             $scope.reagents=val;
-            console.log();
         },
         function(res){
              tools.notify('alert-danger',res.data.error.message);
         }).$promise;
     };
 
-    $a=$scope;
     
     $scope.submit = function() {
         if ($scope.detailForm.$valid) {
@@ -292,19 +311,21 @@ function addDevice($scope, $modalInstance, deviceInfo, Scale, RfidInfo){
                 MAC:deviceInfo.MAC,
                 name:$scope.formDetails.name,
                 type:deviceInfo.type,
-                // reagent: $scope.formDetails.reagent
+                item_id: $scope.formDetails.reagent
             }
             ,function (val,resHeader){
                 $modalInstance.close();
                 tools.notify('alert-success','register device success');
-                $scope.$parent.$parent.devices=Device.find(
-                    function(val){
-                        // debugger;
-                        $scope.$apply();
-                        console.log(val);
-                    },
-                    function(res){
-                });
+                //task
+                // $scope.$parent.$parent.devices=Scale.find(
+                //     function(val){
+                //         // debugger;
+                //         $scope.$apply();
+                //         console.log(val);
+                //     },
+                //     function(res){
+                // });
+                $scope.$parent.$parent.queryDevice();
             }
             ,function (res){
                 tools.notify('alert-danger',res.data.error.message);
@@ -313,22 +334,15 @@ function addDevice($scope, $modalInstance, deviceInfo, Scale, RfidInfo){
     }
     var refreshChosen=function(){
         $('#myChosen').chosen('destroy').chosen({max_selected_options: 1});
-        $('.search-field input').on('keyup',function(){
-            var ele= $('.search-field input');
-            var key = ele.val();
-            $scope.search(key).then(function(){
-                console.log('wetraewrrser');
-                ele.val(key);
-            });
-        });
     };
-    RfidInfo.find({filter:{ "order":"id desc","where":{"name":{"like":"%"+''+"%"}}}},function(val){
+    Item.find({filter:{ "order":"id desc","where":{"name":{"like":"%"+''+"%"}}}},function(val){
             $scope.reagents=val;
-            console.log();
         },
         function(res){
              tools.notify('alert-danger',res.data.error.message);
         }).$promise.then(refreshChosen,refreshChosen);
+    // task
+    // $scope.search().then(refreshChosen,refreshChosen);
 
 };
 

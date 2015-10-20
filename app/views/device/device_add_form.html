@@ -69,10 +69,10 @@
         <label>Reagent</label>
         <div class="input-group">
             <select id="myChosen" multiple chosen class="chosen-select" style="width:350px;min-height:30px" tabindex="4"
-              data-placeholder="Choose some reagents"
+              data-placeholder="Choose reagent"
               no-results-text="'Could not find any reagent'"
               ng-model="formDetails.reagent"
-              ng-options="r.name as r.name for r in reagents">
+              ng-options="r.id as r.name for r in reagents">
             </select>
         </div>
 
