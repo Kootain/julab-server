@@ -12,8 +12,16 @@ module.exports = function (app) {
 
   var exec = require('child_process').exec;
   exec('arp -a',function(err,stdout,stderr){
-    var ips=stdout.match(/(\d+\.){3}\d+/g);
-    var MACs=stdout.match(/([0-9a-zA-Z]{2}:){5}[0-9a-zA-Z]+/g);
+    
+    if( new RegExp(/win.*/).test(process.platform)){
+      var ips = stdout.match(/(\d+\.){3}\d+/g);
+      ip.shift();
+      var MACs = stdout.match(/([0-9a-zA-Z]{2}\-){5}[0-9a-zA-Z]+/g);
+      MACs = MACs.map(function(e){ return e.replace('-',':')});
+    } else {
+      var ips=stdout.match(/(\d+\.){3}\d+/g);
+      var MACs=stdout.match(/([0-9a-zA-Z]{2}:){5}[0-9a-zA-Z]+/g);
+    }
 
     for (var i = ips.length - 1; i >= 0; i--) {
       devices[MACs[i]]=ips[i];
