@@ -16,8 +16,9 @@ module.exports = function(app) {
 
     /* data example
     {
-      online:[{MAC:??, ip:??, name:??, type:??}, ... ]
-      offline:[{MAC:??, name:??}, ... ]
+      online:[{MAC:??, ip:??, name:??, type:??}, ... ],
+      offline:[{MAC:??, name:??}, ... ],
+      unKnown:[{MAC:??, name:??}, ... ]
     }
      */
   	res.json(data);

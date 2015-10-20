@@ -16,7 +16,8 @@ var device = function (name, ip, port){
 	};
 
 	this.getDeviceDetails = function (model,MAC){
-		model.find({'where': {'MAC': MAC}},function(data){
+		model.find({'where': {'MAC': MAC}})
+		.then(function(data){
 			if(data.length != 1){
 				throw new error('duplicate result returned');
 			} else {
