@@ -682,17 +682,30 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale){
         onFinish: function(data){
             $scope.from=new Date(data.from);
             $scope.to=new Date(data.to);
-            // $scope.reagentUsage=weight.find({filter:
-            //     {where:{
-            //             gmt_create:{gt:newDate(data.from),lt:new Date(data.to)},
-            //             id:{inq:$scope.selectedReagents.map(function(e){return e.id})}
-            //         }
-            //     }
-            //     },
-            //     function(){},
-            //     function(err){
-            //         tools.notify('alert-danger',err.data.error.message);
-            //     });
+
+            Weight.find({filter:
+                {where:{
+                        //gmt_create:{gt:newDate(data.from),lt:new Date(data.to)},
+                        //id:{inq:$scope.selectedReagents.map(function(e){return e.id})}
+                    },
+                order:"item_id,id"
+                }
+                },
+                function(val){
+                    flag = -1;
+                    for (i in val){
+                        if (val[i].item_id!=flag){
+                            console.log("done");
+                            $scope.reagentUsage.push({
+                                data:[[0,val.value]],
+                                lable:val.item_id
+                            });
+                        }
+                    }
+                },
+                function(err){
+                    tools.notify('alert-danger',err.data.error.message);
+                });
         }
     };
 
@@ -711,6 +724,7 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale){
     //                 tools.notify('alert-danger',err.data.error.message);
     //             });
     // });
+
     $scope.color=['label-success', 'label-info', 'label-primary', 'label-default', 'label-primary'];
     $scope.latestSearchedReagent=RfidInfo.find({filter:{order:'gmt_visited DESC',limit:5}},
         function(){
@@ -722,7 +736,6 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale){
     $scope.latestSearchedReagent.$promise.then(function(){
         for(var x=0;x<$scope.latestSearchedReagent.length;x++){
             $scope.latestSearchedReagent[x].gmt_visited=new Date($scope.latestSearchedReagent[x].gmt_visited);
-            console.log($scope.latestSearchedReagent[x]);
         }
     });
 
@@ -743,7 +756,7 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale){
         });
 
     };
-
+    //To do: scale list
     $scope.reagentScales = Scale.find();
     console.log($scope.reagentScales);
     $scope.reagentScales=[
