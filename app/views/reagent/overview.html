@@ -78,12 +78,12 @@
             <div class="ibox-content">
             <div class="row">
                 <div class="col-md-2" style="text-align:center"  ng-repeat="reagentScale in reagentScales " 
-                 ng-init="percent=reagentScale.weight / reagentScale.full_weight * 100" ng-click="scaleDetail(reagentScale.reagent_name)">
+                 ng-init="percent=reagentScale.weight / reagentScale.full_weight * 100" ng-click="scaleDetail(reagentScale.name)">
                     <h2>{{  floor(percent)  }}%</h2>
                     <div class="progress progress-mini-vertical reagent-format">
                         <div style="height: {{percent}}%;" class="progress-bar" ng-class="percent<=20?'low-warning':''"></div>
                     </div> 
-                    <h4>{{reagentScale.reagent_name}}</h4>
+                    <h4>{{reagentScale.name}}</h4>
                 </div>
             </div>
                 
@@ -105,10 +105,10 @@
                     <label class="font-noraml">reagent filter</label>
                     <div class="input-group">
                         <select  multiple chosen class="chosen-select" style="width:350px;min-height:30px" tabindex="4"
-                              data-placeholder="Choose some reagents"
-                              no-results-text="'Could not find any reagent'"
-                              ng-model="selectedReagents"
-                              ng-options="r.name for r in reagents" style="width:200px">
+                              data-placeholder="Choose some scales"
+                              no-results-text="'Could not find any scales'"
+                              ng-model="selectedScales"
+                              ng-options="r as r.name for r in scales" style="width:200px">
                         </select>
                     </div>
                 </div>                
