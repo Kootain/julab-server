@@ -1,3 +1,9 @@
+var log4js = require("log4js");
+var log4js_config = require("./log4js.json");
+log4js.configure(log4js_config);
+var c = log4js.getLogger('log_file');
+global.console.log = function(r){ c.info(r);};
+
 var loopback = require('loopback');
 var boot = require('loopback-boot');
 var app = module.exports = loopback();
@@ -12,6 +18,7 @@ app.env={
 };
 
 app.start = function() {
+  global.app=app;
   // start the web server
   return app.listen(function() {
     app.emit('started');
