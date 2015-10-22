@@ -701,7 +701,7 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Ite
 
     $scope.queryData=function(scales){
         $scope.reagentUsageBak=[];
-        for(i in scales){
+        var aStep=function(i){
             Weight.find({
                 filter:{where:{"scale_id":scales[i].id,"gmt_created":{gt:$scope.from,lt:$scope.to}}}
             },function(val){
@@ -719,6 +719,9 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Ite
                 tools.notify('alert-danger',err.data.error.message);
             });
         }
+        for(var i in scales){
+            aStep.bind(null,i)();
+        }
     }
 
     $scope.color=['label-success', 'label-info', 'label-primary', 'label-default', 'label-primary'];
@@ -734,12 +737,7 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Ite
             $scope.latestSearchedReagent[x].gmt_visited=new Date($scope.latestSearchedReagent[x].gmt_visited);
         }
     });
-
-    // console.log($scope.latestSearchedReagent);
-
-    // $http.post('api/scale/status').success(function(data){
-    //     $scope.reagentsScale = $data;
-    // });
+    $a=$scope;
     $scope.scaleDetail = function (reagentName) {
         var modalInstance = $modal.open({
             templateUrl: 'views/reagent/reagent_detail.html',
@@ -761,10 +759,16 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Ite
                 e.weight=vall.value||0;
                 e.full_weight = 200; //TODO
                 $scope.reagentScales.push(e);
+                var a=['乙醇','甲醇','石油醚','乙酸乙酯','二氯甲烷'];
+                var b=[21,19.79,25,22,33];
+                e.reagent_name = a[e.item_id-1];
+                e.full_weight = b[e.item_id-1];
                 return e;
             });
         });
     });
+    //TODO reagent name&reagent full_weight
+
     // $scope.reagentScales=[
     //         {
     //             id:'11',
