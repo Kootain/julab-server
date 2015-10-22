@@ -53,7 +53,6 @@ function deviceOverviewCtrl() {
 
 function deviceCtrl($scope, $http, $modal, Scale) {
 
-    //task:modify API
     $scope.queryDevice=function(){
         $http.get('env/devices')
         .success(function(data, status, headers, config){
@@ -316,7 +315,7 @@ function addDevice($scope, $modalInstance, deviceInfo, Scale, Item){
             ,function (val,resHeader){
                 $modalInstance.close();
                 tools.notify('alert-success','register device success');
-                //task
+
                 // $scope.$parent.$parent.devices=Scale.find(
                 //     function(val){
                 //         // debugger;
@@ -608,31 +607,32 @@ function reagentCtrl($scope, $modal, $compile, $timeout, $sce, RfidInfo ,ngTable
  * used in Chart.js view
  */
 
-function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale){
+function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Item){
     $scope.floor=window.Math.floor;
-    $scope.reagentUsage=[
-        {
-            data:[[0,10000],[1,7563],[2,3650],[3,1324],[4,3641],[5,34577],[6,24356],[7,21237]],
-            //data:oilprices,
-            label:'reagentA'
-        },
-        {
-            data:[[0,1000],[1,2563],[2,7650],[3,5324],[4,2641],[5,4577],[6,1356],[7,11237]],
-            //data:exchangerates,
-            label:'reagentB'
-        },
-        {
-            data:[[0,1000],[1,22563],[2,12650],[3,9324],[4,5641],[5,2457],[6,4356],[7,1237]],
-            //data:oilprices,
-            label:'reagentA'
-        },
-        {
-            data:[[0,20300],[1,15634],[2,12650],[3,9324],[4,5641],[5,3577],[6,2356],[7,1237]],
-            //data:exchangerates,
-            label:'reagentB'
-        },
-    ];
+    // $scope.reagentUsage=[
+    //     {
+    //         data:[[0,10000],[1,7563],[2,3650],[3,1324],[4,3641],[5,34577],[6,24356],[7,21237]],
+    //         //data:oilprices,
+    //         label:'reagentA'
+    //     },
+    //     {
+    //         data:[[0,1000],[1,2563],[2,7650],[3,5324],[4,2641],[5,4577],[6,1356],[7,11237]],
+    //         //data:exchangerates,
+    //         label:'reagentB'
+    //     },
+    //     {
+    //         data:[[0,1000],[1,22563],[2,12650],[3,9324],[4,5641],[5,2457],[6,4356],[7,1237]],
+    //         //data:oilprices,
+    //         label:'reagentA'
+    //     },
+    //     {
+    //         data:[[0,20300],[1,15634],[2,12650],[3,9324],[4,5641],[5,3577],[6,2356],[7,1237]],
+    //         //data:exchangerates,
+    //         label:'reagentB'
+    //     },
+    // ];
     $scope.from=new Date();
+    $scope.from.setMonth($scope.from.getMonth()-1);
     $scope.to=new Date();
     $scope.option = {
         series: {
@@ -670,8 +670,8 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale){
         tooltip: false
     };
     this.sliderOptions = {
-        min: new Date("Aug 09 2015 19:14:24 GMT+0800 (CST)").getTime(),
-        max: new Date().getTime(),
+        min: $scope.from.getTime(),
+        max: $scope.to.getTime(),
         type: 'double',
         force_edges: true,
         values_separator: '→',
@@ -682,35 +682,48 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale){
         onFinish: function(data){
             $scope.from=new Date(data.from);
             $scope.to=new Date(data.to);
-            // $scope.reagentUsage=weight.find({filter:
-            //     {where:{
-            //             gmt_create:{gt:newDate(data.from),lt:new Date(data.to)},
-            //             id:{inq:$scope.selectedReagents.map(function(e){return e.id})}
-            //         }
-            //     }
-            //     },
-            //     function(){},
-            //     function(err){
-            //         tools.notify('alert-danger',err.data.error.message);
-            //     });
+            $scope.queryData($scope.selectedScales);
         }
     };
 
-    $scope.reagents=[{name:'awetaw'},{name:'23wter'},{name:'awetaw'},{name:'23wter'},{name:'awetaw'},{name:'23wter'}];
-    $scope.selectedReagents=[];
-    // $scope.$watch('selectedReagents',function(oval,nval,scope){
-    //     $scope.reagentUsage=Weight.find({filter:
-    //             {where:{
-    //                     gmt_create:{gt: scope.from,lt: scope.to},
-    //                     id:{inq:scope.selectedReagents.map(function(e){return e.id})}
-    //                 }
-    //             }
-    //             },
-    //             function(){},
-    //             function(err){
-    //                 tools.notify('alert-danger',err.data.error.message);
-    //             });
-    // });
+    //init $scope.scales
+    Scale.find(function(val){
+        $scope.scales=val;
+    },function(err){
+        tools.notify('alert-danger',err.data.error.message);
+    });
+    $scope.selectedScales=[];
+
+    //queryData on selectedScales change
+    $scope.$watch('selectedScales',function(oval,nval,scope){
+        $scope.queryData($scope.selectedScales);
+    });
+
+    $scope.queryData=function(scales){
+        $scope.reagentUsageBak=[];
+        var aStep=function(i){
+            Weight.find({
+                filter:{where:{"scale_id":scales[i].id,"gmt_created":{gt:$scope.from,lt:$scope.to}}}
+            },function(val){
+                $scope.reagentUsageBak.push(
+                    {
+                        data: val.map(function(e,b){
+                            //TODO map b
+                            return [b,e.value];
+                        }),
+                        label:scales[i].name
+                    }
+                );
+                $scope.reagentUsage=$scope.reagentUsageBak;
+            },function(err){
+                tools.notify('alert-danger',err.data.error.message);
+            });
+        }
+        for(var i in scales){
+            aStep.bind(null,i)();
+        }
+    }
+
     $scope.color=['label-success', 'label-info', 'label-primary', 'label-default', 'label-primary'];
     $scope.latestSearchedReagent=RfidInfo.find({filter:{order:'gmt_visited DESC',limit:5}},
         function(){
@@ -722,15 +735,9 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale){
     $scope.latestSearchedReagent.$promise.then(function(){
         for(var x=0;x<$scope.latestSearchedReagent.length;x++){
             $scope.latestSearchedReagent[x].gmt_visited=new Date($scope.latestSearchedReagent[x].gmt_visited);
-            console.log($scope.latestSearchedReagent[x]);
         }
     });
-
-    console.log($scope.latestSearchedReagent);
-
-    // $http.post('api/scale/status').success(function(data){
-    //     $scope.reagentsScale = $data;
-    // });
+    $a=$scope;
     $scope.scaleDetail = function (reagentName) {
         var modalInstance = $modal.open({
             templateUrl: 'views/reagent/reagent_detail.html',
@@ -743,29 +750,45 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale){
         });
 
     };
+    //TODO: scale list
+    $scope.reagentScales=[];
+    Scale.find(function(val){
+        val.map(function(e){
+            //TODO if there is no data in weight error
+            Weight.findOne({filter:{"where":{"scale_id":e.id},"order":"gmt_created desc"}},function(vall){
+                e.weight=vall.value||0;
+                e.full_weight = 200; //TODO
+                $scope.reagentScales.push(e);
+                var a=['乙醇','甲醇','石油醚','乙酸乙酯','二氯甲烷'];
+                var b=[21,19.79,25,22,33];
+                e.reagent_name = a[e.item_id-1];
+                e.full_weight = b[e.item_id-1];
+                return e;
+            });
+        });
+    });
+    //TODO reagent name&reagent full_weight
 
-    $scope.reagentScales = Scale.find();
-    console.log($scope.reagentScales);
-    $scope.reagentScales=[
-            {
-                id:'11',
-                reagent_name:'11',
-                weight:'20',
-                full_weight:'100'
-            },
-            {
-                id:'22',
-                reagent_name:'11',
-                weight:'20',
-                full_weight:'30'
-            },
-            {
-                id:'33',
-                reagent_name:'11',
-                weight:'20',
-                full_weight:'20'
-            }
-        ];
+    // $scope.reagentScales=[
+    //         {
+    //             id:'11',
+    //             reagent_name:'11',
+    //             weight:'20',
+    //             full_weight:'100'
+    //         },
+    //         {
+    //             id:'22',
+    //             reagent_name:'11',
+    //             weight:'20',
+    //             full_weight:'30'
+    //         },
+    //         {
+    //             id:'33',
+    //             reagent_name:'11',
+    //             weight:'20',
+    //             full_weight:'20'
+    //         }
+    //     ];
 };
 
 function scaleDetail($scope, reagentName, $modalInstance){
