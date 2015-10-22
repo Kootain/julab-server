@@ -134,7 +134,7 @@ function config($stateProvider, $urlRouterProvider) {
                         },
                         {
                             name:'rangeSlider',
-                            files: ['../bower_components/ionRangeSlider/css/ion.rangeSlider.css','../bower_components/ionRangeSlider/css/ion.rangeSlider.skinFlat.css','../bower_components/ionRangeSlider/js/ion.rangeSlider.min.js']
+                            files: ['../bower_components/ionrangeslider/css/ion.rangeSlider.css','../bower_components/ionrangeslider/css/ion.rangeSlider.skinFlat.css','../bower_components/ionrangeslider/js/ion.rangeSlider.min.js']
                         },
                         {
                             insertBefore: '#loadBefore',
