@@ -25,14 +25,18 @@
     "gmt_created": {
       "type": "date",
       "required": true
+    },
+    "pos": {
+      "type": "number",
+      "required": false
     }
   },
   "validations": [],
   "relations": {
-    "weight": {
-      "type": "hasMany",
-      "model": "Weight",
-      "foreignKey": "scale_id"
+    "weight":{
+      "type":"hasMany",
+      "model":"Weight",
+      "foreignKey":"scale_id"
     }
   },
   "acls": [],

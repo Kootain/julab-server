@@ -956,6 +956,41 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Ite
         }
     ];
 
+    Scale.find({filter:{
+        include:{
+            relation: 'weight',
+            scope:{
+                order: 'gmt_created desc',
+                limit: 1,
+                include: {
+                    relation: 'item'
+                }
+            }
+        }
+    }},function(val){
+        $scope.reagentsShelf=val.map(function(e){
+            e.isselected = true;
+            if(e.weight.length){
+                e.full_weight = e.weight[0].full_weight;
+                e.value = e.weight[0].value;
+                e.reagent_name = e.weight[0].item.name;
+            }else{
+                e.full_weight = 0;
+                e.value = 0;
+                e.reagent_name = '空';
+            }
+            console.log(e);
+            return e;
+        });
+    },function(res){
+        tools.notify('alert-danger',res.data.error.message);
+    }).$promise.then(function(){
+        //按照 reagent_pos排序
+        $scope.reagentsShelf.sort(function(a,b){ return a.pos - b.pos});
+        $scope.reagentsShelf = outputShelf($scope.reagentsShelf,4);
+
+    });
+    $a=$scope;
     //reagentsShelf 待展示试剂数组
     //n每行显示个数
     outputShelf = function(reagentsShelf,n){
@@ -970,10 +1005,7 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Ite
         }
         return result;
     };
-    //按照 reagent_pos排序
-    $scope.reagentsShelf.sort(function(a,b){ return a.reagent_pos - b.reagent_pos});
-    $scope.reagentsShelf = outputShelf($scope.reagentsShelf,4);
-
+   
     //同种试剂
 
     $scope.reagentsStat=[
@@ -1023,6 +1055,7 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Ite
             $scope.reagentsShelf[Math.floor(list[i]/4)][list[i]%4].isselected = true;
         }
     }
+
 };
 
 function chartJsCtrl() {

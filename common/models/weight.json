@@ -18,10 +18,19 @@
     },
     "item_id": {
       "type": "number"
+    },
+    "full_weight":{
+      "type": "number"
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+      "item":{
+        "type":"belongsTo",
+        "model":"Item",
+        "foreignKey":"item_id"
+      }
+    },
   "acls": [],
   "methods": []
 }
