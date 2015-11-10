@@ -53,20 +53,21 @@ function deviceOverviewCtrl() {
 
 function deviceCtrl($scope, $http, $modal, Scale) {
 
-    $scope.queryDevice=function(){
+    $scope.queryDevice=function(cb){
         $http.get('env/devices')
         .success(function(data, status, headers, config){
-            $scope.devicesList=angular.fromJson(data);
-            $scope.devicesList.online=$scope.devicesList.online.map(function(e){
+            var devicesList=angular.fromJson(data);
+            online=devicesList.online.map(function(e){
                 e.isOnline=true;
                 return e;
             });
-            $scope.devicesList.offline=$scope.devicesList.offline.map(function(e){
+            offline=devicesList.offline.map(function(e){
                 e.isOnline = false;
                 return e;
             });
-            $scope.devices=$scope.devices.concat($scope.devicesList.online,$scope.devicesList.offline);
+            $scope.devices=online.concat(offline);
             $scope.isLoading=false;
+            if(cb)cb();
         })
         .error(function(data, status, headers, config){
             $scope.isLoading=false;
@@ -89,10 +90,142 @@ function deviceCtrl($scope, $http, $modal, Scale) {
             controller: 'deviceDetection',
             scope:$scope
         });
-
     };
-    $a=$scope;
+
+    $scope.deviceDetail = function(d){
+
+        $scope.reagentScale = d;
+        $scope.floor=window.Math.floor;
+        var typeList={
+                        scale:{
+                            templateUrl:'views/device/scale_page.html',
+                            controller:'scalePageCtrl'
+                        },
+                        scanner:{
+                            templateUrl:'views/device/scale_page.html',
+                            controller:'scannerPageCtrl'
+                        }
+                    };
+
+        var modalInstance= $modal.open({
+            templateUrl: typeList[d.type].templateUrl,
+            size: 'md',
+            controller: typeList[d.type].controller,
+            scope:$scope
+        });
+    };
 };
+
+function scalePageCtrl($scope, $modal, $modalInstance, Scale, Weight){
+
+    $scope.from=new Date();
+    $scope.from.setMonth($scope.from.getMonth()-1);
+    $scope.to=new Date();
+    $scope.option = {
+        series: {
+            lines: {
+                show: false,
+                fill: true
+            },
+            splines: {
+                show: true,
+                tension: 0.4,
+                lineWidth: 1,
+                fill: 0.4
+            },
+            points: {
+                radius: 0.2,
+                show: true
+            },
+            shadowSize: 2,
+            grow: {stepMode:"linear",stepDirection:"up",steps:80}
+        },
+        grow: {stepMode:"linear",stepDirection:"up",steps:80},
+        grid: {
+            hoverable: true,
+            clickable: true,
+            tickColor: "#d5d5d5",
+            borderWidth: 1,
+            color: '#d5d5d5'
+        },
+        colors: ["#1ab394", "#464f88"],
+        xaxis: {
+        },
+        yaxis: {
+            ticks: 4
+        },
+        tooltip: false
+    };
+    this.sliderOptions = {
+        min: $scope.from.getTime(),
+        max: $scope.to.getTime(),
+        type: 'double',
+        force_edges: true,
+        values_separator: '→',
+        grid: true,
+        prettify: function(num){
+            return new Date(num).format("yyyy-MM-dd");
+        },
+        onFinish: function(data){
+            $scope.from=new Date(data.from);
+            $scope.to=new Date(data.to);
+            $scope.queryData($scope.selectedScales);
+        }
+    };
+
+    $scope.close = $modalInstance.close;
+
+
+    $scope.reagentUsage=[];
+    $scope.selectedScales=[$scope.reagentScale];
+
+    $scope.queryData=function(scales){
+        $scope.reagentUsageBak=[];
+        var aStep=function(i){
+            Weight.find({
+                filter:{where:{"scale_id":scales[i].id,"gmt_created":{gt:$scope.from,lt:$scope.to}}}
+            },function(val){
+                $scope.reagentUsageBak.push(
+                    {
+                        data: val.map(function(e,b){
+                            //TODO map b as x axis, stand for date
+                            return [b,e.value];
+                        }),
+                        label:scales[i].name
+                    }
+                );
+                $scope.reagentUsage=$scope.reagentUsageBak;
+            },function(err){
+                tools.notify('alert-danger',err.data.error.message);
+            });
+        }
+        for(var i in scales){
+             aStep.bind(null,i)();
+
+        }
+    }
+
+    $scope.queryData($scope.selectedScales);
+
+            //TODO if there is no data in weight error
+            //TODO device list should content device's id
+    Scale.find({filter:{"where":{MAC:$scope.reagentScale.MAC},limit:1}},function(val){
+        //TODO if there is no data in weight error
+        Weight.findOne({filter:{"where":{"scale_id":1},"order":"gmt_created desc"}},function(vall){
+            $scope.reagentScale.weight=vall.value||0;
+            $scope.reagentScale.full_weight = 200; //TODO
+            var a=['乙醇','甲醇','石油醚','乙酸乙酯','二氯甲烷'];
+            var b=[21,19.79,25,22,33];
+            $scope.reagentScale.reagent_name = a[val[0].item_id-1];
+            $scope.reagentScale.full_weight = b[val[0].item_id-1];
+        });
+    });
+};
+
+function scannerPageCtrl($scope, $modal, $modalInstance){
+    //TODO scanner detail page
+    $scope.close=$modalInstance.close;
+}
 
 function widgetFlotChart() {
 
@@ -221,6 +354,7 @@ function widgetFlotChart() {
 };
 
 function deviceDetection($scope, $http, $modal, $modalInstance){
+    $scope.$modalInstance=$modalInstance;
     $scope.devicesUnknown=[];
     $scope.iconType={
         scanner: 'fa-bullseye',
@@ -279,8 +413,6 @@ function deviceDetection($scope, $http, $modal, $modalInstance){
         });
 
     };
-
-    $a=$scope;
 };
 
 function addDevice($scope, $modalInstance, deviceInfo, Scale, Item){
@@ -313,9 +445,10 @@ function addDevice($scope, $modalInstance, deviceInfo, Scale, Item){
                 item_id: $scope.formDetails.reagent
             }
             ,function (val,resHeader){
+                $a=$scope;
                 $modalInstance.close();
                 tools.notify('alert-success','register device success');
-
+                $scope.$parent.$modalInstance.close();
                 // $scope.$parent.$parent.devices=Scale.find(
                 //     function(val){
                 //         // debugger;
@@ -324,7 +457,7 @@ function addDevice($scope, $modalInstance, deviceInfo, Scale, Item){
                 //     },
                 //     function(res){
                 // });
-                $scope.$parent.$parent.queryDevice();
+                $scope.queryDevice($scope.$apply);
             }
             ,function (res){
                 tools.notify('alert-danger',res.data.error.message);
@@ -447,7 +580,6 @@ function reagentCtrl($scope, $modal, $compile, $timeout, $sce, RfidInfo ,ngTable
     };
 
     
-    $a=$scope;
     $scope.deletea=function(_id,cb){
             RfidInfo.deleteById({id: $scope.reagents[_id].id},
                 function(){
@@ -455,7 +587,7 @@ function reagentCtrl($scope, $modal, $compile, $timeout, $sce, RfidInfo ,ngTable
                     console.log("delete");
                     if(cb){
                         console.log("confirm cb");
-                        cb;
+                        cb();
                     }
                 },
                 function(res,_id){
@@ -470,12 +602,12 @@ function reagentCtrl($scope, $modal, $compile, $timeout, $sce, RfidInfo ,ngTable
 
     $scope.deleteReagent=function(id,cb){
         var _delete=function(_id,cb){
-            RfidInfo.deleteById({id: ['1','2']},
+            RfidInfo.deleteById({id: _id},
                 function(){
                     console.log("delete"+_id);
                     if(cb){
                         console.log("confirm cb");
-                        cb;
+                        cb();
                     }
                 },
                 function(res,_id){
@@ -609,28 +741,6 @@ function reagentCtrl($scope, $modal, $compile, $timeout, $sce, RfidInfo ,ngTable
 
 function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Item){
     $scope.floor=window.Math.floor;
-    // $scope.reagentUsage=[
-    //     {
-    //         data:[[0,10000],[1,7563],[2,3650],[3,1324],[4,3641],[5,34577],[6,24356],[7,21237]],
-    //         //data:oilprices,
-    //         label:'reagentA'
-    //     },
-    //     {
-    //         data:[[0,1000],[1,2563],[2,7650],[3,5324],[4,2641],[5,4577],[6,1356],[7,11237]],
-    //         //data:exchangerates,
-    //         label:'reagentB'
-    //     },
-    //     {
-    //         data:[[0,1000],[1,22563],[2,12650],[3,9324],[4,5641],[5,2457],[6,4356],[7,1237]],
-    //         //data:oilprices,
-    //         label:'reagentA'
-    //     },
-    //     {
-    //         data:[[0,20300],[1,15634],[2,12650],[3,9324],[4,5641],[5,3577],[6,2356],[7,1237]],
-    //         //data:exchangerates,
-    //         label:'reagentB'
-    //     },
-    // ];
     $scope.from=new Date();
     $scope.from.setMonth($scope.from.getMonth()-1);
     $scope.to=new Date();
@@ -708,7 +818,7 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Ite
                 $scope.reagentUsageBak.push(
                     {
                         data: val.map(function(e,b){
-                            //TODO map b
+                            //TODO map b, the x axis of chart, change to date
                             return [b,e.value];
                         }),
                         label:scales[i].name
@@ -720,10 +830,12 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Ite
             });
         }
         for(var i in scales){
+            debugger;
             aStep.bind(null,i)();
         }
     }
 
+    //最近查询
     $scope.color=['label-success', 'label-info', 'label-primary', 'label-default', 'label-primary'];
     $scope.latestSearchedReagent=RfidInfo.find({filter:{order:'gmt_visited DESC',limit:5}},
         function(){
@@ -737,20 +849,8 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Ite
             $scope.latestSearchedReagent[x].gmt_visited=new Date($scope.latestSearchedReagent[x].gmt_visited);
         }
     });
-    $a=$scope;
-    $scope.scaleDetail = function (reagentName) {
-        var modalInstance = $modal.open({
-            templateUrl: 'views/reagent/reagent_detail.html',
-            controller: 'scaleDetail',
-            resolve :{
-                'reagentName':function(){
-                    return reagentName;
-                }
-            },
-        });
 
-    };
-    //TODO: scale list
+    //展示试剂余量
     $scope.reagentScales=[];
     Scale.find(function(val){
         val.map(function(e){
@@ -769,32 +869,160 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Ite
     });
     //TODO reagent name&reagent full_weight
 
-    // $scope.reagentScales=[
-    //         {
-    //             id:'11',
-    //             reagent_name:'11',
-    //             weight:'20',
-    //             full_weight:'100'
-    //         },
-    //         {
-    //             id:'22',
-    //             reagent_name:'11',
-    //             weight:'20',
-    //             full_weight:'30'
-    //         },
-    //         {
-    //             id:'33',
-    //             reagent_name:'11',
-    //             weight:'20',
-    //             full_weight:'20'
-    //         }
-    //     ];
-};
 
-function scaleDetail($scope, reagentName, $modalInstance){
-    console.log($modalInstance);
-    $scope.reagentName = reagentName;
-    $scope.close = $modalInstance.close;
+    //架子展示
+    //TODO: reagent_name,full_weight,reagent_pos
+    $scope.reagentsShelf=[
+        {
+            reagent_pos:-1
+        },
+        {
+            reagent_name : '甲醇',
+            reagent_pos : 1,
+            full_weight : 20,
+            weight : 3,
+            id : 1,
+            isselected : true
+        },{
+            reagent_name : '甲醇',
+            reagent_pos : 2,
+            full_weight : 20,
+            weight : 14,
+            id : 1,
+            isselected : true
+        },{
+            reagent_name : '甲醇',
+            reagent_pos : 3,
+            full_weight : 20,
+            weight : 20,
+            id : 1,
+            isselected : true
+        },{
+            reagent_name : '乙醇',
+            reagent_pos : 4,
+            full_weight : 20,
+            weight : 19,
+            id : 1,
+            isselected : true
+        },{
+            reagent_name : '乙酸乙酯',
+            reagent_pos : 5,
+            full_weight : 20,
+            weight : 2,
+            id : 1,
+            isselected : true
+        },{
+            reagent_name : '石油醚',
+            reagent_pos : 6,
+            full_weight : 20,
+            weight : 5,
+            id : 1,
+            isselected : true
+        },{
+            reagent_name : '甲醇',
+            reagent_pos : 7,
+            full_weight : 20,
+            weight : 14,
+            id : 1,
+            isselected : true
+        },{
+            reagent_name : '甲醇',
+            reagent_pos : 8,
+            full_weight : 20,
+            weight : 3,
+            id : 1,
+            isselected : true
+        },{
+            reagent_name : '甲醇',
+            reagent_pos : 9,
+            full_weight : 20,
+            weight : 11,
+            id : 1,
+            isselected : true
+        },{
+            reagent_name : '甲醇',
+            reagent_pos : 11,
+            full_weight : 20,
+            weight : 17,
+            id : 1,
+            isselected : true
+        },{
+            reagent_name : '甲醇',
+            reagent_pos : 10,
+            full_weight : 20,
+            weight : 2,
+            id : 1,
+            isselected : true
+        }
+    ];
+
+    //reagentsShelf 待展示试剂数组
+    //n每行显示个数
+    outputShelf = function(reagentsShelf,n){
+        result=[];
+        for(var i=0;i<reagentsShelf.length/n;i++){
+            temp=[];
+            for(var j=0;j<n;j++){
+                if(i*n+j>=reagentsShelf.length) break;
+                temp.push(reagentsShelf[i*n+j]);
+            }
+            result.push(temp);
+        }
+        return result;
+    };
+    //按照 reagent_pos排序
+    $scope.reagentsShelf.sort(function(a,b){ return a.reagent_pos - b.reagent_pos});
+    $scope.reagentsShelf = outputShelf($scope.reagentsShelf,4);
+
+    //同种试剂
+
+    $scope.reagentsStat=[
+        {
+            reagent_name: '甲醇',
+            amount: 8,
+            list: [1,2,3,7,8,9,10,11]
+        },
+        {
+            reagent_name: '乙醇',
+            amount: 1,
+            list: [4]
+        },
+        {
+            reagent_name: '乙酸乙酯',
+            amount: 1,
+            list: [5]
+        },
+        {
+            reagent_name: '石油醚',
+            amount: 1,
+            list :[6]
+        }
+    ];
+
+    //称详情展示
+    $scope.scaleDetail = function(scale){
+        $scope.reagentScale = scale
+        var modalInstance = $modal.open({
+            templateUrl: 'views/device/scale_page.html',
+            size: 'md',
+            scope: $scope,
+            controller: 'scalePageCtrl'
+        });
+    };
+    var isselect = false;
+    $scope.selectScale = function(list){
+        flag = $scope.reagentsShelf[Math.floor(list[0]/4)][list[0]%4].isselected;
+        isselect = !(isselect && flag);
+        for(i in $scope.reagentsShelf){
+            for(j in $scope.reagentsShelf[i]){
+                $scope.reagentsShelf[i][j].isselected= flag && isselect;
+            }
+        }
+        for(i in list){
+            console.log();
+            $scope.reagentsShelf[Math.floor(list[i]/4)][list[i]%4].isselected = true;
+        }
+    }
 };
 
 function chartJsCtrl() {
@@ -1056,10 +1284,11 @@ angular
     .controller('deviceCtrl', deviceCtrl)
     .controller('deviceDetection', deviceDetection)
     .controller('addDevice', addDevice)
+    .controller('scalePageCtrl', scalePageCtrl)
+    .controller('scannerPageCtrl', scannerPageCtrl)
 
     .controller('reagentCtrl', reagentCtrl)
-    .controller('reagentOverviewCtrl',reagentOverviewCtrl)
-    .controller('scaleDetail',scaleDetail);
+    .controller('reagentOverviewCtrl',reagentOverviewCtrl);
 
 
 

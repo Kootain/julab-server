@@ -55,9 +55,48 @@
 .low-warning{
     background-color: #ED5565;
 }
+
+.unhighlight{
+    background-color: #8E8E8E !important;
+}
 </style>
 <div class="row  border-bottom white-bg dashboard-header">
-    <div class="col-sm-5 col-md-4">
+
+    <div class="col-sm-12 col-md-4">
+        <h2>{{ 'WELCOME' | translate }}</h2>
+        <small>Reagent Statics</small>
+        <ul class="list-group clear-list m-t" >
+            <li ng-repeat="reagent in reagentsStat" ng-class="($index==0)?'fist-item':''"class="list-group-item" ng-click="selectScale(reagent.list)">
+                                <span class="pull-right">
+                                    <strong>{{ reagent.amount+' ' }}bucket{{reagent.amount>1?'s':''}}</strong>
+                                </span>
+                <span class="label" ng-class="color[$index]">{{ $index+1 }}</span> <strong>{{ reagent.reagent_name }}</strong>
+            </li>
+        </ul>
+    </div>
+
+    <!--架子-->
+    <div class="col-md-8 col-sm-12" style="padding-top: 30px;margin-bottom:30px">
+        <div class="row" ng-repeat="(j,reagents) in reagentsShelf">
+            <div class="col-md-3 col-sm-3" ng-repeat="(i,reagent) in reagents">
+                <div class="ibox" style="{{reagent.hasOwnProperty('reagent_name')?'':'display:none;'}}">
+                    <div class="ibox-content"  ng-init="percent=reagent.weight / reagent.full_weight * 100" ng-click="scaleDetail(reagent)" ng-class="reagent.isselected?'':'unhighlight'">
+                        <h5>{{reagent.reagent_name}}</h5>
+                        <h2>{{floor(percent)}}%</h2>
+                        <div class="progress progress-mini" >
+                            <div style="width: {{floor(percent)}}%;" class="progress-bar" ng-class="percent<=20?'progress-bar-danger':''"></div>
+                        </div>
+                        <div class="m-t-sm small">Shelf {{reagent.reagent_pos}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+     <!--架子结束-->
+
+    <!--
+
+    <div class="col-sm-12 col-md-4">
         <h2>{{ 'WELCOME' | translate }}</h2>
         <small>latest searched reagent info</small>
         <ul class="list-group clear-list m-t">
@@ -90,6 +129,8 @@
             </div>
         </div>
     </div>
+    
+
     <div class="col-sm-12 col-md-12">
         <div class="ibox float-e-margins">
             <div class="ibox-title">
@@ -115,6 +156,7 @@
             </div>
         </div>
     </div>
+    -->
 
 </div>
 
