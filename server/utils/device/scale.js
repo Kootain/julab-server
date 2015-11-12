@@ -1,4 +1,4 @@
-var FREQUENCY=1000;//query data per 1s.
+var FREQUENCY=900000;//query data per 1s.
 
 
 var _scale = function scale(app , device, params){

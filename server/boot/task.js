@@ -1,4 +1,4 @@
-var SERVER_PORT = 8001;
+var SERVER_PORT = 8080;
 module.exports = function (app) {
   console.log('called');
 	var Device = require('../utils/device/device');
@@ -17,7 +17,7 @@ module.exports = function (app) {
   var exec = require('child_process').exec;
   exec('arp -a',function(err,stdout,stderr){
     //if(err) throw new Error(err)
-    stdout='192.168.100.105  0x1         0x2         ac:bc:32:8d:9d:5d     *        br-lan';
+    stdout='192.168.100.152  0x1         0x2         8c:88:2b:00:1f:80     *        br-lan';
     console.log('=========');
     console.log(stdout);
     console.log('=========');
