@@ -2898,6 +2898,12 @@ module.factory(
           method: "PUT"
         },
 
+        // INTERNAL. Use Scale.item() instead.
+        "prototype$__get__item": {
+          url: urlBase + "/Scales/:id/item",
+          method: "GET"
+        },
+
         // INTERNAL. Use Scale.weight() instead.
         "prototype$__get__weight": {
           isArray: true,
@@ -3341,6 +3347,65 @@ module.factory(
           url: urlBase + "/Scales/change-stream",
           method: "POST"
         },
+
+        // INTERNAL. Use Item.scale.findById() instead.
+        "::findById::Item::scale": {
+          params: {
+          'fk': '@fk'
+          },
+          url: urlBase + "/Items/:id/scale/:fk",
+          method: "GET"
+        },
+
+        // INTERNAL. Use Item.scale.destroyById() instead.
+        "::destroyById::Item::scale": {
+          params: {
+          'fk': '@fk'
+          },
+          url: urlBase + "/Items/:id/scale/:fk",
+          method: "DELETE"
+        },
+
+        // INTERNAL. Use Item.scale.updateById() instead.
+        "::updateById::Item::scale": {
+          params: {
+          'fk': '@fk'
+          },
+          url: urlBase + "/Items/:id/scale/:fk",
+          method: "PUT"
+        },
+
+        // INTERNAL. Use Item.scale() instead.
+        "::get::Item::scale": {
+          isArray: true,
+          url: urlBase + "/Items/:id/scale",
+          method: "GET"
+        },
+
+        // INTERNAL. Use Item.scale.create() instead.
+        "::create::Item::scale": {
+          url: urlBase + "/Items/:id/scale",
+          method: "POST"
+        },
+
+        // INTERNAL. Use Item.scale.createMany() instead.
+        "::createMany::Item::scale": {
+          isArray: true,
+          url: urlBase + "/Items/:id/scale",
+          method: "POST"
+        },
+
+        // INTERNAL. Use Item.scale.destroyAll() instead.
+        "::delete::Item::scale": {
+          url: urlBase + "/Items/:id/scale",
+          method: "DELETE"
+        },
+
+        // INTERNAL. Use Item.scale.count() instead.
+        "::count::Item::scale": {
+          url: urlBase + "/Items/:id/scale/count",
+          method: "GET"
+        },
       }
     );
 
@@ -3776,6 +3841,42 @@ module.factory(
         R.weight.updateById = function() {
           var TargetResource = $injector.get("Weight");
           var action = TargetResource["::updateById::Scale::weight"];
+          return action.apply(R, arguments);
+        };
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Scale#item
+         * @methodOf lbServices.Scale
+         *
+         * @description
+         *
+         * Fetches belongsTo relation item.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - PersistedModel id
+         *
+         *  - `refresh` – `{boolean=}` - 
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * <em>
+         * (The remote method definition does not provide any description.
+         * This usually means the response is a `Item` object.)
+         * </em>
+         */
+        R.item = function() {
+          var TargetResource = $injector.get("Item");
+          var action = TargetResource["::get::Scale::item"];
           return action.apply(R, arguments);
         };
 
@@ -4491,6 +4592,58 @@ module.factory(
       { 'id': '@id' },
       {
 
+        // INTERNAL. Use Item.scale.findById() instead.
+        "prototype$__findById__scale": {
+          params: {
+          'fk': '@fk'
+          },
+          url: urlBase + "/Items/:id/scale/:fk",
+          method: "GET"
+        },
+
+        // INTERNAL. Use Item.scale.destroyById() instead.
+        "prototype$__destroyById__scale": {
+          params: {
+          'fk': '@fk'
+          },
+          url: urlBase + "/Items/:id/scale/:fk",
+          method: "DELETE"
+        },
+
+        // INTERNAL. Use Item.scale.updateById() instead.
+        "prototype$__updateById__scale": {
+          params: {
+          'fk': '@fk'
+          },
+          url: urlBase + "/Items/:id/scale/:fk",
+          method: "PUT"
+        },
+
+        // INTERNAL. Use Item.scale() instead.
+        "prototype$__get__scale": {
+          isArray: true,
+          url: urlBase + "/Items/:id/scale",
+          method: "GET"
+        },
+
+        // INTERNAL. Use Item.scale.create() instead.
+        "prototype$__create__scale": {
+          url: urlBase + "/Items/:id/scale",
+          method: "POST"
+        },
+
+        // INTERNAL. Use Item.scale.destroyAll() instead.
+        "prototype$__delete__scale": {
+          url: urlBase + "/Items/:id/scale",
+          method: "DELETE"
+        },
+
+        // INTERNAL. Use Item.scale.count() instead.
+        "prototype$__count__scale": {
+          url: urlBase + "/Items/:id/scale/count",
+          method: "GET"
+        },
+
         /**
          * @ngdoc method
          * @name lbServices.Item#create
@@ -4910,6 +5063,12 @@ module.factory(
           method: "POST"
         },
 
+        // INTERNAL. Use Scale.item() instead.
+        "::get::Scale::item": {
+          url: urlBase + "/Scales/:id/item",
+          method: "GET"
+        },
+
         // INTERNAL. Use Weight.item() instead.
         "::get::Weight::item": {
           url: urlBase + "/Weights/:id/item",
@@ -5051,6 +5210,307 @@ module.factory(
     */
     R.modelName = "Item";
 
+    /**
+     * @ngdoc object
+     * @name lbServices.Item.scale
+     * @header lbServices.Item.scale
+     * @object
+     * @description
+     *
+     * The object `Item.scale` groups methods
+     * manipulating `Scale` instances related to `Item`.
+     *
+     * Call {@link lbServices.Item#scale Item.scale()}
+     * to query all related instances.
+     */
+
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Item#scale
+         * @methodOf lbServices.Item
+         *
+         * @description
+         *
+         * Queries scale of Item.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - PersistedModel id
+         *
+         *  - `filter` – `{object=}` - 
+         *
+         * @param {function(Array.<Object>,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Array.<Object>} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * <em>
+         * (The remote method definition does not provide any description.
+         * This usually means the response is a `Scale` object.)
+         * </em>
+         */
+        R.scale = function() {
+          var TargetResource = $injector.get("Scale");
+          var action = TargetResource["::get::Item::scale"];
+          return action.apply(R, arguments);
+        };
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Item.scale#count
+         * @methodOf lbServices.Item.scale
+         *
+         * @description
+         *
+         * Counts scale of Item.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - PersistedModel id
+         *
+         *  - `where` – `{object=}` - Criteria to match model instances
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * Data properties:
+         *
+         *  - `count` – `{number=}` - 
+         */
+        R.scale.count = function() {
+          var TargetResource = $injector.get("Scale");
+          var action = TargetResource["::count::Item::scale"];
+          return action.apply(R, arguments);
+        };
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Item.scale#create
+         * @methodOf lbServices.Item.scale
+         *
+         * @description
+         *
+         * Creates a new instance in scale of this model.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - PersistedModel id
+         *
+         * @param {Object} postData Request data.
+         *
+         * This method expects a subset of model properties as request parameters.
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * <em>
+         * (The remote method definition does not provide any description.
+         * This usually means the response is a `Scale` object.)
+         * </em>
+         */
+        R.scale.create = function() {
+          var TargetResource = $injector.get("Scale");
+          var action = TargetResource["::create::Item::scale"];
+          return action.apply(R, arguments);
+        };
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Item.scale#createMany
+         * @methodOf lbServices.Item.scale
+         *
+         * @description
+         *
+         * Creates a new instance in scale of this model.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - PersistedModel id
+         *
+         * @param {Object} postData Request data.
+         *
+         * This method expects a subset of model properties as request parameters.
+         *
+         * @param {function(Array.<Object>,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Array.<Object>} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * <em>
+         * (The remote method definition does not provide any description.
+         * This usually means the response is a `Scale` object.)
+         * </em>
+         */
+        R.scale.createMany = function() {
+          var TargetResource = $injector.get("Scale");
+          var action = TargetResource["::createMany::Item::scale"];
+          return action.apply(R, arguments);
+        };
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Item.scale#destroyAll
+         * @methodOf lbServices.Item.scale
+         *
+         * @description
+         *
+         * Deletes all scale of this model.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - PersistedModel id
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * This method returns no data.
+         */
+        R.scale.destroyAll = function() {
+          var TargetResource = $injector.get("Scale");
+          var action = TargetResource["::delete::Item::scale"];
+          return action.apply(R, arguments);
+        };
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Item.scale#destroyById
+         * @methodOf lbServices.Item.scale
+         *
+         * @description
+         *
+         * Delete a related item by id for scale.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - PersistedModel id
+         *
+         *  - `fk` – `{*}` - Foreign key for scale
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * This method returns no data.
+         */
+        R.scale.destroyById = function() {
+          var TargetResource = $injector.get("Scale");
+          var action = TargetResource["::destroyById::Item::scale"];
+          return action.apply(R, arguments);
+        };
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Item.scale#findById
+         * @methodOf lbServices.Item.scale
+         *
+         * @description
+         *
+         * Find a related item by id for scale.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - PersistedModel id
+         *
+         *  - `fk` – `{*}` - Foreign key for scale
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * <em>
+         * (The remote method definition does not provide any description.
+         * This usually means the response is a `Scale` object.)
+         * </em>
+         */
+        R.scale.findById = function() {
+          var TargetResource = $injector.get("Scale");
+          var action = TargetResource["::findById::Item::scale"];
+          return action.apply(R, arguments);
+        };
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Item.scale#updateById
+         * @methodOf lbServices.Item.scale
+         *
+         * @description
+         *
+         * Update a related item by id for scale.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - PersistedModel id
+         *
+         *  - `fk` – `{*}` - Foreign key for scale
+         *
+         * @param {Object} postData Request data.
+         *
+         * This method expects a subset of model properties as request parameters.
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * <em>
+         * (The remote method definition does not provide any description.
+         * This usually means the response is a `Scale` object.)
+         * </em>
+         */
+        R.scale.updateById = function() {
+          var TargetResource = $injector.get("Scale");
+          var action = TargetResource["::updateById::Item::scale"];
+          return action.apply(R, arguments);
+        };
 
     return R;
   }]);

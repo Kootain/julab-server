@@ -37,6 +37,11 @@
       "type":"hasMany",
       "model":"Weight",
       "foreignKey":"scale_id"
+    },
+    "item":{
+      "type":"belongsTo",
+      "model":"Item",
+      "foreignKey":"item_id"
     }
   },
   "acls": [],

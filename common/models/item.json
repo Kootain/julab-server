@@ -13,6 +13,11 @@
   },
   "validations": [],
   "relations": {
+    "scale":{
+      "type":"hasMany",
+      "model": "Scale",
+      "foreignKey": "item_id"
+    }
   },
   "acls": [],
   "methods": []

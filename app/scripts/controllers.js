@@ -2,7 +2,8 @@
  * MainCtrl - controller
  */
 tools={};
-function mainCtrl($scope,notify) {
+query={};
+function mainCtrl($scope, Scale,notify) {
 
     this.userName = 'tanki';
     this.helloText = 'Welcome in SeedProject';
@@ -464,6 +465,18 @@ function addDevice($scope, $modalInstance, deviceInfo, Scale, Item){
             });
         }
     }
+    outputShelf = function(reagentsShelf,n){
+        result=[];
+        for(var i=0;i<reagentsShelf.length/n;i++){
+            temp=[];
+            for(var j=0;j<n;j++){
+                if(i*n+j>=reagentsShelf.length) break;
+                temp.push(reagentsShelf[i*n+j]);
+            }
+            result.push(temp);
+        }
+        return result;
+    };
     var refreshChosen=function(){
         $('#myChosen').chosen('destroy').chosen({max_selected_options: 1});
     };
@@ -473,9 +486,11 @@ function addDevice($scope, $modalInstance, deviceInfo, Scale, Item){
         function(res){
              tools.notify('alert-danger',res.data.error.message);
         }).$promise.then(refreshChosen,refreshChosen);
-    // task
-    // $scope.search().then(refreshChosen,refreshChosen);
-
+    Scale.find().$promise.then(function(data){
+        $scope.scales = outputShelf(data,4);
+    });
+    
+    // $scope.scales = outputShelf($scope.scales,4);
 };
 
 
@@ -804,36 +819,36 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Ite
     });
     $scope.selectedScales=[];
 
-    //queryData on selectedScales change
-    $scope.$watch('selectedScales',function(oval,nval,scope){
-        $scope.queryData($scope.selectedScales);
-    });
+    // queryData on selectedScales change
+    // $scope.$watch('selectedScales',function(oval,nval,scope){
+    //     $scope.queryData($scope.selectedScales);
+    // });
 
-    $scope.queryData=function(scales){
-        $scope.reagentUsageBak=[];
-        var aStep=function(i){
-            Weight.find({
-                filter:{where:{"scale_id":scales[i].id,"gmt_created":{gt:$scope.from,lt:$scope.to}}}
-            },function(val){
-                $scope.reagentUsageBak.push(
-                    {
-                        data: val.map(function(e,b){
-                            //TODO map b, the x axis of chart, change to date
-                            return [b,e.value];
-                        }),
-                        label:scales[i].name
-                    }
-                );
-                $scope.reagentUsage=$scope.reagentUsageBak;
-            },function(err){
-                tools.notify('alert-danger',err.data.error.message);
-            });
-        }
-        for(var i in scales){
-            debugger;
-            aStep.bind(null,i)();
-        }
-    }
+    // $scope.queryData=function(scales){
+    //     $scope.reagentUsageBak=[];
+    //     var aStep=function(i){
+    //         Weight.find({
+    //             filter:{where:{"scale_id":scales[i].id,"gmt_created":{gt:$scope.from,lt:$scope.to}}}
+    //         },function(val){
+    //             $scope.reagentUsageBak.push(
+    //                 {
+    //                     data: val.map(function(e,b){
+    //                         //TODO map b, the x axis of chart, change to date
+    //                         return [b,e.value];
+    //                     }),
+    //                     label:scales[i].name
+    //                 }
+    //             );
+    //             $scope.reagentUsage=$scope.reagentUsageBak;
+    //         },function(err){
+    //             tools.notify('alert-danger',err.data.error.message);
+    //         });
+    //     }
+    //     for(var i in scales){
+    //         // debugger;
+    //         aStep.bind(null,i)();
+    //     }
+    // }
 
     //最近查询
     $scope.color=['label-success', 'label-info', 'label-primary', 'label-default', 'label-primary'];
@@ -850,123 +865,22 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Ite
         }
     });
 
-    //展示试剂余量
-    $scope.reagentScales=[];
-    Scale.find(function(val){
-        val.map(function(e){
-            //TODO if there is no data in weight error
-            Weight.findOne({filter:{"where":{"scale_id":e.id},"order":"gmt_created desc"}},function(vall){
-                e.weight=vall.value||0;
-                e.full_weight = 200; //TODO
-                $scope.reagentScales.push(e);
-                var a=['乙醇','甲醇','石油醚','乙酸乙酯','二氯甲烷'];
-                var b=[21,19.79,25,22,33];
-                e.reagent_name = a[e.item_id-1];
-                e.full_weight = b[e.item_id-1];
-                return e;
-            });
-        });
-    });
-    //TODO reagent name&reagent full_weight
-
-
     //架子展示
-    //TODO: reagent_name,full_weight,reagent_pos
-    $scope.reagentsShelf=[
-        {
-            reagent_pos:-1
-        },
-        {
-            reagent_name : '甲醇',
-            reagent_pos : 1,
-            full_weight : 20,
-            weight : 3,
-            id : 1,
-            isselected : true
-        },{
-            reagent_name : '甲醇',
-            reagent_pos : 2,
-            full_weight : 20,
-            weight : 14,
-            id : 1,
-            isselected : true
-        },{
-            reagent_name : '甲醇',
-            reagent_pos : 3,
-            full_weight : 20,
-            weight : 20,
-            id : 1,
-            isselected : true
-        },{
-            reagent_name : '乙醇',
-            reagent_pos : 4,
-            full_weight : 20,
-            weight : 19,
-            id : 1,
-            isselected : true
-        },{
-            reagent_name : '乙酸乙酯',
-            reagent_pos : 5,
-            full_weight : 20,
-            weight : 2,
-            id : 1,
-            isselected : true
-        },{
-            reagent_name : '石油醚',
-            reagent_pos : 6,
-            full_weight : 20,
-            weight : 5,
-            id : 1,
-            isselected : true
-        },{
-            reagent_name : '甲醇',
-            reagent_pos : 7,
-            full_weight : 20,
-            weight : 14,
-            id : 1,
-            isselected : true
-        },{
-            reagent_name : '甲醇',
-            reagent_pos : 8,
-            full_weight : 20,
-            weight : 3,
-            id : 1,
-            isselected : true
-        },{
-            reagent_name : '甲醇',
-            reagent_pos : 9,
-            full_weight : 20,
-            weight : 11,
-            id : 1,
-            isselected : true
-        },{
-            reagent_name : '甲醇',
-            reagent_pos : 11,
-            full_weight : 20,
-            weight : 17,
-            id : 1,
-            isselected : true
-        },{
-            reagent_name : '甲醇',
-            reagent_pos : 10,
-            full_weight : 20,
-            weight : 2,
-            id : 1,
-            isselected : true
-        }
-    ];
-
     Scale.find({filter:{
-        include:{
-            relation: 'weight',
-            scope:{
-                order: 'gmt_created desc',
-                limit: 1,
-                include: {
-                    relation: 'item'
-                }
-            }
-        }
+        include:
+            [
+                {
+                    relation: 'weight',
+                    scope:{
+                        order: 'gmt_created desc',
+                        limit: 1,
+                        include: {
+                            relation: 'item'
+                        }
+                    }
+                },
+                "item"
+            ]
     }},function(val){
         $scope.reagentsShelf=val.map(function(e){
             e.isselected = true;
@@ -977,24 +891,27 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Ite
             }else{
                 e.full_weight = 0;
                 e.value = 0;
-                e.reagent_name = '空';
+                e.reagent_name = e.hasOwnProperty('item')?e.item.name:'空';
             }
-            console.log(e);
             return e;
         });
     },function(res){
         tools.notify('alert-danger',res.data.error.message);
     }).$promise.then(function(){
-        //按照 reagent_pos排序
-        $scope.reagentsShelf.sort(function(a,b){ return a.pos - b.pos});
         $scope.reagentsShelf = outputShelf($scope.reagentsShelf,4);
-
+        console.log($scope.reagentsShelf);
     });
-    $a=$scope;
+
     //reagentsShelf 待展示试剂数组
     //n每行显示个数
     outputShelf = function(reagentsShelf,n){
+        a=[];
         result=[];
+        for(var i=0;i<reagentsShelf.length;i++){
+            a[reagentsShelf[i].pos] = reagentsShelf[i];
+        }
+        console.log(a);
+        reagentsShelf = a;
         for(var i=0;i<reagentsShelf.length/n;i++){
             temp=[];
             for(var j=0;j<n;j++){
@@ -1006,30 +923,19 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Ite
         return result;
     };
    
-    //同种试剂
-
-    $scope.reagentsStat=[
-        {
-            reagent_name: '甲醇',
-            amount: 8,
-            list: [1,2,3,7,8,9,10,11]
-        },
-        {
-            reagent_name: '乙醇',
-            amount: 1,
-            list: [4]
-        },
-        {
-            reagent_name: '乙酸乙酯',
-            amount: 1,
-            list: [5]
-        },
-        {
-            reagent_name: '石油醚',
-            amount: 1,
-            list :[6]
-        }
-    ];
+    //同种试剂统计
+    Item.find({filter:{
+        include : "scale"
+    }},function(val){
+        $scope.reagentsStat = val.map(function(e){
+            e.amount = e.scale.length;
+            e.list=[];
+            for (var i=0;i<e.scale.length;i++){
+                e.list.push(e.scale[i].pos);
+            }
+                return e;
+        });
+    });
 
     //称详情展示
     $scope.scaleDetail = function(scale){
@@ -1041,13 +947,20 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Ite
             controller: 'scalePageCtrl'
         });
     };
+
+    //试剂高亮
     var isselect = false;
     $scope.selectScale = function(list){
+        if (list.length == 0){
+            return;
+        }
         flag = $scope.reagentsShelf[Math.floor(list[0]/4)][list[0]%4].isselected;
         isselect = !(isselect && flag);
         for(i in $scope.reagentsShelf){
             for(j in $scope.reagentsShelf[i]){
-                $scope.reagentsShelf[i][j].isselected= flag && isselect;
+                if($scope.reagentsShelf[i][j]){
+                    $scope.reagentsShelf[i][j].isselected= flag && isselect;
+                }
             }
         }
         for(i in list){
