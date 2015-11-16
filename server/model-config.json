@@ -67,5 +67,11 @@
     "public": true,
     "$promise": {},
     "$resolved": true
+  },
+  "Reagent": {
+    "dataSource": "router-db",
+    "public": true,
+    "$promise": {},
+    "$resolved": true
   }
 }

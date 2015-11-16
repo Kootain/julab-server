@@ -28,7 +28,7 @@
         <div class="ibox-content">
              <div class="row" >
                  <div class="col-md-3" style="text-align:center">
-                     <h2>{{  floor(reagentScale.weight / reagentScale.full_weight * 100)  }}%</h2>
+                     <h2>{{  percent=floor(reagentScale.value / reagentScale.full_weight * 100)  }}%</h2>
                      <div class="progress progress-mini-vertical reagent-format">
                          <div style="height: {{percent}}%;" class="progress-bar" ng-class="percent<=20?'low-warning':''"></div>
                      </div> 
@@ -50,7 +50,7 @@
                 </div>
              </div>
              <div class="row" style="text-align:center">
-                <a class="btn btn-rounded" href="" ng-click="dg=!dg" ng-class="dg?'btn-danger':'btn-primary'">马上订购！</a>
+                <a class="btn btn-rounded" href="" ng-click="dg=!dg" ng-class="percent<=20?'btn-danger':'btn-primary'">马上订购！</a>
              </div>
          </div>
     </div>

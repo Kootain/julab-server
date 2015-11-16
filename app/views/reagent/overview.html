@@ -59,6 +59,10 @@
 .unhighlight{
     background-color: #8E8E8E !important;
 }
+
+.new{
+    background-color : #ED5565 !important;
+}
 </style>
 <div class="row  border-bottom white-bg dashboard-header">
 
@@ -80,7 +84,7 @@
         <div class="row" ng-repeat="(j,reagents) in reagentsShelf">
             <div class="col-md-3 col-sm-3" ng-repeat="(i,reagent) in reagents">
                 <div class="ibox" style="{{reagent.hasOwnProperty('reagent_name')?'':'display:none;'}}">
-                    <div class="ibox-content"  ng-init="percent=reagent.weight / reagent.full_weight * 100" ng-click="scaleDetail(reagent)" ng-class="reagent.isselected?'':'unhighlight'">
+                    <div class="ibox-content  {{!reagent.is_new?'':'new'}}"  ng-init="percent=reagent.value / reagent.full_weight * 100" ng-click="scaleDetail(reagent)" ng-class="reagent.isselected?'':'unhighlight'">
                         <h5>{{reagent.reagent_name}}</h5>
                         <h2>{{floor(percent)}}%</h2>
                         <div class="progress progress-mini" >

@@ -13,10 +13,10 @@
   },
   "validations": [],
   "relations": {
-    "scale":{
+    "reagent":{
       "type":"hasMany",
-      "model": "Scale",
-      "foreignKey": "item_id"
+      "model":"Reagent",
+      "foreignKey":"item_id"
     }
   },
   "acls": [],

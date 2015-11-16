@@ -2907,61 +2907,9 @@ module.factory(
       { 'id': '@id' },
       {
 
-        // INTERNAL. Use Scale.weight.findById() instead.
-        "prototype$__findById__weight": {
-          params: {
-          'fk': '@fk'
-          },
-          url: urlBase + "/Scales/:id/weight/:fk",
-          method: "GET"
-        },
-
-        // INTERNAL. Use Scale.weight.destroyById() instead.
-        "prototype$__destroyById__weight": {
-          params: {
-          'fk': '@fk'
-          },
-          url: urlBase + "/Scales/:id/weight/:fk",
-          method: "DELETE"
-        },
-
-        // INTERNAL. Use Scale.weight.updateById() instead.
-        "prototype$__updateById__weight": {
-          params: {
-          'fk': '@fk'
-          },
-          url: urlBase + "/Scales/:id/weight/:fk",
-          method: "PUT"
-        },
-
-        // INTERNAL. Use Scale.item() instead.
-        "prototype$__get__item": {
-          url: urlBase + "/Scales/:id/item",
-          method: "GET"
-        },
-
-        // INTERNAL. Use Scale.weight() instead.
-        "prototype$__get__weight": {
-          isArray: true,
-          url: urlBase + "/Scales/:id/weight",
-          method: "GET"
-        },
-
-        // INTERNAL. Use Scale.weight.create() instead.
-        "prototype$__create__weight": {
-          url: urlBase + "/Scales/:id/weight",
-          method: "POST"
-        },
-
-        // INTERNAL. Use Scale.weight.destroyAll() instead.
-        "prototype$__delete__weight": {
-          url: urlBase + "/Scales/:id/weight",
-          method: "DELETE"
-        },
-
-        // INTERNAL. Use Scale.weight.count() instead.
-        "prototype$__count__weight": {
-          url: urlBase + "/Scales/:id/weight/count",
+        // INTERNAL. Use Scale.reagent() instead.
+        "prototype$__get__reagent": {
+          url: urlBase + "/Scales/:id/reagent",
           method: "GET"
         },
 
@@ -3387,62 +3335,9 @@ module.factory(
           method: "POST"
         },
 
-        // INTERNAL. Use Item.scale.findById() instead.
-        "::findById::Item::scale": {
-          params: {
-          'fk': '@fk'
-          },
-          url: urlBase + "/Items/:id/scale/:fk",
-          method: "GET"
-        },
-
-        // INTERNAL. Use Item.scale.destroyById() instead.
-        "::destroyById::Item::scale": {
-          params: {
-          'fk': '@fk'
-          },
-          url: urlBase + "/Items/:id/scale/:fk",
-          method: "DELETE"
-        },
-
-        // INTERNAL. Use Item.scale.updateById() instead.
-        "::updateById::Item::scale": {
-          params: {
-          'fk': '@fk'
-          },
-          url: urlBase + "/Items/:id/scale/:fk",
-          method: "PUT"
-        },
-
-        // INTERNAL. Use Item.scale() instead.
-        "::get::Item::scale": {
-          isArray: true,
-          url: urlBase + "/Items/:id/scale",
-          method: "GET"
-        },
-
-        // INTERNAL. Use Item.scale.create() instead.
-        "::create::Item::scale": {
-          url: urlBase + "/Items/:id/scale",
-          method: "POST"
-        },
-
-        // INTERNAL. Use Item.scale.createMany() instead.
-        "::createMany::Item::scale": {
-          isArray: true,
-          url: urlBase + "/Items/:id/scale",
-          method: "POST"
-        },
-
-        // INTERNAL. Use Item.scale.destroyAll() instead.
-        "::delete::Item::scale": {
-          url: urlBase + "/Items/:id/scale",
-          method: "DELETE"
-        },
-
-        // INTERNAL. Use Item.scale.count() instead.
-        "::count::Item::scale": {
-          url: urlBase + "/Items/:id/scale/count",
+        // INTERNAL. Use Reagent.scale() instead.
+        "::get::Reagent::scale": {
+          url: urlBase + "/Reagents/:id/scale",
           method: "GET"
         },
       }
@@ -3587,316 +3482,15 @@ module.factory(
     */
     R.modelName = "Scale";
 
-    /**
-     * @ngdoc object
-     * @name lbServices.Scale.weight
-     * @header lbServices.Scale.weight
-     * @object
-     * @description
-     *
-     * The object `Scale.weight` groups methods
-     * manipulating `Weight` instances related to `Scale`.
-     *
-     * Call {@link lbServices.Scale#weight Scale.weight()}
-     * to query all related instances.
-     */
-
 
         /**
          * @ngdoc method
-         * @name lbServices.Scale#weight
+         * @name lbServices.Scale#reagent
          * @methodOf lbServices.Scale
          *
          * @description
          *
-         * Queries weight of Scale.
-         *
-         * @param {Object=} parameters Request parameters.
-         *
-         *  - `id` – `{*}` - PersistedModel id
-         *
-         *  - `filter` – `{object=}` - 
-         *
-         * @param {function(Array.<Object>,Object)=} successCb
-         *   Success callback with two arguments: `value`, `responseHeaders`.
-         *
-         * @param {function(Object)=} errorCb Error callback with one argument:
-         *   `httpResponse`.
-         *
-         * @returns {Array.<Object>} An empty reference that will be
-         *   populated with the actual data once the response is returned
-         *   from the server.
-         *
-         * <em>
-         * (The remote method definition does not provide any description.
-         * This usually means the response is a `Weight` object.)
-         * </em>
-         */
-        R.weight = function() {
-          var TargetResource = $injector.get("Weight");
-          var action = TargetResource["::get::Scale::weight"];
-          return action.apply(R, arguments);
-        };
-
-        /**
-         * @ngdoc method
-         * @name lbServices.Scale.weight#count
-         * @methodOf lbServices.Scale.weight
-         *
-         * @description
-         *
-         * Counts weight of Scale.
-         *
-         * @param {Object=} parameters Request parameters.
-         *
-         *  - `id` – `{*}` - PersistedModel id
-         *
-         *  - `where` – `{object=}` - Criteria to match model instances
-         *
-         * @param {function(Object,Object)=} successCb
-         *   Success callback with two arguments: `value`, `responseHeaders`.
-         *
-         * @param {function(Object)=} errorCb Error callback with one argument:
-         *   `httpResponse`.
-         *
-         * @returns {Object} An empty reference that will be
-         *   populated with the actual data once the response is returned
-         *   from the server.
-         *
-         * Data properties:
-         *
-         *  - `count` – `{number=}` - 
-         */
-        R.weight.count = function() {
-          var TargetResource = $injector.get("Weight");
-          var action = TargetResource["::count::Scale::weight"];
-          return action.apply(R, arguments);
-        };
-
-        /**
-         * @ngdoc method
-         * @name lbServices.Scale.weight#create
-         * @methodOf lbServices.Scale.weight
-         *
-         * @description
-         *
-         * Creates a new instance in weight of this model.
-         *
-         * @param {Object=} parameters Request parameters.
-         *
-         *  - `id` – `{*}` - PersistedModel id
-         *
-         * @param {Object} postData Request data.
-         *
-         * This method expects a subset of model properties as request parameters.
-         *
-         * @param {function(Object,Object)=} successCb
-         *   Success callback with two arguments: `value`, `responseHeaders`.
-         *
-         * @param {function(Object)=} errorCb Error callback with one argument:
-         *   `httpResponse`.
-         *
-         * @returns {Object} An empty reference that will be
-         *   populated with the actual data once the response is returned
-         *   from the server.
-         *
-         * <em>
-         * (The remote method definition does not provide any description.
-         * This usually means the response is a `Weight` object.)
-         * </em>
-         */
-        R.weight.create = function() {
-          var TargetResource = $injector.get("Weight");
-          var action = TargetResource["::create::Scale::weight"];
-          return action.apply(R, arguments);
-        };
-
-        /**
-         * @ngdoc method
-         * @name lbServices.Scale.weight#createMany
-         * @methodOf lbServices.Scale.weight
-         *
-         * @description
-         *
-         * Creates a new instance in weight of this model.
-         *
-         * @param {Object=} parameters Request parameters.
-         *
-         *  - `id` – `{*}` - PersistedModel id
-         *
-         * @param {Object} postData Request data.
-         *
-         * This method expects a subset of model properties as request parameters.
-         *
-         * @param {function(Array.<Object>,Object)=} successCb
-         *   Success callback with two arguments: `value`, `responseHeaders`.
-         *
-         * @param {function(Object)=} errorCb Error callback with one argument:
-         *   `httpResponse`.
-         *
-         * @returns {Array.<Object>} An empty reference that will be
-         *   populated with the actual data once the response is returned
-         *   from the server.
-         *
-         * <em>
-         * (The remote method definition does not provide any description.
-         * This usually means the response is a `Weight` object.)
-         * </em>
-         */
-        R.weight.createMany = function() {
-          var TargetResource = $injector.get("Weight");
-          var action = TargetResource["::createMany::Scale::weight"];
-          return action.apply(R, arguments);
-        };
-
-        /**
-         * @ngdoc method
-         * @name lbServices.Scale.weight#destroyAll
-         * @methodOf lbServices.Scale.weight
-         *
-         * @description
-         *
-         * Deletes all weight of this model.
-         *
-         * @param {Object=} parameters Request parameters.
-         *
-         *  - `id` – `{*}` - PersistedModel id
-         *
-         * @param {function(Object,Object)=} successCb
-         *   Success callback with two arguments: `value`, `responseHeaders`.
-         *
-         * @param {function(Object)=} errorCb Error callback with one argument:
-         *   `httpResponse`.
-         *
-         * @returns {Object} An empty reference that will be
-         *   populated with the actual data once the response is returned
-         *   from the server.
-         *
-         * This method returns no data.
-         */
-        R.weight.destroyAll = function() {
-          var TargetResource = $injector.get("Weight");
-          var action = TargetResource["::delete::Scale::weight"];
-          return action.apply(R, arguments);
-        };
-
-        /**
-         * @ngdoc method
-         * @name lbServices.Scale.weight#destroyById
-         * @methodOf lbServices.Scale.weight
-         *
-         * @description
-         *
-         * Delete a related item by id for weight.
-         *
-         * @param {Object=} parameters Request parameters.
-         *
-         *  - `id` – `{*}` - PersistedModel id
-         *
-         *  - `fk` – `{*}` - Foreign key for weight
-         *
-         * @param {function(Object,Object)=} successCb
-         *   Success callback with two arguments: `value`, `responseHeaders`.
-         *
-         * @param {function(Object)=} errorCb Error callback with one argument:
-         *   `httpResponse`.
-         *
-         * @returns {Object} An empty reference that will be
-         *   populated with the actual data once the response is returned
-         *   from the server.
-         *
-         * This method returns no data.
-         */
-        R.weight.destroyById = function() {
-          var TargetResource = $injector.get("Weight");
-          var action = TargetResource["::destroyById::Scale::weight"];
-          return action.apply(R, arguments);
-        };
-
-        /**
-         * @ngdoc method
-         * @name lbServices.Scale.weight#findById
-         * @methodOf lbServices.Scale.weight
-         *
-         * @description
-         *
-         * Find a related item by id for weight.
-         *
-         * @param {Object=} parameters Request parameters.
-         *
-         *  - `id` – `{*}` - PersistedModel id
-         *
-         *  - `fk` – `{*}` - Foreign key for weight
-         *
-         * @param {function(Object,Object)=} successCb
-         *   Success callback with two arguments: `value`, `responseHeaders`.
-         *
-         * @param {function(Object)=} errorCb Error callback with one argument:
-         *   `httpResponse`.
-         *
-         * @returns {Object} An empty reference that will be
-         *   populated with the actual data once the response is returned
-         *   from the server.
-         *
-         * <em>
-         * (The remote method definition does not provide any description.
-         * This usually means the response is a `Weight` object.)
-         * </em>
-         */
-        R.weight.findById = function() {
-          var TargetResource = $injector.get("Weight");
-          var action = TargetResource["::findById::Scale::weight"];
-          return action.apply(R, arguments);
-        };
-
-        /**
-         * @ngdoc method
-         * @name lbServices.Scale.weight#updateById
-         * @methodOf lbServices.Scale.weight
-         *
-         * @description
-         *
-         * Update a related item by id for weight.
-         *
-         * @param {Object=} parameters Request parameters.
-         *
-         *  - `id` – `{*}` - PersistedModel id
-         *
-         *  - `fk` – `{*}` - Foreign key for weight
-         *
-         * @param {Object} postData Request data.
-         *
-         * This method expects a subset of model properties as request parameters.
-         *
-         * @param {function(Object,Object)=} successCb
-         *   Success callback with two arguments: `value`, `responseHeaders`.
-         *
-         * @param {function(Object)=} errorCb Error callback with one argument:
-         *   `httpResponse`.
-         *
-         * @returns {Object} An empty reference that will be
-         *   populated with the actual data once the response is returned
-         *   from the server.
-         *
-         * <em>
-         * (The remote method definition does not provide any description.
-         * This usually means the response is a `Weight` object.)
-         * </em>
-         */
-        R.weight.updateById = function() {
-          var TargetResource = $injector.get("Weight");
-          var action = TargetResource["::updateById::Scale::weight"];
-          return action.apply(R, arguments);
-        };
-
-        /**
-         * @ngdoc method
-         * @name lbServices.Scale#item
-         * @methodOf lbServices.Scale
-         *
-         * @description
-         *
-         * Fetches belongsTo relation item.
+         * Fetches belongsTo relation reagent.
          *
          * @param {Object=} parameters Request parameters.
          *
@@ -3916,12 +3510,12 @@ module.factory(
          *
          * <em>
          * (The remote method definition does not provide any description.
-         * This usually means the response is a `Item` object.)
+         * This usually means the response is a `Reagent` object.)
          * </em>
          */
-        R.item = function() {
-          var TargetResource = $injector.get("Item");
-          var action = TargetResource["::get::Scale::item"];
+        R.reagent = function() {
+          var TargetResource = $injector.get("Reagent");
+          var action = TargetResource["::get::Scale::reagent"];
           return action.apply(R, arguments);
         };
 
@@ -3953,9 +3547,9 @@ module.factory(
       { 'id': '@id' },
       {
 
-        // INTERNAL. Use Weight.item() instead.
-        "prototype$__get__item": {
-          url: urlBase + "/Weights/:id/item",
+        // INTERNAL. Use Weight.reagent() instead.
+        "prototype$__get__reagent": {
+          url: urlBase + "/Weights/:id/reagent",
           method: "GET"
         },
 
@@ -4380,65 +3974,6 @@ module.factory(
           url: urlBase + "/Weights/change-stream",
           method: "POST"
         },
-
-        // INTERNAL. Use Scale.weight.findById() instead.
-        "::findById::Scale::weight": {
-          params: {
-          'fk': '@fk'
-          },
-          url: urlBase + "/Scales/:id/weight/:fk",
-          method: "GET"
-        },
-
-        // INTERNAL. Use Scale.weight.destroyById() instead.
-        "::destroyById::Scale::weight": {
-          params: {
-          'fk': '@fk'
-          },
-          url: urlBase + "/Scales/:id/weight/:fk",
-          method: "DELETE"
-        },
-
-        // INTERNAL. Use Scale.weight.updateById() instead.
-        "::updateById::Scale::weight": {
-          params: {
-          'fk': '@fk'
-          },
-          url: urlBase + "/Scales/:id/weight/:fk",
-          method: "PUT"
-        },
-
-        // INTERNAL. Use Scale.weight() instead.
-        "::get::Scale::weight": {
-          isArray: true,
-          url: urlBase + "/Scales/:id/weight",
-          method: "GET"
-        },
-
-        // INTERNAL. Use Scale.weight.create() instead.
-        "::create::Scale::weight": {
-          url: urlBase + "/Scales/:id/weight",
-          method: "POST"
-        },
-
-        // INTERNAL. Use Scale.weight.createMany() instead.
-        "::createMany::Scale::weight": {
-          isArray: true,
-          url: urlBase + "/Scales/:id/weight",
-          method: "POST"
-        },
-
-        // INTERNAL. Use Scale.weight.destroyAll() instead.
-        "::delete::Scale::weight": {
-          url: urlBase + "/Scales/:id/weight",
-          method: "DELETE"
-        },
-
-        // INTERNAL. Use Scale.weight.count() instead.
-        "::count::Scale::weight": {
-          url: urlBase + "/Scales/:id/weight/count",
-          method: "GET"
-        },
       }
     );
 
@@ -4584,12 +4119,12 @@ module.factory(
 
         /**
          * @ngdoc method
-         * @name lbServices.Weight#item
+         * @name lbServices.Weight#reagent
          * @methodOf lbServices.Weight
          *
          * @description
          *
-         * Fetches belongsTo relation item.
+         * Fetches belongsTo relation reagent.
          *
          * @param {Object=} parameters Request parameters.
          *
@@ -4609,12 +4144,12 @@ module.factory(
          *
          * <em>
          * (The remote method definition does not provide any description.
-         * This usually means the response is a `Item` object.)
+         * This usually means the response is a `Reagent` object.)
          * </em>
          */
-        R.item = function() {
-          var TargetResource = $injector.get("Item");
-          var action = TargetResource["::get::Weight::item"];
+        R.reagent = function() {
+          var TargetResource = $injector.get("Reagent");
+          var action = TargetResource["::get::Weight::reagent"];
           return action.apply(R, arguments);
         };
 
@@ -4646,55 +4181,55 @@ module.factory(
       { 'id': '@id' },
       {
 
-        // INTERNAL. Use Item.scale.findById() instead.
-        "prototype$__findById__scale": {
+        // INTERNAL. Use Item.reagent.findById() instead.
+        "prototype$__findById__reagent": {
           params: {
           'fk': '@fk'
           },
-          url: urlBase + "/Items/:id/scale/:fk",
+          url: urlBase + "/Items/:id/reagent/:fk",
           method: "GET"
         },
 
-        // INTERNAL. Use Item.scale.destroyById() instead.
-        "prototype$__destroyById__scale": {
+        // INTERNAL. Use Item.reagent.destroyById() instead.
+        "prototype$__destroyById__reagent": {
           params: {
           'fk': '@fk'
           },
-          url: urlBase + "/Items/:id/scale/:fk",
+          url: urlBase + "/Items/:id/reagent/:fk",
           method: "DELETE"
         },
 
-        // INTERNAL. Use Item.scale.updateById() instead.
-        "prototype$__updateById__scale": {
+        // INTERNAL. Use Item.reagent.updateById() instead.
+        "prototype$__updateById__reagent": {
           params: {
           'fk': '@fk'
           },
-          url: urlBase + "/Items/:id/scale/:fk",
+          url: urlBase + "/Items/:id/reagent/:fk",
           method: "PUT"
         },
 
-        // INTERNAL. Use Item.scale() instead.
-        "prototype$__get__scale": {
+        // INTERNAL. Use Item.reagent() instead.
+        "prototype$__get__reagent": {
           isArray: true,
-          url: urlBase + "/Items/:id/scale",
+          url: urlBase + "/Items/:id/reagent",
           method: "GET"
         },
 
-        // INTERNAL. Use Item.scale.create() instead.
-        "prototype$__create__scale": {
-          url: urlBase + "/Items/:id/scale",
+        // INTERNAL. Use Item.reagent.create() instead.
+        "prototype$__create__reagent": {
+          url: urlBase + "/Items/:id/reagent",
           method: "POST"
         },
 
-        // INTERNAL. Use Item.scale.destroyAll() instead.
-        "prototype$__delete__scale": {
-          url: urlBase + "/Items/:id/scale",
+        // INTERNAL. Use Item.reagent.destroyAll() instead.
+        "prototype$__delete__reagent": {
+          url: urlBase + "/Items/:id/reagent",
           method: "DELETE"
         },
 
-        // INTERNAL. Use Item.scale.count() instead.
-        "prototype$__count__scale": {
-          url: urlBase + "/Items/:id/scale/count",
+        // INTERNAL. Use Item.reagent.count() instead.
+        "prototype$__count__reagent": {
+          url: urlBase + "/Items/:id/reagent/count",
           method: "GET"
         },
 
@@ -5120,15 +4655,9 @@ module.factory(
           method: "POST"
         },
 
-        // INTERNAL. Use Scale.item() instead.
-        "::get::Scale::item": {
-          url: urlBase + "/Scales/:id/item",
-          method: "GET"
-        },
-
-        // INTERNAL. Use Weight.item() instead.
-        "::get::Weight::item": {
-          url: urlBase + "/Weights/:id/item",
+        // INTERNAL. Use Reagent.item() instead.
+        "::get::Reagent::item": {
+          url: urlBase + "/Reagents/:id/item",
           method: "GET"
         },
       }
@@ -5275,27 +4804,27 @@ module.factory(
 
     /**
      * @ngdoc object
-     * @name lbServices.Item.scale
-     * @header lbServices.Item.scale
+     * @name lbServices.Item.reagent
+     * @header lbServices.Item.reagent
      * @object
      * @description
      *
-     * The object `Item.scale` groups methods
-     * manipulating `Scale` instances related to `Item`.
+     * The object `Item.reagent` groups methods
+     * manipulating `Reagent` instances related to `Item`.
      *
-     * Call {@link lbServices.Item#scale Item.scale()}
+     * Call {@link lbServices.Item#reagent Item.reagent()}
      * to query all related instances.
      */
 
 
         /**
          * @ngdoc method
-         * @name lbServices.Item#scale
+         * @name lbServices.Item#reagent
          * @methodOf lbServices.Item
          *
          * @description
          *
-         * Queries scale of Item.
+         * Queries reagent of Item.
          *
          * @param {Object=} parameters Request parameters.
          *
@@ -5315,23 +4844,23 @@ module.factory(
          *
          * <em>
          * (The remote method definition does not provide any description.
-         * This usually means the response is a `Scale` object.)
+         * This usually means the response is a `Reagent` object.)
          * </em>
          */
-        R.scale = function() {
-          var TargetResource = $injector.get("Scale");
-          var action = TargetResource["::get::Item::scale"];
+        R.reagent = function() {
+          var TargetResource = $injector.get("Reagent");
+          var action = TargetResource["::get::Item::reagent"];
           return action.apply(R, arguments);
         };
 
         /**
          * @ngdoc method
-         * @name lbServices.Item.scale#count
-         * @methodOf lbServices.Item.scale
+         * @name lbServices.Item.reagent#count
+         * @methodOf lbServices.Item.reagent
          *
          * @description
          *
-         * Counts scale of Item.
+         * Counts reagent of Item.
          *
          * @param {Object=} parameters Request parameters.
          *
@@ -5353,20 +4882,20 @@ module.factory(
          *
          *  - `count` – `{number=}` - 
          */
-        R.scale.count = function() {
-          var TargetResource = $injector.get("Scale");
-          var action = TargetResource["::count::Item::scale"];
+        R.reagent.count = function() {
+          var TargetResource = $injector.get("Reagent");
+          var action = TargetResource["::count::Item::reagent"];
           return action.apply(R, arguments);
         };
 
         /**
          * @ngdoc method
-         * @name lbServices.Item.scale#create
-         * @methodOf lbServices.Item.scale
+         * @name lbServices.Item.reagent#create
+         * @methodOf lbServices.Item.reagent
          *
          * @description
          *
-         * Creates a new instance in scale of this model.
+         * Creates a new instance in reagent of this model.
          *
          * @param {Object=} parameters Request parameters.
          *
@@ -5388,23 +4917,23 @@ module.factory(
          *
          * <em>
          * (The remote method definition does not provide any description.
-         * This usually means the response is a `Scale` object.)
+         * This usually means the response is a `Reagent` object.)
          * </em>
          */
-        R.scale.create = function() {
-          var TargetResource = $injector.get("Scale");
-          var action = TargetResource["::create::Item::scale"];
+        R.reagent.create = function() {
+          var TargetResource = $injector.get("Reagent");
+          var action = TargetResource["::create::Item::reagent"];
           return action.apply(R, arguments);
         };
 
         /**
          * @ngdoc method
-         * @name lbServices.Item.scale#createMany
-         * @methodOf lbServices.Item.scale
+         * @name lbServices.Item.reagent#createMany
+         * @methodOf lbServices.Item.reagent
          *
          * @description
          *
-         * Creates a new instance in scale of this model.
+         * Creates a new instance in reagent of this model.
          *
          * @param {Object=} parameters Request parameters.
          *
@@ -5426,23 +4955,23 @@ module.factory(
          *
          * <em>
          * (The remote method definition does not provide any description.
-         * This usually means the response is a `Scale` object.)
+         * This usually means the response is a `Reagent` object.)
          * </em>
          */
-        R.scale.createMany = function() {
-          var TargetResource = $injector.get("Scale");
-          var action = TargetResource["::createMany::Item::scale"];
+        R.reagent.createMany = function() {
+          var TargetResource = $injector.get("Reagent");
+          var action = TargetResource["::createMany::Item::reagent"];
           return action.apply(R, arguments);
         };
 
         /**
          * @ngdoc method
-         * @name lbServices.Item.scale#destroyAll
-         * @methodOf lbServices.Item.scale
+         * @name lbServices.Item.reagent#destroyAll
+         * @methodOf lbServices.Item.reagent
          *
          * @description
          *
-         * Deletes all scale of this model.
+         * Deletes all reagent of this model.
          *
          * @param {Object=} parameters Request parameters.
          *
@@ -5460,26 +4989,26 @@ module.factory(
          *
          * This method returns no data.
          */
-        R.scale.destroyAll = function() {
-          var TargetResource = $injector.get("Scale");
-          var action = TargetResource["::delete::Item::scale"];
+        R.reagent.destroyAll = function() {
+          var TargetResource = $injector.get("Reagent");
+          var action = TargetResource["::delete::Item::reagent"];
           return action.apply(R, arguments);
         };
 
         /**
          * @ngdoc method
-         * @name lbServices.Item.scale#destroyById
-         * @methodOf lbServices.Item.scale
+         * @name lbServices.Item.reagent#destroyById
+         * @methodOf lbServices.Item.reagent
          *
          * @description
          *
-         * Delete a related item by id for scale.
+         * Delete a related item by id for reagent.
          *
          * @param {Object=} parameters Request parameters.
          *
          *  - `id` – `{*}` - PersistedModel id
          *
-         *  - `fk` – `{*}` - Foreign key for scale
+         *  - `fk` – `{*}` - Foreign key for reagent
          *
          * @param {function(Object,Object)=} successCb
          *   Success callback with two arguments: `value`, `responseHeaders`.
@@ -5493,26 +5022,26 @@ module.factory(
          *
          * This method returns no data.
          */
-        R.scale.destroyById = function() {
-          var TargetResource = $injector.get("Scale");
-          var action = TargetResource["::destroyById::Item::scale"];
+        R.reagent.destroyById = function() {
+          var TargetResource = $injector.get("Reagent");
+          var action = TargetResource["::destroyById::Item::reagent"];
           return action.apply(R, arguments);
         };
 
         /**
          * @ngdoc method
-         * @name lbServices.Item.scale#findById
-         * @methodOf lbServices.Item.scale
+         * @name lbServices.Item.reagent#findById
+         * @methodOf lbServices.Item.reagent
          *
          * @description
          *
-         * Find a related item by id for scale.
+         * Find a related item by id for reagent.
          *
          * @param {Object=} parameters Request parameters.
          *
          *  - `id` – `{*}` - PersistedModel id
          *
-         *  - `fk` – `{*}` - Foreign key for scale
+         *  - `fk` – `{*}` - Foreign key for reagent
          *
          * @param {function(Object,Object)=} successCb
          *   Success callback with two arguments: `value`, `responseHeaders`.
@@ -5526,29 +5055,29 @@ module.factory(
          *
          * <em>
          * (The remote method definition does not provide any description.
-         * This usually means the response is a `Scale` object.)
+         * This usually means the response is a `Reagent` object.)
          * </em>
          */
-        R.scale.findById = function() {
-          var TargetResource = $injector.get("Scale");
-          var action = TargetResource["::findById::Item::scale"];
+        R.reagent.findById = function() {
+          var TargetResource = $injector.get("Reagent");
+          var action = TargetResource["::findById::Item::reagent"];
           return action.apply(R, arguments);
         };
 
         /**
          * @ngdoc method
-         * @name lbServices.Item.scale#updateById
-         * @methodOf lbServices.Item.scale
+         * @name lbServices.Item.reagent#updateById
+         * @methodOf lbServices.Item.reagent
          *
          * @description
          *
-         * Update a related item by id for scale.
+         * Update a related item by id for reagent.
          *
          * @param {Object=} parameters Request parameters.
          *
          *  - `id` – `{*}` - PersistedModel id
          *
-         *  - `fk` – `{*}` - Foreign key for scale
+         *  - `fk` – `{*}` - Foreign key for reagent
          *
          * @param {Object} postData Request data.
          *
@@ -5566,12 +5095,759 @@ module.factory(
          *
          * <em>
          * (The remote method definition does not provide any description.
+         * This usually means the response is a `Reagent` object.)
+         * </em>
+         */
+        R.reagent.updateById = function() {
+          var TargetResource = $injector.get("Reagent");
+          var action = TargetResource["::updateById::Item::reagent"];
+          return action.apply(R, arguments);
+        };
+
+    return R;
+  }]);
+
+/**
+ * @ngdoc object
+ * @name lbServices.Reagent
+ * @header lbServices.Reagent
+ * @object
+ *
+ * @description
+ *
+ * A $resource object for interacting with the `Reagent` model.
+ *
+ * ## Example
+ *
+ * See
+ * {@link http://docs.angularjs.org/api/ngResource.$resource#example $resource}
+ * for an example of using this object.
+ *
+ */
+module.factory(
+  "Reagent",
+  ['LoopBackResource', 'LoopBackAuth', '$injector', function(Resource, LoopBackAuth, $injector) {
+    var R = Resource(
+      urlBase + "/Reagents/:id",
+      { 'id': '@id' },
+      {
+
+        // INTERNAL. Use Reagent.item() instead.
+        "prototype$__get__item": {
+          url: urlBase + "/Reagents/:id/item",
+          method: "GET"
+        },
+
+        // INTERNAL. Use Reagent.scale() instead.
+        "prototype$__get__scale": {
+          url: urlBase + "/Reagents/:id/scale",
+          method: "GET"
+        },
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Reagent#create
+         * @methodOf lbServices.Reagent
+         *
+         * @description
+         *
+         * Create a new instance of the model and persist it into the data source.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *   This method does not accept any parameters.
+         *   Supply an empty object or omit this argument altogether.
+         *
+         * @param {Object} postData Request data.
+         *
+         * This method expects a subset of model properties as request parameters.
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * <em>
+         * (The remote method definition does not provide any description.
+         * This usually means the response is a `Reagent` object.)
+         * </em>
+         */
+        "create": {
+          url: urlBase + "/Reagents",
+          method: "POST"
+        },
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Reagent#createMany
+         * @methodOf lbServices.Reagent
+         *
+         * @description
+         *
+         * Create a new instance of the model and persist it into the data source.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *   This method does not accept any parameters.
+         *   Supply an empty object or omit this argument altogether.
+         *
+         * @param {Object} postData Request data.
+         *
+         * This method expects a subset of model properties as request parameters.
+         *
+         * @param {function(Array.<Object>,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Array.<Object>} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * <em>
+         * (The remote method definition does not provide any description.
+         * This usually means the response is a `Reagent` object.)
+         * </em>
+         */
+        "createMany": {
+          isArray: true,
+          url: urlBase + "/Reagents",
+          method: "POST"
+        },
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Reagent#upsert
+         * @methodOf lbServices.Reagent
+         *
+         * @description
+         *
+         * Update an existing model instance or insert a new one into the data source.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *   This method does not accept any parameters.
+         *   Supply an empty object or omit this argument altogether.
+         *
+         * @param {Object} postData Request data.
+         *
+         * This method expects a subset of model properties as request parameters.
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * <em>
+         * (The remote method definition does not provide any description.
+         * This usually means the response is a `Reagent` object.)
+         * </em>
+         */
+        "upsert": {
+          url: urlBase + "/Reagents",
+          method: "PUT"
+        },
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Reagent#exists
+         * @methodOf lbServices.Reagent
+         *
+         * @description
+         *
+         * Check whether a model instance exists in the data source.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - Model id
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * Data properties:
+         *
+         *  - `exists` – `{boolean=}` - 
+         */
+        "exists": {
+          url: urlBase + "/Reagents/:id/exists",
+          method: "GET"
+        },
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Reagent#findById
+         * @methodOf lbServices.Reagent
+         *
+         * @description
+         *
+         * Find a model instance by id from the data source.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - Model id
+         *
+         *  - `filter` – `{object=}` - Filter defining fields and include
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * <em>
+         * (The remote method definition does not provide any description.
+         * This usually means the response is a `Reagent` object.)
+         * </em>
+         */
+        "findById": {
+          url: urlBase + "/Reagents/:id",
+          method: "GET"
+        },
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Reagent#find
+         * @methodOf lbServices.Reagent
+         *
+         * @description
+         *
+         * Find all instances of the model matched by filter from the data source.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `filter` – `{object=}` - Filter defining fields, where, include, order, offset, and limit
+         *
+         * @param {function(Array.<Object>,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Array.<Object>} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * <em>
+         * (The remote method definition does not provide any description.
+         * This usually means the response is a `Reagent` object.)
+         * </em>
+         */
+        "find": {
+          isArray: true,
+          url: urlBase + "/Reagents",
+          method: "GET"
+        },
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Reagent#findOne
+         * @methodOf lbServices.Reagent
+         *
+         * @description
+         *
+         * Find first instance of the model matched by filter from the data source.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `filter` – `{object=}` - Filter defining fields, where, include, order, offset, and limit
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * <em>
+         * (The remote method definition does not provide any description.
+         * This usually means the response is a `Reagent` object.)
+         * </em>
+         */
+        "findOne": {
+          url: urlBase + "/Reagents/findOne",
+          method: "GET"
+        },
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Reagent#updateAll
+         * @methodOf lbServices.Reagent
+         *
+         * @description
+         *
+         * Update instances of the model matched by where from the data source.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `where` – `{object=}` - Criteria to match model instances
+         *
+         * @param {Object} postData Request data.
+         *
+         * This method expects a subset of model properties as request parameters.
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * The number of instances updated
+         */
+        "updateAll": {
+          url: urlBase + "/Reagents/update",
+          method: "POST"
+        },
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Reagent#deleteById
+         * @methodOf lbServices.Reagent
+         *
+         * @description
+         *
+         * Delete a model instance by id from the data source.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - Model id
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * <em>
+         * (The remote method definition does not provide any description.
+         * This usually means the response is a `Reagent` object.)
+         * </em>
+         */
+        "deleteById": {
+          url: urlBase + "/Reagents/:id",
+          method: "DELETE"
+        },
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Reagent#count
+         * @methodOf lbServices.Reagent
+         *
+         * @description
+         *
+         * Count instances of the model matched by where from the data source.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `where` – `{object=}` - Criteria to match model instances
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * Data properties:
+         *
+         *  - `count` – `{number=}` - 
+         */
+        "count": {
+          url: urlBase + "/Reagents/count",
+          method: "GET"
+        },
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Reagent#prototype$updateAttributes
+         * @methodOf lbServices.Reagent
+         *
+         * @description
+         *
+         * Update attributes for a model instance and persist it into the data source.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - PersistedModel id
+         *
+         * @param {Object} postData Request data.
+         *
+         * This method expects a subset of model properties as request parameters.
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * <em>
+         * (The remote method definition does not provide any description.
+         * This usually means the response is a `Reagent` object.)
+         * </em>
+         */
+        "prototype$updateAttributes": {
+          url: urlBase + "/Reagents/:id",
+          method: "PUT"
+        },
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Reagent#createChangeStream
+         * @methodOf lbServices.Reagent
+         *
+         * @description
+         *
+         * Create a change stream.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *   This method does not accept any parameters.
+         *   Supply an empty object or omit this argument altogether.
+         *
+         * @param {Object} postData Request data.
+         *
+         *  - `options` – `{object=}` - 
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * Data properties:
+         *
+         *  - `changes` – `{ReadableStream=}` - 
+         */
+        "createChangeStream": {
+          url: urlBase + "/Reagents/change-stream",
+          method: "POST"
+        },
+
+        // INTERNAL. Use Scale.reagent() instead.
+        "::get::Scale::reagent": {
+          url: urlBase + "/Scales/:id/reagent",
+          method: "GET"
+        },
+
+        // INTERNAL. Use Weight.reagent() instead.
+        "::get::Weight::reagent": {
+          url: urlBase + "/Weights/:id/reagent",
+          method: "GET"
+        },
+
+        // INTERNAL. Use Item.reagent.findById() instead.
+        "::findById::Item::reagent": {
+          params: {
+          'fk': '@fk'
+          },
+          url: urlBase + "/Items/:id/reagent/:fk",
+          method: "GET"
+        },
+
+        // INTERNAL. Use Item.reagent.destroyById() instead.
+        "::destroyById::Item::reagent": {
+          params: {
+          'fk': '@fk'
+          },
+          url: urlBase + "/Items/:id/reagent/:fk",
+          method: "DELETE"
+        },
+
+        // INTERNAL. Use Item.reagent.updateById() instead.
+        "::updateById::Item::reagent": {
+          params: {
+          'fk': '@fk'
+          },
+          url: urlBase + "/Items/:id/reagent/:fk",
+          method: "PUT"
+        },
+
+        // INTERNAL. Use Item.reagent() instead.
+        "::get::Item::reagent": {
+          isArray: true,
+          url: urlBase + "/Items/:id/reagent",
+          method: "GET"
+        },
+
+        // INTERNAL. Use Item.reagent.create() instead.
+        "::create::Item::reagent": {
+          url: urlBase + "/Items/:id/reagent",
+          method: "POST"
+        },
+
+        // INTERNAL. Use Item.reagent.createMany() instead.
+        "::createMany::Item::reagent": {
+          isArray: true,
+          url: urlBase + "/Items/:id/reagent",
+          method: "POST"
+        },
+
+        // INTERNAL. Use Item.reagent.destroyAll() instead.
+        "::delete::Item::reagent": {
+          url: urlBase + "/Items/:id/reagent",
+          method: "DELETE"
+        },
+
+        // INTERNAL. Use Item.reagent.count() instead.
+        "::count::Item::reagent": {
+          url: urlBase + "/Items/:id/reagent/count",
+          method: "GET"
+        },
+      }
+    );
+
+
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Reagent#updateOrCreate
+         * @methodOf lbServices.Reagent
+         *
+         * @description
+         *
+         * Update an existing model instance or insert a new one into the data source.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *   This method does not accept any parameters.
+         *   Supply an empty object or omit this argument altogether.
+         *
+         * @param {Object} postData Request data.
+         *
+         * This method expects a subset of model properties as request parameters.
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * <em>
+         * (The remote method definition does not provide any description.
+         * This usually means the response is a `Reagent` object.)
+         * </em>
+         */
+        R["updateOrCreate"] = R["upsert"];
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Reagent#update
+         * @methodOf lbServices.Reagent
+         *
+         * @description
+         *
+         * Update instances of the model matched by where from the data source.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `where` – `{object=}` - Criteria to match model instances
+         *
+         * @param {Object} postData Request data.
+         *
+         * This method expects a subset of model properties as request parameters.
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * The number of instances updated
+         */
+        R["update"] = R["updateAll"];
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Reagent#destroyById
+         * @methodOf lbServices.Reagent
+         *
+         * @description
+         *
+         * Delete a model instance by id from the data source.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - Model id
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * <em>
+         * (The remote method definition does not provide any description.
+         * This usually means the response is a `Reagent` object.)
+         * </em>
+         */
+        R["destroyById"] = R["deleteById"];
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Reagent#removeById
+         * @methodOf lbServices.Reagent
+         *
+         * @description
+         *
+         * Delete a model instance by id from the data source.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - Model id
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * <em>
+         * (The remote method definition does not provide any description.
+         * This usually means the response is a `Reagent` object.)
+         * </em>
+         */
+        R["removeById"] = R["deleteById"];
+
+
+    /**
+    * @ngdoc property
+    * @name lbServices.Reagent#modelName
+    * @propertyOf lbServices.Reagent
+    * @description
+    * The name of the model represented by this $resource,
+    * i.e. `Reagent`.
+    */
+    R.modelName = "Reagent";
+
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Reagent#item
+         * @methodOf lbServices.Reagent
+         *
+         * @description
+         *
+         * Fetches belongsTo relation item.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - PersistedModel id
+         *
+         *  - `refresh` – `{boolean=}` - 
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * <em>
+         * (The remote method definition does not provide any description.
+         * This usually means the response is a `Item` object.)
+         * </em>
+         */
+        R.item = function() {
+          var TargetResource = $injector.get("Item");
+          var action = TargetResource["::get::Reagent::item"];
+          return action.apply(R, arguments);
+        };
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Reagent#scale
+         * @methodOf lbServices.Reagent
+         *
+         * @description
+         *
+         * Fetches belongsTo relation scale.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - PersistedModel id
+         *
+         *  - `refresh` – `{boolean=}` - 
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * <em>
+         * (The remote method definition does not provide any description.
          * This usually means the response is a `Scale` object.)
          * </em>
          */
-        R.scale.updateById = function() {
+        R.scale = function() {
           var TargetResource = $injector.get("Scale");
-          var action = TargetResource["::updateById::Item::scale"];
+          var action = TargetResource["::get::Reagent::scale"];
           return action.apply(R, arguments);
         };
 

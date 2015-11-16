@@ -14,10 +14,6 @@
     "name": {
       "type": "string"
     },
-    "item_id": {
-      "type": "number",
-      "required": false
-    },
     "MAC": {
       "type": "string",
       "required": true
@@ -30,22 +26,21 @@
       "type": "number",
       "required": false
     },
-    "full_weight":{
+    "reagent_id":{
       "type": "number",
       "required": false
+    },
+    "is_new":{
+      "type":"number",
+      "required":false
     }
   },
   "validations": [],
   "relations": {
-    "weight":{
-      "type":"hasMany",
-      "model":"Weight",
-      "foreignKey":"scale_id"
-    },
-    "item":{
+    "reagent":{
       "type":"belongsTo",
-      "model":"Item",
-      "foreignKey":"item_id"
+      "model":"Reagent",
+      "foreignKey":"reagent_id"
     }
   },
   "acls": [],

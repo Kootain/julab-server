@@ -117,7 +117,7 @@ function deviceCtrl($scope, $http, $modal, Scale) {
     };
 };
 
-function scalePageCtrl($scope, $modal, $modalInstance, Scale, Weight){
+function scalePageCtrl($scope, $modal, $modalInstance, Scale, Weight, Reagent){
 
     $scope.from=new Date();
     $scope.from.setMonth($scope.from.getMonth()-1);
@@ -178,49 +178,26 @@ function scalePageCtrl($scope, $modal, $modalInstance, Scale, Weight){
 
 
     $scope.reagentUsage=[];
-    $scope.selectedScales=[$scope.reagentScale];
 
-    $scope.queryData=function(scales){
-        $scope.reagentUsageBak=[];
-        var aStep=function(i){
-            Weight.find({
-                filter:{where:{"scale_id":scales[i].id,"gmt_created":{gt:$scope.from,lt:$scope.to}}}
-            },function(val){
-                $scope.reagentUsageBak.push(
-                    {
-                        data: val.map(function(e,b){
-                            //TODO map b as x axis, stand for date
-                            return [b,e.value];
-                        }),
-                        label:scales[i].name
-                    }
-                );
-                $scope.reagentUsage=$scope.reagentUsageBak;
-            },function(err){
-                tools.notify('alert-danger',err.data.error.message);
-            });
+    Weight.find({filter:{
+            where:{
+                reagent_id : $scope.reagentScale.reagent_id,
+                gmt_created: {gt:$scope.from,lt:$scope.to}  //TODO
+            }
         }
-        for(var i in scales){
-             aStep.bind(null,i)();
-
-        }
-    }
-
-    $scope.queryData($scope.selectedScales);
-
+    },function(val){
+        $scope.reagentUsage.push(
+            {
+                data: val.map(function(e,b){
+                    //TODO map b as x axis, stand for date
+                    return [b,e.value];
+                }),
+                label:$scope.reagentScale.reagent_name
+            }
+        );
+    })
             //TODO if there is no data in weight error
             //TODO device list should content device's id
-    Scale.find({filter:{"where":{MAC:$scope.reagentScale.MAC},limit:1}},function(val){
-        //TODO if there is no data in weight error
-        Weight.findOne({filter:{"where":{"scale_id":1},"order":"gmt_created desc"}},function(vall){
-            $scope.reagentScale.weight=vall.value||0;
-            $scope.reagentScale.full_weight = 200; //TODO
-            var a=['乙醇','甲醇','石油醚','乙酸乙酯','二氯甲烷'];
-            var b=[21,19.79,25,22,33];
-            $scope.reagentScale.reagent_name = a[val[0].item_id-1];
-            $scope.reagentScale.full_weight = b[val[0].item_id-1];
-        });
-    });
 };
 
 function scannerPageCtrl($scope, $modal, $modalInstance){
@@ -754,7 +731,7 @@ function reagentCtrl($scope, $modal, $compile, $timeout, $sce, RfidInfo ,ngTable
  * used in Chart.js view
  */
 
-function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Item){
+function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Item ,Reagent){
     $scope.floor=window.Math.floor;
     $scope.from=new Date();
     $scope.from.setMonth($scope.from.getMonth()-1);
@@ -870,28 +847,25 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Ite
         include:
             [
                 {
-                    relation: 'weight',
+                    relation: 'reagent',
                     scope:{
-                        order: 'gmt_created desc',
-                        limit: 1,
                         include: {
                             relation: 'item'
                         }
                     }
-                },
-                "item"
+                }
             ]
     }},function(val){
         $scope.reagentsShelf=val.map(function(e){
             e.isselected = true;
-            if(e.weight.length){
-                e.full_weight = e.weight[0].full_weight;
-                e.value = e.weight[0].value;
-                e.reagent_name = e.weight[0].item.name;
+            if(e.hasOwnProperty('reagent')){
+                e.full_weight = e.reagent.full_weight;
+                e.value = e.reagent.value;
+                e.reagent_name = e.reagent.item.name;
             }else{
                 e.full_weight = 0;
                 e.value = 0;
-                e.reagent_name = e.hasOwnProperty('item')?e.item.name:'空';
+                e.reagent_name = '空';
             }
             return e;
         });
@@ -925,13 +899,18 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Ite
    
     //同种试剂统计
     Item.find({filter:{
-        include : "scale"
+        include : {
+            "relation":"reagent",
+            "scope":{
+                "include":"scale"
+            }
+        }
     }},function(val){
         $scope.reagentsStat = val.map(function(e){
-            e.amount = e.scale.length;
+            e.amount = e.reagent.length;
             e.list=[];
-            for (var i=0;i<e.scale.length;i++){
-                e.list.push(e.scale[i].pos);
+            for (var i=0;i<e.reagent.length;i++){
+                e.list.push(e.reagent[i].scale.pos);
             }
                 return e;
         });
