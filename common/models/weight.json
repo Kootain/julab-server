@@ -16,7 +16,7 @@
     "value": {
       "type": "number"
     },
-    "reagent_id": {
+    "item_id": {
       "type": "number"
     },
     "full_weight":{
@@ -25,10 +25,10 @@
   },
   "validations": [],
   "relations": {
-      "reagent":{
+      "item":{
         "type":"belongsTo",
-        "model":"Reagent",
-        "foreignKey":"reagent_id"
+        "model":"Item",
+        "foreignKey":"item_id"
       }
     },
   "acls": [],

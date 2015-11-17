@@ -732,6 +732,17 @@ function reagentCtrl($scope, $modal, $compile, $timeout, $sce, RfidInfo ,ngTable
  */
 
 function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Item ,Reagent){
+    
+    //称上物品状态
+    $scope.stateStyle = function(state){
+        var style = "";
+        if(state==0) style="";          //普通展示状态
+        if(state==1) style="new";       //称上新换物品
+        if(state==2) style="low";       //称上物品紧缺
+        if(state==3) style="sending";   //补货中
+        return style;
+    };
+
     $scope.floor=window.Math.floor;
     $scope.from=new Date();
     $scope.from.setMonth($scope.from.getMonth()-1);
@@ -844,27 +855,13 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Ite
 
     //架子展示
     Scale.find({filter:{
-        include:
-            [
-                {
-                    relation: 'reagent',
-                    scope:{
-                        include: {
-                            relation: 'item'
-                        }
-                    }
-                }
-            ]
+        include:"item"
     }},function(val){
         $scope.reagentsShelf=val.map(function(e){
             e.isselected = true;
-            if(e.hasOwnProperty('reagent')){
-                e.full_weight = e.reagent.full_weight;
-                e.value = e.reagent.value;
-                e.reagent_name = e.reagent.item.name;
+            if(e.hasOwnProperty('item')){
+                e.reagent_name = e.item.name;
             }else{
-                e.full_weight = 0;
-                e.value = 0;
                 e.reagent_name = '空';
             }
             return e;
@@ -899,18 +896,13 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Ite
    
     //同种试剂统计
     Item.find({filter:{
-        include : {
-            "relation":"reagent",
-            "scope":{
-                "include":"scale"
-            }
-        }
+        include : "scale"
     }},function(val){
         $scope.reagentsStat = val.map(function(e){
-            e.amount = e.reagent.length;
+            e.amount = e.scale.length;
             e.list=[];
-            for (var i=0;i<e.reagent.length;i++){
-                e.list.push(e.reagent[i].scale.pos);
+            for (var i=0;i<e.scale.length;i++){
+                e.list.push(e.scale[i].pos);
             }
                 return e;
         });

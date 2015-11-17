@@ -13,9 +13,9 @@
   },
   "validations": [],
   "relations": {
-    "reagent":{
+    "scale":{
       "type":"hasMany",
-      "model":"Reagent",
+      "model":"Scale",
       "foreignKey":"item_id"
     }
   },

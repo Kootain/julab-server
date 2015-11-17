@@ -26,21 +26,34 @@
       "type": "number",
       "required": false
     },
-    "reagent_id":{
+    "item_id":{
       "type": "number",
       "required": false
     },
-    "is_new":{
+    "state":{
+      "type":"number",
+      "required":false
+    },
+    "value":{
+      "type":"number",
+      "required":false
+    },
+    "full_weight":{
       "type":"number",
       "required":false
     }
   },
   "validations": [],
   "relations": {
-    "reagent":{
+    "item":{
       "type":"belongsTo",
-      "model":"Reagent",
-      "foreignKey":"reagent_id"
+      "model":"Item",
+      "foreignKey":"item_id"
+    },
+    "weight":{
+      "type":"hasMany",
+      "model":"Weight",
+      "foreignKey":"scale_id"
     }
   },
   "acls": [],
