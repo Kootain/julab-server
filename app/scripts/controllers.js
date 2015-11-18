@@ -117,7 +117,7 @@ function deviceCtrl($scope, $http, $modal, Scale) {
     };
 };
 
-function scalePageCtrl($scope, $modal, $modalInstance, Scale, Weight, Reagent){
+function scalePageCtrl($scope, $modal, $modalInstance, Scale, Weight, Item){
 
     $scope.from=new Date();
     $scope.from.setMonth($scope.from.getMonth()-1);
@@ -176,12 +176,13 @@ function scalePageCtrl($scope, $modal, $modalInstance, Scale, Weight, Reagent){
 
     $scope.close = $modalInstance.close;
 
+    $a=$scope; 
 
     $scope.reagentUsage=[];
-
+    console.log($scope.reagentScale);
     Weight.find({filter:{
             where:{
-                reagent_id : $scope.reagentScale.reagent_id,
+                item_id : $scope.reagentScale.id,
                 gmt_created: {gt:$scope.from,lt:$scope.to}  //TODO
             }
         }
@@ -196,6 +197,28 @@ function scalePageCtrl($scope, $modal, $modalInstance, Scale, Weight, Reagent){
             }
         );
     })
+
+    $scope.itemList=[];
+    Item.find({},function(val){
+        $scope.itemList = val;
+    });
+    $scope.itemChanged = 0;
+
+    $scope.saveItem = function(item_id){
+        var data={
+            "item_id": $scope.itemChanged
+          };
+          console.log(data);
+        Scale.update(
+            {
+                "where":{"id":$scope.reagentScale.id}
+            },data,function(val, resHeader){
+                 tools.notify('alert-success', 'Update success');
+                $scope.$parent.queryScale();
+            },function(err){
+                tools.notify('alert-danger', res.data.error.message);
+            });
+    }
             //TODO if there is no data in weight error
             //TODO device list should content device's id
 };
@@ -643,7 +666,7 @@ function reagentCtrl($scope, $modal, $compile, $timeout, $sce, RfidInfo ,ngTable
     };
 
     $scope.saveReagent = function(id){
-        data={
+        var data={
             "rfid": $scope.reagents[id].rfid,
             "name": $scope.reagents[id].name,
             "id": $scope.reagents[id].id,
@@ -737,9 +760,9 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Ite
     $scope.stateStyle = function(state){
         var style = "";
         if(state==0) style="";          //普通展示状态
-        if(state==1) style="new";       //称上新换物品
-        if(state==2) style="low";       //称上物品紧缺
-        if(state==3) style="sending";   //补货中
+        if(state==1) style=" new";       //称上新换物品
+        if(state==2) style=" low";       //称上物品紧缺
+        if(state==3) style=" sending";   //补货中
         return style;
     };
 
@@ -853,26 +876,33 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Ite
         }
     });
 
+    //自动查询
+    var FREQUENCY=90000;//query data per 1s.
+    setInterval(function(){
+    $scope.queryScale();
+    },FREQUENCY);
     //架子展示
-    Scale.find({filter:{
-        include:"item"
-    }},function(val){
-        $scope.reagentsShelf=val.map(function(e){
-            e.isselected = true;
-            if(e.hasOwnProperty('item')){
-                e.reagent_name = e.item.name;
-            }else{
-                e.reagent_name = '空';
-            }
-            return e;
+    $scope.queryScale=function(){
+        Scale.find({filter:{
+            include:"item"
+        }},function(val){
+            $scope.reagentsShelf=val.map(function(e){
+                e.isselected = true;
+                if(e.hasOwnProperty('item')){
+                    e.reagent_name = e.item.name;
+                }else{
+                    e.reagent_name = '空';
+                }
+                return e;
+            });
+        },function(res){
+            tools.notify('alert-danger',res.data.error.message);
+        }).$promise.then(function(){
+            $scope.reagentsShelf = outputShelf($scope.reagentsShelf,4);
+            console.log($scope.reagentsShelf);
         });
-    },function(res){
-        tools.notify('alert-danger',res.data.error.message);
-    }).$promise.then(function(){
-        $scope.reagentsShelf = outputShelf($scope.reagentsShelf,4);
-        console.log($scope.reagentsShelf);
-    });
-
+    }
+    $scope.queryScale();
     //reagentsShelf 待展示试剂数组
     //n每行显示个数
     outputShelf = function(reagentsShelf,n){

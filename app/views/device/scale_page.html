@@ -32,7 +32,12 @@
                      <div class="progress progress-mini-vertical reagent-format">
                          <div style="height: {{percent}}%;" class="progress-bar" ng-class="percent<=20?'low-warning':''"></div>
                      </div> 
-                     <h4>{{reagentScale.reagent_name}}</h4>
+                     <select ng-model="itemChanged" ng-options="item.id as item.name for item in itemList">
+                        <option value="">{{reagentScale.reagent_name}}</option>
+                     </select>
+                     <div style="margin-top:10px">
+                        <a class="btn btn-rounded btn-primary" ng-click="saveItem(reagentScale.item_id)">save</a>
+                    </div>
                  </div>
                 <div class="col-md-9">
                     <div class="ibox float-e-margins">
