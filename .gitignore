@@ -30,3 +30,4 @@ coverage
 node_modules
 npm-debug.log
 docular_generated
+sftp-config.json

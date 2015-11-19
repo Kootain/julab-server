@@ -1,5 +1,5 @@
 {
-  "name": "Scale",
+  "name": "Reagent",
   "base": "PersistedModel",
   "strict": false,
   "idInjection": false,
@@ -7,38 +7,19 @@
     "validateUpsert": true
   },
   "properties": {
-    "gmt_login": {
-      "type": "date",
-      "required": true
-    },
-    "name": {
-      "type": "string"
-    },
-    "MAC": {
-      "type": "string",
-      "required": true
-    },
-    "gmt_created": {
-      "type": "date",
-      "required": true
-    },
-    "pos": {
-      "type": "number",
-      "required": false
-    },
-    "item_id":{
-      "type": "number",
-      "required": false
-    },
-    "state":{
+    "scale_id":{
       "type":"number",
       "required":false
     },
-    "value":{
-      "type":"number",
-      "required":false
+    "item_id": {
+      "type": "number",
+      "required": false
     },
     "full_weight":{
+      "type": "number",
+      "required": false
+    },
+    "value":{
       "type":"number",
       "required":false
     }
@@ -50,9 +31,9 @@
       "model":"Item",
       "foreignKey":"item_id"
     },
-    "weight":{
-      "type":"hasMany",
-      "model":"Weight",
+    "scale":{
+      "type":"belongsTo",
+      "model":"Scale",
       "foreignKey":"scale_id"
     }
   },

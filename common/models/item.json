@@ -13,10 +13,10 @@
   },
   "validations": [],
   "relations": {
-    "weight": {
-      "type": "hasMany",
-      "model": "Weight",
-      "foreignKey": "item_id"
+    "scale":{
+      "type":"hasMany",
+      "model":"Scale",
+      "foreignKey":"item_id"
     }
   },
   "acls": [],

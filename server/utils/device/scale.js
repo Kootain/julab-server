@@ -13,6 +13,7 @@ var _scale = function scale(app , device, params){
     _canHandle = false;
     var weight = data.toString().match('[0-9]+')[0];
     console.log(weight);
+    //TODO 增加称上之前重量判断以及百分比判断
     app.models.Weight.create(
       {
         'scale_id':_params.id,
