@@ -176,8 +176,6 @@ function scalePageCtrl($scope, $modal, $modalInstance, Scale, Weight, Item){
 
     $scope.close = $modalInstance.close;
 
-    $a=$scope; 
-
     $scope.reagentUsage=[];
     console.log($scope.reagentScale);
     Weight.find({filter:{
@@ -494,7 +492,7 @@ function addDevice($scope, $modalInstance, deviceInfo, Scale, Item){
 };
 
 
-function reagentCtrl($scope, $modal, $compile, $timeout, $sce, RfidInfo ,ngTableParams, DTColumnBuilder, DTOptionsBuilder, DTColumnDefBuilder) {
+function reagentCtrl($scope, $modal, $compile, $timeout, $http, RfidInfo, ngTableParams, DTColumnBuilder, DTOptionsBuilder, DTColumnDefBuilder) {
     var table=$('#reagents-table').dataTable();
 
     $scope.selectAll=false;
@@ -746,15 +744,15 @@ function reagentCtrl($scope, $modal, $compile, $timeout, $sce, RfidInfo ,ngTable
             
             controller: 'deviceDetection'
         });
-
     };
+
 };
 /**
  * chartJsCtrl - Controller for data for ChartJs plugin
  * used in Chart.js view
  */
 
-function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Item ,Reagent){
+function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Item, Reagent, Email){
     
     //称上物品状态
     $scope.stateStyle = function(state){
@@ -951,6 +949,7 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Ite
 
     //试剂高亮
     var isselect = false;
+
     $scope.selectScale = function(list){
         if (list.length == 0){
             return;
@@ -970,6 +969,19 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Ite
         }
     }
 
+    $scope.buy= function (scale){
+        message = {
+            to: "gaoty@qq.com",
+            data: scale
+        }
+        $http.post('/mail',message).
+            success(function(data, status, headers, config){
+                console.log('> email send to '+ message.to);
+            }).
+            error(function(data, status, headers, config){
+                console.log(status);
+            });
+    }
 };
 
 function chartJsCtrl() {
