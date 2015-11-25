@@ -12,13 +12,13 @@ module.exports = function(app) {
     var unKnown = app.unKnownDevices.list || [];
     var offlines = app.offlineDevices || [];
 
-    unKnown = [{
-      MAC: 'a2:12:31:d3:32',
-      ip: '192.168.1.3',
-      name: 'device1',
-      type: 'Scale'
-    }
-    ]
+    // unKnown = [{
+    //   MAC: 'a2:12:31:d3:32',
+    //   ip: '192.168.1.3',
+    //   name: 'device1',
+    //   type: 'Scale'
+    // }
+    // ]
     var data={
       'online':onlines,
       'offline':offlines,
@@ -48,7 +48,7 @@ module.exports = function(app) {
       to: req.body.to,
       from: yourEmailAddress,
       subject: '聚缘实验室订单',
-      text: JSON.stringify(req.body.data)
+      html: req.body.data
       //html: '<strong>HTML</strong> tags are converted'
     }, function(err) {
       if (err) throw err;

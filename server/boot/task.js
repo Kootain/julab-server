@@ -17,17 +17,17 @@ module.exports = function (app) {
   var exec = require('child_process').exec;
   exec('arp -a',function(err,stdout,stderr){
     //if(err) throw new Error(err)
-    stdout='192.168.100.152  0x1         0x2         8c:88:2b:00:1f:80     *        br-lan';
+    // stdout='192.168.100.152  0x1         0x2         8c:88:2b:00:1f:80     *        br-lan';
     console.log('=========');
     console.log(stdout);
     console.log('=========');
     if( new RegExp(/win.*/).test(process.platform)){
-      stdout='192.168.100.105  0x1         0x2         ac-bc-32-8d-9d-5d     *        br-lan';
+      // stdout='192.168.100.105  0x1         0x2         ac-bc-32-8d-9d-5d     *        br-lan';
       var ips = stdout.match(/(\d+\.){3}\d+/g);
       ips.shift();
       var MACs = stdout.match(/([0-9a-zA-Z]{2}\-){5}[0-9a-zA-Z]+/g);
+      MACs = MACs.map(function(e){ return e.replace(/-/g,':')});
       console.log(MACs);
-      MACs = MACs.map(function(e){ return e.replace('-',':')});
     } else {
       var ips=stdout.match(/(\d+\.){3}\d+/g);
       var MACs=stdout.match(/([0-9a-zA-Z]{2}:){5}[0-9a-zA-Z]+/g);
