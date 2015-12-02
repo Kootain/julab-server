@@ -875,7 +875,7 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Ite
     });
 
     //自动查询
-    var FREQUENCY=90000;//query data per 1s.
+    var FREQUENCY=9000;//query data per 1s.
     setInterval(function(){
     $scope.queryScale();
     },FREQUENCY);
@@ -969,8 +969,32 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Ite
         }
     }
 
+    $a = Scale;
+
     $scope.buy= function (scale){
-        html = '<table  border="1"><tr><td>称名</td><td>{0}</td></tr><tr><td>试剂名称</td><td>{1}</td></tr><tr><td>试剂余量</td><td>{2}KG</td></tr><tr><td>试剂满重</td><td>{3}KG</td></tr><tr><td>试剂栏位</td><td>{4}</td></tr><tr><td>实验室名称</td><td>{5}</td></tr><tr><td>订单时间</td><td>{6}</td></tr></table>'.format(scale.name,scale.item.name,scale.value,scale.full_weight,scale.pos,'Julab',new Date().format("yyyy-MM-dd hh:mm"));
+        var html = `<table  border="1">
+            <tr>
+                <td>称名</td> <td>{0}</td>
+            </tr>
+            <tr>
+                <td>试剂名称</td> <td>{1}</td>
+            </tr>
+            <tr>
+                <td>试剂余量</td> <td>{2}KG</td>
+            </tr>
+            <tr>
+                <td>试剂满重</td><td>{3}KG</td>
+            </tr>
+            <tr>
+                <td>试剂栏位</td> <td>{4}</td>
+            </tr>
+            <tr>
+                <td>实验室名称</td> <td>{5}</td>
+            </tr>
+            <tr>
+                <td>订单时间</td><td>{6}</td>
+            </tr>
+        </table>`.format(scale.name,scale.item.name,scale.value,scale.full_weight,scale.pos,'Julab',new Date().format("yyyy-MM-dd hh:mm"));
         message = {
             to: "gaoty@qq.com",
             data: html
@@ -978,6 +1002,11 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Ite
         $http.post('/mail',message).
             success(function(data, status, headers, config){
                 console.log('> email post to server');
+                data = {
+                    state : 3
+                };
+                scale.state = 3;
+                Scale.updateAll({where : {id : scale.id}}, data, function(){});
             }).
             error(function(data, status, headers, config){
                 console.log(status);

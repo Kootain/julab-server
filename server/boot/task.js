@@ -100,10 +100,19 @@ module.exports = function (app) {
       // });
 
       process.nextTick(function(){
-        app.unKnownDevices ={
-          list: unKnownDevices,
-          connectors: unKnownDevices.map(function(e){ return new Device('unknown', e.ip, SERVER_PORT)})
+        var list = unKnownDevices.map(function(e){ 
+          return {
+            detail:e,
+            connector:new Device('unknown', e.ip, SERVER_PORT)
+          }
+        });
+
+        app.unKnownDevices = {};
+
+        for (var i = list.length - 1; i >= 0; i--) {
+          app.unKnownDevices[list[i].detail.MAC] = list[i];
         };
+
       });
 
       app.offlineDevices = offlineDevices;

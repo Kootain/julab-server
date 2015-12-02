@@ -7,7 +7,7 @@ module.exports = function(Weight) {
  //        }
  //    );
   Weight.observe('before save',function addTimeInfo(ctx, next){
-    console.log('called');
+    console.log('called Weight before save');
     if(ctx.isNewInstance){ //new instance -> create option
       ctx.instance.gmt_created=(new Date()).toGMTString();
     }

@@ -25,7 +25,7 @@ app.start = function() {
     console.log('Web server listening at: %s', app.get('url'));
   });
 };
-require('./boot/task.js')(app);
+// require('./boot/task.js')(app);
 boot(app, __dirname);
 
 
