@@ -8,6 +8,7 @@ module.exports = function(Scale) {
   });
   Scale.observe('after save',function updateStatus(ctx, next){
     console.log('after save');
+
     // require('../../server/boot/task')(global.app);
     next();
   });

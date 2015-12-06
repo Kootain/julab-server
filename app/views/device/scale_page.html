@@ -28,7 +28,7 @@
         <div class="ibox-content">
              <div class="row" >
                  <div class="col-md-3" style="text-align:center">
-                     <h2>{{  percent=floor(reagentScale.value / reagentScale.full_weight * 100)  }}%</h2>
+                     <h2>{{  percent=floor(reagentScale.value / reagentScale.full_weight * 100) || 0}}%</h2>
                      <div class="progress progress-mini-vertical reagent-format">
                          <div style="height: {{percent}}%;" class="progress-bar" ng-class="percent<=20?'low-warning':''"></div>
                      </div> 

@@ -3,19 +3,19 @@ var Transaction = require('loopback-datasource-juggler').Transaction;
 
 var jump={
   0 : function(scale){
-    if(scale.value < scale.full_weight * 0.2){
+    if(scale.value <= scale.full_weight * 0.2){
       scale.state =2;
     }
     return scale.state;
   },
   2 : function(scale){
-    if(scale.value >= scale.full_weight * 0.2){
+    if(scale.value > scale.full_weight * 0.2){
       scale.state =0;
     }
     return scale.state;
   },
   3 : function(scale){
-    if(scale.value >= scale.full_weight * 0.2){
+    if(scale.value > scale.full_weight * 0.2){
       scale.state =0;
     }
     return scale.state;

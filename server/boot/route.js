@@ -9,7 +9,7 @@ module.exports = function(app) {
   router.get('/env/devices',function(req,res,value){
   	//TODO use native api
     var onlines = app.onlineDevices.list || [];
-    var unKnown = app.unKnownDevices.list || [];
+    var unKnown = app.unKnownDevices || [];
     var offlines = app.offlineDevices || [];
 
     // unKnown = [{

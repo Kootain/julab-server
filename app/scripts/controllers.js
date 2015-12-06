@@ -379,10 +379,15 @@ function deviceDetection($scope, $http, $modal, $modalInstance){
         .success(function(data, status, headers, config){
             $scope.devicesList=angular.fromJson(data);
             $scope.devicesUnknown=$scope.devicesList.unKnown;
-            $scope.devicesUnknown=$scope.devicesUnknown.map(function(e){
-                e.type='scale';
-                e.name=e.MAC;
-                return e});
+            console.log($scope.devicesUnknown);
+            // $scope.devicesUnknown=$scope.devicesUnknown.map(function(e){
+            //     e.type='scale';
+            //     e.name=e.MAC;
+            //     return e});
+            for(var x in $scope.devicesUnknown){
+                $scope.devicesUnknown[x].type = 'scale';
+                $scope.devicesUnknown[x].name = $scope.devicesUnknown[x].MAC;
+            }
             $scope.isLoading=false;
         })
         .error(function(data, status, headers, config){
@@ -1002,10 +1007,10 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Ite
         $http.post('/mail',message).
             success(function(data, status, headers, config){
                 console.log('> email post to server');
+                tools.notify('alert-success','订单已成功发出！');
                 data = {
                     state : 3
                 };
-                scale.state = 3;
                 Scale.updateAll({where : {id : scale.id}}, data, function(){});
             }).
             error(function(data, status, headers, config){
