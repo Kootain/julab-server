@@ -38,6 +38,11 @@ var device = function (name, ip, port){
 			colorlog.log(['connected device: ',_name||'undefined',', ',_ip,':',_port]);
 		});
 
+		client.on('error', function (err){
+			colorlog.warning(err);
+			//TODO reconnect
+		});
+
 		client.on('data', function(data){
 			colorlog.info(['get data from server']);
 			colorlog.warning([data.toString()]);
@@ -46,6 +51,7 @@ var device = function (name, ip, port){
 
 		client.on('close', function() {
 		    colorlog.info(['connection with ', _name ,' closed.']);
+		    client.end();
 		});
 
 		return true;
