@@ -176,8 +176,6 @@ function scalePageCtrl($scope, $modal, $modalInstance, Scale, Weight, Item){
 
     $scope.close = $modalInstance.close;
 
-    $a=$scope; 
-
     $scope.reagentUsage=[];
     console.log($scope.reagentScale);
     Weight.find({filter:{
@@ -381,10 +379,15 @@ function deviceDetection($scope, $http, $modal, $modalInstance){
         .success(function(data, status, headers, config){
             $scope.devicesList=angular.fromJson(data);
             $scope.devicesUnknown=$scope.devicesList.unKnown;
-            $scope.devicesUnknown=$scope.devicesUnknown.map(function(e){
-                e.type='scale';
-                e.name=e.MAC;
-                return e});
+            console.log($scope.devicesUnknown);
+            // $scope.devicesUnknown=$scope.devicesUnknown.map(function(e){
+            //     e.type='scale';
+            //     e.name=e.MAC;
+            //     return e});
+            for(var x in $scope.devicesUnknown){
+                $scope.devicesUnknown[x].type = 'scale';
+                $scope.devicesUnknown[x].name = $scope.devicesUnknown[x].MAC;
+            }
             $scope.isLoading=false;
         })
         .error(function(data, status, headers, config){
@@ -494,7 +497,7 @@ function addDevice($scope, $modalInstance, deviceInfo, Scale, Item){
 };
 
 
-function reagentCtrl($scope, $modal, $compile, $timeout, $sce, RfidInfo ,ngTableParams, DTColumnBuilder, DTOptionsBuilder, DTColumnDefBuilder) {
+function reagentCtrl($scope, $modal, $compile, $timeout, $http, RfidInfo, ngTableParams, DTColumnBuilder, DTOptionsBuilder, DTColumnDefBuilder) {
     var table=$('#reagents-table').dataTable();
 
     $scope.selectAll=false;
@@ -746,15 +749,15 @@ function reagentCtrl($scope, $modal, $compile, $timeout, $sce, RfidInfo ,ngTable
             
             controller: 'deviceDetection'
         });
-
     };
+
 };
 /**
  * chartJsCtrl - Controller for data for ChartJs plugin
  * used in Chart.js view
  */
 
-function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Item ,Reagent){
+function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Item, Reagent, Email){
     
     //称上物品状态
     $scope.stateStyle = function(state){
@@ -877,7 +880,7 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Ite
     });
 
     //自动查询
-    var FREQUENCY=90000;//query data per 1s.
+    var FREQUENCY=9000;//query data per 1s.
     setInterval(function(){
     $scope.queryScale();
     },FREQUENCY);
@@ -951,6 +954,7 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Ite
 
     //试剂高亮
     var isselect = false;
+
     $scope.selectScale = function(list){
         if (list.length == 0){
             return;
@@ -970,6 +974,49 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Ite
         }
     }
 
+    $a = Scale;
+
+    $scope.buy= function (scale){
+        var html = `<table  border="1">
+            <tr>
+                <td>称名</td> <td>{0}</td>
+            </tr>
+            <tr>
+                <td>试剂名称</td> <td>{1}</td>
+            </tr>
+            <tr>
+                <td>试剂余量</td> <td>{2}KG</td>
+            </tr>
+            <tr>
+                <td>试剂满重</td><td>{3}KG</td>
+            </tr>
+            <tr>
+                <td>试剂栏位</td> <td>{4}</td>
+            </tr>
+            <tr>
+                <td>实验室名称</td> <td>{5}</td>
+            </tr>
+            <tr>
+                <td>订单时间</td><td>{6}</td>
+            </tr>
+        </table>`.format(scale.name,scale.item.name,scale.value,scale.full_weight,scale.pos,'Julab',new Date().format("yyyy-MM-dd hh:mm"));
+        message = {
+            to: "gaoty@qq.com",
+            data: html
+        }
+        $http.post('/mail',message).
+            success(function(data, status, headers, config){
+                console.log('> email post to server');
+                tools.notify('alert-success','订单已成功发出！');
+                data = {
+                    state : 3
+                };
+                Scale.updateAll({where : {id : scale.id}}, data, function(){});
+            }).
+            error(function(data, status, headers, config){
+                console.log(status);
+            });
+    }
 };
 
 function chartJsCtrl() {

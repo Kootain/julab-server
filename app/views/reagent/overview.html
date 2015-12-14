@@ -94,7 +94,7 @@
         <div class="row" ng-repeat="(j,reagents) in reagentsShelf">
             <div class="col-md-3 col-sm-3" ng-repeat="(i,reagent) in reagents">
                 <div class="ibox" style="{{reagent.hasOwnProperty('reagent_name')?'':'display:none;'}}">
-                    <div class="ibox-content{{stateStyle(reagent.state)}}"  ng-init="percent=reagent.value / reagent.full_weight * 100" ng-click="scaleDetail(reagent)" ng-class="reagent.isselected?'':'unhighlight'">
+                    <div class="ibox-content{{stateStyle(reagent.state)}}"  ng-init="percent=(reagent.value / reagent.full_weight * 100) || 0" ng-click="scaleDetail(reagent)" ng-class="reagent.isselected?'':'unhighlight'">
                         <h5>{{reagent.reagent_name}}</h5>
                         <h2>{{floor(percent)}}%</h2>
                         <div class="progress progress-mini" >

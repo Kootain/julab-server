@@ -17,25 +17,28 @@ module.exports = function (app) {
   var exec = require('child_process').exec;
   exec('arp -a',function(err,stdout,stderr){
     //if(err) throw new Error(err)
-    stdout='192.168.100.152  0x1         0x2         8c:88:2b:00:1f:80     *        br-lan';
+    // stdout='192.168.100.152  0x1         0x2         8c:88:2b:00:1f:80     *        br-lan';
     console.log('=========');
     console.log(stdout);
     console.log('=========');
     if( new RegExp(/win.*/).test(process.platform)){
-      stdout='192.168.100.105  0x1         0x2         ac-bc-32-8d-9d-5d     *        br-lan';
+      // stdout='192.168.100.105  0x1         0x2         ac-bc-32-8d-9d-5d     *        br-lan';
       var ips = stdout.match(/(\d+\.){3}\d+/g);
       ips.shift();
       var MACs = stdout.match(/([0-9a-zA-Z]{2}\-){5}[0-9a-zA-Z]+/g);
-      console.log(MACs);
-      MACs = MACs.map(function(e){ return e.replace('-',':')});
+      MACs = MACs.map(function(e){ return e.replace(/-/g,':')});
     } else {
       var ips=stdout.match(/(\d+\.){3}\d+/g);
       var MACs=stdout.match(/([0-9a-zA-Z]{2}:){5}[0-9a-zA-Z]+/g);
     }
 
     for (var i = ips.length - 1; i >= 0; i--) {
-      devices[MACs[i]]=ips[i];
+      devices[MACs[i]]={
+        ip: ips[i],
+        known : false
+      };
     };
+
     var onlineDevices = [],    // [{MAC:??, ip:??, name:??, type:??, ip: ??}, ... ]
         offlineDevices=[],     // [{MAC:??, name:??, type: ??}, ... ]
         unKnownDevices=[];      // [{MAC：??, ip:??}, ... ]
@@ -47,13 +50,13 @@ module.exports = function (app) {
       .then(function(data){
         for (var i = data.length - 1; i >= 0; i--) {
           if(devices[data[i].MAC]){   //if exist in 'devices' => online  else  offline
-            devices[data[i].MAC]['known']=true;
+            devices[data[i].MAC].known=true;
             data[i]['type']=type;
             var aDevice={
               'MAC' : data[i].MAC, 
               'name' : data[i].name, 
               'type' : type,
-              'ip' : devices[data[i].MAC]  
+              'ip' : devices[data[i].MAC].ip  
             };
             app.onlineDevices.list.push(aDevice);
             var connector=new Device(aDevice.name, aDevice.ip, SERVER_PORT);
@@ -81,7 +84,7 @@ module.exports = function (app) {
     .done(function(){   
       //mark unknown
       for(var mac in devices){
-        if(!devices[mac]['known']) unKnownDevices.push({MAC:mac,ip:devices[mac]});
+        if(!devices[mac].known) unKnownDevices.push({MAC:mac,ip:devices[mac].ip});
       } 
 
       // //generate devices socket, bind on app
@@ -100,15 +103,24 @@ module.exports = function (app) {
       // });
 
       process.nextTick(function(){
-        app.unKnownDevices ={
-          list: unKnownDevices,
-          connectors: unKnownDevices.map(function(e){ return new Device('unknown', e.ip, SERVER_PORT)})
+        var list = unKnownDevices.map(function(e){ 
+          e.connector=new Device('unknown', e.ip, SERVER_PORT);
+          return e;
+        });
+
+        app.unKnownDevices = {};
+
+        for (var i = list.length - 1; i >= 0; i--) {
+          app.unKnownDevices[list[i].MAC] = list[i];
         };
+
       });
 
       app.offlineDevices = offlineDevices;
 
       console.log("UNKNOWN\t",app.unKnownDevices);
+      console.log("OFFLINE\t",app.offlineDevices);
+      console.log("ONLINE\t",app.onlineDevices);
 
     });
   });
