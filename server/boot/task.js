@@ -1,3 +1,4 @@
+var fs = require('fs');
 var SERVER_PORT = 8080;
 module.exports = function (app) {
   console.log('called');
@@ -14,24 +15,36 @@ module.exports = function (app) {
           list: [],
           connectors: []
         };
-  var exec = require('child_process').exec;
-  exec('arp -a',function(err,stdout,stderr){
+  var dhcpPath = './dhcp.leases';
+  fs.readFile(dhcpPath,function(err,data){
+    data = data.toString();
     //if(err) throw new Error(err)
     // stdout='192.168.100.152  0x1         0x2         8c:88:2b:00:1f:80     *        br-lan';
     console.log('=========');
-    console.log(stdout);
+    console.log(data);
     console.log('=========');
-    if( new RegExp(/win.*/).test(process.platform)){
-      // stdout='192.168.100.105  0x1         0x2         ac-bc-32-8d-9d-5d     *        br-lan';
-      var ips = stdout.match(/(\d+\.){3}\d+/g);
-      ips.shift();
-      var MACs = stdout.match(/([0-9a-zA-Z]{2}\-){5}[0-9a-zA-Z]+/g);
-      MACs = MACs.map(function(e){ return e.replace(/-/g,':')});
-    } else {
-      var ips=stdout.match(/(\d+\.){3}\d+/g);
-      var MACs=stdout.match(/([0-9a-zA-Z]{2}:){5}[0-9a-zA-Z]+/g);
+    // if( new RegExp(/win.*/).test(process.platform)){
+    //   // stdout='192.168.100.105  0x1         0x2         ac-bc-32-8d-9d-5d     *        br-lan';
+    //   var ips = stdout.match(/(\d+\.){3}\d+/g);
+    //   ips.shift();
+    //   var MACs = stdout.match(/([0-9a-zA-Z]{2}\-){5}[0-9a-zA-Z]+/g);
+    //   MACs = MACs.map(function(e){ return e.replace(/-/g,':')});
+    // } else {
+      // var ips=data.match(/(\d+\.){3}\d+/g);
+      // var MACs=data.match(/([0-9a-zA-Z]{2}:){5}[0-9a-zA-Z]+/g);
+    // }
+    // console.log(ips,MACs);
+    var MACs=[];
+    var ips=[];
+    var lines = data.match(/[\S ]*/g);
+    for(var i=lines.length -1 ; i>=0; i--){
+      if (lines[i]=='') lines.splice(i,1);
     }
-
+    for(var i=lines.length -1 ; i>=0; i--){
+      MACs.push(lines[i].match(/\S*/g)[6]);
+      ips.push(lines[i].match(/\S*/g)[4]);
+    }
+    console.log(MACs,ips);
     for (var i = ips.length - 1; i >= 0; i--) {
       devices[MACs[i]]={
         ip: ips[i],
@@ -113,7 +126,6 @@ module.exports = function (app) {
         for (var i = list.length - 1; i >= 0; i--) {
           app.unKnownDevices[list[i].MAC] = list[i];
         };
-
       });
 
       app.offlineDevices = offlineDevices;
