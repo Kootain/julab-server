@@ -41,7 +41,7 @@ module.exports = function (app) {
       if (lines[i]=='') lines.splice(i,1);
     }
     for(var i=lines.length -1 ; i>=0; i--){
-      MACs.push(lines[i].match(/\S*/g)[6]);
+      MACs.push(lines[i].match(/\S*/g)[2]);
       ips.push(lines[i].match(/\S*/g)[4]);
     }
     console.log(MACs,ips);
