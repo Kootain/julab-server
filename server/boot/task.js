@@ -44,7 +44,6 @@ module.exports = function (app) {
       MACs.push(lines[i].match(/\S*/g)[2]);
       ips.push(lines[i].match(/\S*/g)[4]);
     }
-    console.log(MACs,ips);
     for (var i = ips.length - 1; i >= 0; i--) {
       devices[MACs[i]]={
         ip: ips[i],
@@ -59,7 +58,7 @@ module.exports = function (app) {
 
     function getDeviceListOfAType(type){  
       var deferred = Q.defer();//
-      app.models[type].find({where:{MAC:{inq:MACs}}})
+      app.models[type].find()
       .then(function(data){
         for (var i = data.length - 1; i >= 0; i--) {
           if(devices[data[i].MAC]){   //if exist in 'devices' => online  else  offline
@@ -127,12 +126,9 @@ module.exports = function (app) {
           app.unKnownDevices[list[i].MAC] = list[i];
         };
       });
-
       app.offlineDevices = offlineDevices;
-
-      console.log("UNKNOWN\t",app.unKnownDevices);
-      console.log("OFFLINE\t",app.offlineDevices);
-      console.log("ONLINE\t",app.onlineDevices);
+      console.log(app.offlineDevices);
+      console.log(app.onlineDevices);
 
     });
   });
