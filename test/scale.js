@@ -1,8 +1,26 @@
 var net = new  require('net');
+var process = require('process');
+
+var weight = '11.0kg';
+
+process.stdin.setEncoding('utf8');
+
+process.stdin.on('readable', function() {
+  var chunk = process.stdin.read();
+  if (chunk !== null) {
+    chunk = chunk.slice(0,chunk.length-2);
+    weight = chunk + 'kg';
+    process.stdout.write('data: ' + weight );
+  }
+});
+
+process.stdin.on('end', function() {
+  process.stdout.write('end');
+});
 
 var server = net.createServer(function(socket){
   var cl = setInterval(function(){
-    socket.write('11.0kg');
+    socket.write(weight);
   },2000);
 
   socket.on('error',function(err){
@@ -20,7 +38,7 @@ var server = net.createServer(function(socket){
 });
 
 server.listen({
-  host: '192.168.20.150',
+  host: 'localhost',
   port: 8080,
   exclusive: true
 },function(){
