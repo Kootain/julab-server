@@ -114,7 +114,6 @@ module.exports = function (app) {
         for (var i = list.length - 1; i >= 0; i--) {
           app.unKnownDevices[list[i].MAC] = list[i];
         };
-
         console.log('OFFLINE:',app.offlineDevices);
         console.log('ONLINE:',app.onlineDevices);
         console.log('UNKNOWN:',app.unKnownDevices);
