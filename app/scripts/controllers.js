@@ -2,9 +2,11 @@
  * MainCtrl - controller
  */
 tools={};
-query={};
+webConfig={
+    shelfX : 4,
+    shelfY : 3
+}
 function mainCtrl($scope, Scale,notify) {
-
     this.userName = 'tanki';
     this.helloText = 'Welcome in SeedProject';
     this.descriptionText = 'It is an application skeleton for a typical AngularJS web app. You can use it to quickly bootstrap your angular webapp projects and dev environment for these projects.';
@@ -26,6 +28,25 @@ function mainCtrl($scope, Scale,notify) {
     　　}
     　　return pwd;
     }
+    tools.outputShelf = function(reagentsShelf){
+        var a=[];
+        for(var i = 0; i<webConfig.shelfY; i++){
+            a[i] = new Array(webConfig.shelfX);
+            for(var j =0; j<webConfig.shelfX; j++){
+                a[i][j] = {
+                    reagent_name : '空',
+                    state : 0,
+                    isselected : 1,
+                    name : '空',
+                    pos : i*webConfig.shelfX + j
+                }
+            }
+        }
+        for(var i=0;i<reagentsShelf.length;i++){
+            a[Math.floor(reagentsShelf[i].pos/webConfig.shelfX)][reagentsShelf[i].pos%webConfig.shelfX] = reagentsShelf[i];
+        }
+        return a;
+    };
 
     $scope.commingSoon=function(){
         tools.notify('alert-info','this function will come soon.');
@@ -424,7 +445,8 @@ function addDevice($scope, $modalInstance, deviceInfo, Scale, Item){
                         name:deviceInfo.name,
                         MAC:deviceInfo.MAC,
                         type:deviceInfo.type,
-                        reagent: ""
+                        reagent: "",
+                        pos: -1
                     };
     $scope.reagents=[{'name':'oooops, nothing','id':-1}];
     $scope.selectedReagents=[];
@@ -441,12 +463,14 @@ function addDevice($scope, $modalInstance, deviceInfo, Scale, Item){
     
     $scope.submit = function() {
         if ($scope.detailForm.$valid) {
+            console.log($scope.detailForm.pos);
             Scale.create(
             {
                 MAC:deviceInfo.MAC,
                 name:$scope.formDetails.name,
                 type:deviceInfo.type,
-                item_id: $scope.formDetails.reagent
+                item_id: $scope.formDetails.reagent,
+                pos : $scope.formDetails.pos
             }
             ,function (val,resHeader){
                 $a=$scope;
@@ -468,18 +492,7 @@ function addDevice($scope, $modalInstance, deviceInfo, Scale, Item){
             });
         }
     }
-    outputShelf = function(reagentsShelf,n){
-        result=[];
-        for(var i=0;i<reagentsShelf.length/n;i++){
-            temp=[];
-            for(var j=0;j<n;j++){
-                if(i*n+j>=reagentsShelf.length) break;
-                temp.push(reagentsShelf[i*n+j]);
-            }
-            result.push(temp);
-        }
-        return result;
-    };
+
     var refreshChosen=function(){
         $('#myChosen').chosen('destroy').chosen({max_selected_options: 1});
     };
@@ -489,11 +502,11 @@ function addDevice($scope, $modalInstance, deviceInfo, Scale, Item){
         function(res){
              tools.notify('alert-danger',res.data.error.message);
         }).$promise.then(refreshChosen,refreshChosen);
+
     Scale.find().$promise.then(function(data){
-        $scope.scales = outputShelf(data,4);
+        $scope.scales = tools.outputShelf(data);
     });
     
-    // $scope.scales = outputShelf($scope.scales,4);
 };
 
 
@@ -901,31 +914,12 @@ function reagentOverviewCtrl($scope, $http, $modal, RfidInfo, Weight, Scale, Ite
         },function(res){
             tools.notify('alert-danger',res.data.error.message);
         }).$promise.then(function(){
-            $scope.reagentsShelf = outputShelf($scope.reagentsShelf,4);
-            console.log($scope.reagentsShelf);
+            $scope.reagentsShelf = tools.outputShelf($scope.reagentsShelf);
         });
     }
     $scope.queryScale();
     //reagentsShelf 待展示试剂数组
     //n每行显示个数
-    outputShelf = function(reagentsShelf,n){
-        a=[];
-        result=[];
-        for(var i=0;i<reagentsShelf.length;i++){
-            a[reagentsShelf[i].pos] = reagentsShelf[i];
-        }
-        console.log(a);
-        reagentsShelf = a;
-        for(var i=0;i<reagentsShelf.length/n;i++){
-            temp=[];
-            for(var j=0;j<n;j++){
-                if(i*n+j>=reagentsShelf.length) break;
-                temp.push(reagentsShelf[i*n+j]);
-            }
-            result.push(temp);
-        }
-        return result;
-    };
    
     //同种试剂统计
     Item.find({filter:{
