@@ -2,6 +2,45 @@ module.exports = function io(app) {
 	app.io = require('socket.io')(app.start());
 	HashSet = require('../tools/HashSet');
 	colorlog = require('../tools/colorlog');
+
+	var ShakeHands = (function () {
+	    function ShakeHands(prefix) {
+	        this.start = prefix + "." + "ShakeHands.start";
+	        this.accept = prefix + "." + "ShakeHands.accept";
+	        this.reject = prefix + "." + "ShakeHands.reject";
+	    }
+	    return ShakeHands;
+	})();
+	var job = (function () {
+	    function job(prefix) {
+	        this.shakeHands = new ShakeHands(prefix + ".Job");
+	        this.submit = prefix + "." + "Job.submit";
+	        this.spread = prefix + "." + "Job.spread";
+	    }
+	    return job;
+	})();
+	var Connection = (function () {
+	    function Connection() {
+	    }
+	    Connection.in = "Connection.in";
+	    return Connection;
+	})();
+	var RegisterReagents = (function () {
+	    function RegisterReagents() {
+	    }
+	    RegisterReagents.isInProcess = "RegisterReagents.isInProcess";
+	    RegisterReagents.Job = new job("RegisterReagents");
+	    RegisterReagents.update = "RegisterReagents.update";
+	    return RegisterReagents;
+	})();
+	var FindReagents = (function () {
+	    function FindReagents() {
+	    }
+	    FindReagents.Job = new job("FindReagents");
+	    return FindReagents;
+	})();
+
+
 	/*-------device type------
 	 * scanner
 	 * web
@@ -9,8 +48,8 @@ module.exports = function io(app) {
 	 */
 
 	app.todo={
-		scanner: new HashSet(),
-		web: new HashSet()
+		scanner: {},
+		web: {}
 	}
 
 	//var scanner=app.connected.scanner;
@@ -26,26 +65,27 @@ module.exports = function io(app) {
 						 *  * add reagent
 						 *  * find reagents
 						 */
-						socket.on('submit job', function (data) {
-							todo.scanner.add(data.serial);
+						socket.on(FindReagents.Job.submit, function (data) {
+							todo.scanner[data.serial]=data.list;
 							for(var id in scanner){
-								scanner[id].emit('notify job',
-									{ detail: data, owner: socket.id });
+								scanner[id].emit(FindReagents.Job.spread,
+									{ serial:data.serial, detail: data, owner: socket.id });
 							}
 						});
 
 					},	
 		scanner: 	function(socket){
 						var todo=app.todo;
-						socket.on('notify accept job',function (data){
-							if(!todo.scanner.contains(data.serial)){
+						socket.on(FindReagents.Job.shakeHands.start,function (data){
+							data=JSON.parse(data);
+							if(!todo.scanner[data.serial]){
 								colorlog.log([colorlog.yellow(data.serial),' was ',colorlog.red('expired'),'!']);
-								socket.emit('cancel job', {serial: data.detail.serial});
+								socket.emit(FindReagents.Job.shakeHands.reject, data);
 								return;
 							}
 							colorlog.log([colorlog.yellow(data.serial),' was ',colorlog.green('accepeted'),'!']);
-							socket.emit('register job',{serial: data.detail.serial});
-							todo.scanner.remove(data.serial);
+							socket.emit(FindReagents.Job.shakeHands.accept, data);
+							delete todo.scanner[data.serial];
 						});
 
 						socket.on('get reagent rfid result', function (data){
@@ -77,6 +117,7 @@ module.exports = function io(app) {
 
 	app.io.on('connection', function (socket) {
 		socket.on('in',function(data){
+			console.log(data.type+"  connected");
 			app.connected[data.type][socket.id]=socket;
 			jobs.registerJobs(data.type, socket);
 		});
