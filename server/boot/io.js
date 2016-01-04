@@ -33,12 +33,19 @@ module.exports = function io(app) {
 	    RegisterReagents.update = "RegisterReagents.update";
 	    return RegisterReagents;
 	})();
+	var QuickRegisterReagents = (function () {
+	    function QuickRegisterReagents() {
+	    }
+	    QuickRegisterReagents.Job = new job("QuickRegisterReagents");
+	    return QuickRegisterReagents;
+	})();
 	var FindReagents = (function () {
 	    function FindReagents() {
 	    }
 	    FindReagents.Job = new job("FindReagents");
 	    return FindReagents;
 	})();
+
 
 
 	/*-------device type------
@@ -72,6 +79,18 @@ module.exports = function io(app) {
 									{ serial:data.serial, detail: data, owner: socket.id });
 							}
 						});
+						
+						socket.on(QuickRegisterReagents.Job.shakeHands.start,function (data){
+							data=JSON.parse(data);
+							if(!todo.web[data.serial]){
+								colorlog.log([colorlog.yellow(data.serial),' was ',colorlog.red('expired'),'!']);
+								socket.emit(QuickRegisterReagents.Job.shakeHands.reject, data);
+								return;
+							}
+							colorlog.log([colorlog.yellow(data.serial),' was ',colorlog.green('accepeted'),'!']);
+							socket.emit(QuickRegisterReagents.Job.shakeHands.accept, data);
+							delete todo.scanner[data.serial];
+						});
 
 					},	
 		scanner: 	function(socket){
@@ -86,6 +105,15 @@ module.exports = function io(app) {
 							colorlog.log([colorlog.yellow(data.serial),' was ',colorlog.green('accepeted'),'!']);
 							socket.emit(FindReagents.Job.shakeHands.accept, data);
 							delete todo.scanner[data.serial];
+						});
+
+						socket.on(QuickRegisterReagents.Job.submit,function (data){
+							data=JSON.parse(data);
+							todo.web[data.serial] = data.rfid;
+							for(var id in web){
+								web[id].emit(QuickRegisterReagents.Job.spread,
+									{ serial:data.serial, detail: data, owner: socket.id });
+							}
 						});
 
 						socket.on('get reagent rfid result', function (data){
