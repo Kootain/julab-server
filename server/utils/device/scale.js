@@ -43,7 +43,7 @@ var _scale = function (app , device, params){
     ).then(function(w){
       //TODO 将 full_weight 绑定 
       app.models.Scale.find({where:{id : w.scale_id}}).then(function(s){
-        var full =(w.value > s[0].value || s[0].value === 0 || s[0].full_weight === 0) ? w.value : s[0].full_weight;
+        var full =(w.value > s[0].value +0.3 || s[0].full_weight === 0) ? w.value : s[0].full_weight;
         var scaleData = {
           value : w.value,
           full_weight : full,

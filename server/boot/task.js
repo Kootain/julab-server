@@ -22,34 +22,17 @@ module.exports = function (app) {
   }
   exec(cmd,function(err,data,stderr){
     data = data.toString();
-    //if(err) throw new Error(err)
-    stdout='192.168.100.152  0x1         0x2         8c:88:2b:00:1f:80     *        br-lan';
+    if(err) throw new Error(err)
+    //30:10:b3:9a:5f:7a 192.168.100.174 QJZN-20151021YG
     console.log('=========');
     console.log(data);
     console.log('=========');
-
-    // if( new RegExp(/win.*/).test(process.platform)){
-    //   // stdout='192.168.100.105  0x1         0x2         ac-bc-32-8d-9d-5d     *        br-lan';
-    //   var ips = stdout.match(/(\d+\.){3}\d+/g);
-    //   ips.shift();
-    //   var MACs = stdout.match(/([0-9a-zA-Z]{2}\-){5}[0-9a-zA-Z]+/g);
-    //   MACs = MACs.map(function(e){ return e.replace(/-/g,':')});
-    // } else {
-      // var ips=data.match(/(\d+\.){3}\d+/g);
-      // var MACs=data.match(/([0-9a-zA-Z]{2}:){5}[0-9a-zA-Z]+/g);
-    // }
-    // console.log(ips,MACs);
     var MACs=[];
     var ips=[];
-    var lines = data.match(/[\S ]*/g);
-    for(var i=lines.length -1 ; i>=0; i--){
-      if (lines[i]=='') lines.splice(i,1);
-    }
-    for(var i=lines.length -1 ; i>=0; i--){
-      MACs.push(lines[i].match(/\S*/g)[2]);
-      ips.push(lines[i].match(/\S*/g)[4]);
+    
+    var ips=data.match(/(\d+\.){3}\d+/g);
+    var MACs=data.match(/([0-9a-zA-Z]{2}:){5}[0-9a-zA-Z]+/g);
 
-    }
     for (var i = ips.length - 1; i >= 0; i--) {
       devices[MACs[i]]={
         ip: ips[i],
@@ -88,34 +71,22 @@ module.exports = function (app) {
             });
           }
         };
-        app.onlineDevices.list.push(aDevice);
-        var connector=new Device(aDevice.name, aDevice.ip, SERVER_PORT);
-        app.onlineDevices.connectors.push(connector);
-        tasks[type](connector,data[i]);
-      } else {
-        offlineDevices.push({
-          'MAC' : data[i].MAC, 
-          'name' : data[i].name, 
-          'type' : type 
-        });
-      }
+        deferred.resolve();
+      });
+      return deferred.promise;
+    }
+
+    var jobs=[];
+    for (var i = deviceType.length - 1; i >= 0; i--) {
+      jobs.push(getDeviceListOfAType(deviceType[i]));
     };
-    deferred.resolve();
-  });
-  return deferred.promise;
-}
 
-var jobs=[];
-for (var i = deviceType.length - 1; i >= 0; i--) {
-  jobs.push(getDeviceListOfAType(deviceType[i]));
-};
-
-Q.all(jobs)  
-.done(function(){   
-  //mark unknown
-  for(var mac in devices){
-    if(!devices[mac].known) unKnownDevices.push({MAC:mac,ip:devices[mac].ip});
-  } 
+    Q.all(jobs)  
+    .done(function(){   
+      //mark unknown
+      for(var mac in devices){
+        if(!devices[mac].known) unKnownDevices.push({MAC:mac,ip:devices[mac].ip});
+      } 
 
       // //generate devices socket, bind on app
       // process.nextTick(function(){
