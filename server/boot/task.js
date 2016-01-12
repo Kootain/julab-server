@@ -22,18 +22,34 @@ module.exports = function (app) {
   }
   exec(cmd,function(err,data,stderr){
     data = data.toString();
-    if(err) throw new Error(err)
-    //30:10:b3:9a:5f:7a 192.168.100.174 QJZN-20151021YG
+    //if(err) throw new Error(err)
+    stdout='192.168.100.152  0x1         0x2         8c:88:2b:00:1f:80     *        br-lan';
     console.log('=========');
     console.log(data);
     console.log('=========');
+
+    // if( new RegExp(/win.*/).test(process.platform)){
+    //   // stdout='192.168.100.105  0x1         0x2         ac-bc-32-8d-9d-5d     *        br-lan';
+    //   var ips = stdout.match(/(\d+\.){3}\d+/g);
+    //   ips.shift();
+    //   var MACs = stdout.match(/([0-9a-zA-Z]{2}\-){5}[0-9a-zA-Z]+/g);
+    //   MACs = MACs.map(function(e){ return e.replace(/-/g,':')});
+    // } else {
+      // var ips=data.match(/(\d+\.){3}\d+/g);
+      // var MACs=data.match(/([0-9a-zA-Z]{2}:){5}[0-9a-zA-Z]+/g);
+    // }
+    // console.log(ips,MACs);
     var MACs=[];
     var ips=[];
-    
-    var ips=data.match(/(\d+\.){3}\d+/g);
-    var MACs=data.match(/([0-9a-zA-Z]{2}:){5}[0-9a-zA-Z]+/g);
+    var lines = data.match(/[\S ]*/g);
+    for(var i=lines.length -1 ; i>=0; i--){
+      if (lines[i]=='') lines.splice(i,1);
+    }
+    for(var i=lines.length -1 ; i>=0; i--){
+      MACs.push(lines[i].match(/\S*/g)[2]);
+      ips.push(lines[i].match(/\S*/g)[4]);
 
-
+    }
     for (var i = ips.length - 1; i >= 0; i--) {
       devices[MACs[i]]={
         ip: ips[i],

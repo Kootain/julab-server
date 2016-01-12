@@ -46,7 +46,15 @@ var device = function (name, ip, port){
 		client.on('data', function(data){
 			colorlog.info(['get data from server']);
 			colorlog.warning([data.toString()]);
-			callback(data);
+			var temp = data.toString().match('[0-9]+.[0-9]+')[0];
+			if (temp<=weight+0.1 || temp=>weight -0.1 ){
+				flag++;
+				if(flag >= 10)
+				callback(data);
+			}else{
+				flag = 0;
+				weight = temp;
+			}
 		});
 
 		client.on('close', function() {
