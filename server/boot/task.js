@@ -33,6 +33,7 @@ module.exports = function (app) {
     var ips=data.match(/(\d+\.){3}\d+/g);
     var MACs=data.match(/([0-9a-zA-Z]{2}:){5}[0-9a-zA-Z]+/g);
 
+
     for (var i = ips.length - 1; i >= 0; i--) {
       devices[MACs[i]]={
         ip: ips[i],
@@ -71,22 +72,34 @@ module.exports = function (app) {
             });
           }
         };
-        deferred.resolve();
-      });
-      return deferred.promise;
-    }
-
-    var jobs=[];
-    for (var i = deviceType.length - 1; i >= 0; i--) {
-      jobs.push(getDeviceListOfAType(deviceType[i]));
+        app.onlineDevices.list.push(aDevice);
+        var connector=new Device(aDevice.name, aDevice.ip, SERVER_PORT);
+        app.onlineDevices.connectors.push(connector);
+        tasks[type](connector,data[i]);
+      } else {
+        offlineDevices.push({
+          'MAC' : data[i].MAC, 
+          'name' : data[i].name, 
+          'type' : type 
+        });
+      }
     };
+    deferred.resolve();
+  });
+  return deferred.promise;
+}
 
-    Q.all(jobs)  
-    .done(function(){   
-      //mark unknown
-      for(var mac in devices){
-        if(!devices[mac].known) unKnownDevices.push({MAC:mac,ip:devices[mac].ip});
-      } 
+var jobs=[];
+for (var i = deviceType.length - 1; i >= 0; i--) {
+  jobs.push(getDeviceListOfAType(deviceType[i]));
+};
+
+Q.all(jobs)  
+.done(function(){   
+  //mark unknown
+  for(var mac in devices){
+    if(!devices[mac].known) unKnownDevices.push({MAC:mac,ip:devices[mac].ip});
+  } 
 
       // //generate devices socket, bind on app
       // process.nextTick(function(){
