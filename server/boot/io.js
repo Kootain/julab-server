@@ -75,7 +75,7 @@ module.exports = function io(app) {
 						socket.on(FindReagents.Job.submit, function (data) {
 							console.log('on FindReagents.Job.submit');
 							todo.scanner[data.serial]=data.list;
-							console.log();
+							
 							for(var id in scanner){
 								scanner[id].emit(FindReagents.Job.spread,
 									{ serial:data.serial, detail: data, owner: socket.id });
@@ -91,7 +91,7 @@ module.exports = function io(app) {
 							}
 							colorlog.log([colorlog.yellow(data.serial),' was ',colorlog.green('accepeted'),'!']);
 							socket.emit(QuickRegisterReagents.Job.shakeHands.accept, data);
-							delete todo.scanner[data.serial];
+							delete todo.web[data.serial];
 						});
 
 					},	
@@ -99,8 +99,7 @@ module.exports = function io(app) {
 						var todo=app.todo;
 						var web = app.connected.web;
 						socket.on(FindReagents.Job.shakeHands.start,function (data){
-							console.log(FindReagents.Job.shakeHands.start,data);
-							// data=JSON.parse(data);
+							data=JSON.parse(data);
 							if(!todo.scanner[data.serial]){
 								colorlog.log([colorlog.yellow(data.serial),' was ',colorlog.red('expired'),'!']);
 								socket.emit(FindReagents.Job.shakeHands.reject, data);
@@ -120,21 +119,6 @@ module.exports = function io(app) {
 									{ serial:data.serial, detail: data, owner: socket.id });
 							}
 						});
-
-						socket.on('get reagent rfid result', function (data){
-							web[data.owner].emit('reagent add notify rfid',
-									{ serial: data.serial, rfid: data.rfid }
-								);
-						});
-
-						socket.on('search report', function (data){
-							app.models.RfidInfo.update(
-								{ id: { in: data.toFind } }, 
-								{gmt_visited: (new Date()).toGMTString() },
-								function(err, info){
-									colorlog.error(err.message);
-								});
-						})
 					}
 		};
 	jobs.registerJobs=function(type,socket){

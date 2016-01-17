@@ -575,36 +575,19 @@ function reagentCtrl($scope, $modal, $compile, $timeout, $http, RfidInfo, ngTabl
         return FindReagents;
     })();
 
-    $scope.findReagents ={
-        start : function(serial,_data){
-            var data =  {};
-            data.serial = serial;
-            data.data = _data;
-            socket.emit(FindReagents.Job.shakeHands.start,data);
-        },
-        sumbit : function(serial,_data){
-            var data = {};
-            data.serial = serial;
-            data.list = _data;
-            socket.emit(FindReagents.Job.submit, data);
-        }
-    }
+    $scope.find = function(){
+        var data = {};
+        data.serial = tools.randomStr(10); //todo
+        data.list = $scope.reagents.filter(function(e){
+            return e.selected;
+        }).map(function(e){
+            return e.rfid;
+        });
+        console.log(data);
+        socket.emit(FindReagents.Job.submit, data);
+    };
 
     $scope.quickRegisterReagents = {
-        start : function(serial,_data){
-            var data = {};
-            data.serial = serial;
-            data.data = _data;
-            socket.emit(QuickRegisterReagents.Job.shakeHands.start,data);
-
-        },
-        submit : function(serial,_data){
-            var data={};
-            data.serial = serial;
-            data._data = _data;
-            socket.emit(QuickRegisterReagents.Job.submit,data);
-
-        },
         onData : function(serial,_data){
             socket.on(QuickRegisterReagents.Job.spread,function(_data){
                 data = _data;
@@ -626,16 +609,16 @@ function reagentCtrl($scope, $modal, $compile, $timeout, $http, RfidInfo, ngTabl
         }
     };
 
-    $scope.find=function(){
-        var toFind=[];
-        for(var x=0;x<$scope.reagents.length;x++){ 
-            if($scope.reagents[x].selected) toFind.push($scope.reagents[x].id);
-        }
-        socket.emit('submit job',{serial: tools.randomStr(10), list: toFind});
-        socket.on('search result',function(data){
-            console.log(data);
-        })
-    }
+    // $scope.find=function(){
+    //     var toFind=[];
+    //     for(var x=0;x<$scope.reagents.length;x++){ 
+    //         if($scope.reagents[x].selected) toFind.push($scope.reagents[x].id);
+    //     }
+    //     socket.emit('submit job',{serial: tools.randomStr(10), list: toFind});
+    //     socket.on('search result',function(data){
+    //         console.log(data);
+    //     })
+    // }
 
     $scope.queryReagents=function(cb){
         $scope.reagentsAdd=[];
@@ -814,7 +797,8 @@ function reagentCtrl($scope, $modal, $compile, $timeout, $http, RfidInfo, ngTabl
              name: $scope.reagentsAdd[id].name,
              rfid: $scope.reagentsAdd[id].rfid
         };
-        socket.emit(QuickRegisterReagents.Job.shakeHands.start,{serial:$scope.reagentsAdd[id].id});
+        socket.emit(QuickRegisterReagents.Job.shakeHands.start,{serial:$scope.reagentsAdd[id].id,index:id});
+        console.log($scope.reagentsAdd[id].id);
         socket.on(QuickRegisterReagents.Job.shakeHands.accept,function(data){
             RfidInfo.create(info,
                 function(val, resHeader){//success
@@ -830,6 +814,11 @@ function reagentCtrl($scope, $modal, $compile, $timeout, $http, RfidInfo, ngTabl
                     tools.notify('alert-danger', res.data.error.message);
                 });
             socket.removeListener(QuickRegisterReagents.Job.shakeHands.accept);
+        });
+        socket.on(QuickRegisterReagents.Job.shakeHands.reject,function(data){
+            tools.notify('alert-danger','Job has been done!');
+            socket.removeListener(QuickRegisterReagents.Job.shakeHands.reject);
+            $scope.close(data.index);
         });
 
     };
