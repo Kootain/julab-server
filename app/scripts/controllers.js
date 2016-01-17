@@ -513,6 +513,7 @@ function addDevice($scope, $modalInstance, deviceInfo, Scale, Item){
 function reagentCtrl($scope, $modal, $compile, $timeout, $http, RfidInfo, ngTableParams, DTColumnBuilder, DTOptionsBuilder, DTColumnDefBuilder) {
     var table=$('#reagents-table').dataTable();
 
+    $a = $scope;
     $scope.selectAll=false;
     $scope.reagentsAdd=[];
 
@@ -531,9 +532,93 @@ function reagentCtrl($scope, $modal, $compile, $timeout, $http, RfidInfo, ngTabl
     //     DTColumnDefBuilder.newColumnDef(2),
     //     DTColumnDefBuilder.newColumnDef(3).notSortable(),
     // ];
+    var ShakeHands = (function () {
+        function ShakeHands(prefix) {
+            this.start = prefix + "." + "ShakeHands.start";
+            this.accept = prefix + "." + "ShakeHands.accept";
+            this.reject = prefix + "." + "ShakeHands.reject";
+        }
+        return ShakeHands;
+    })();
+    var job = (function () {
+        function job(prefix) {
+            this.shakeHands = new ShakeHands(prefix + ".Job");
+            this.submit = prefix + "." + "Job.submit";
+            this.spread = prefix + "." + "Job.spread";
+        }
+        return job;
+    })();
+    var Connection = (function () {
+        function Connection() {
+        }
+        Connection.in = "Connection.in";
+        return Connection;
+    })();
+    var RegisterReagents = (function () {
+        function RegisterReagents() {
+        }
+        RegisterReagents.isInProcess = "RegisterReagents.isInProcess";
+        RegisterReagents.Job = new job("RegisterReagents");
+        RegisterReagents.update = "RegisterReagents.update";
+        return RegisterReagents;
+    })();
+    var QuickRegisterReagents = (function () {
+        function QuickRegisterReagents() {
+        }
+        QuickRegisterReagents.Job = new job("QuickRegisterReagents");
+        return QuickRegisterReagents;
+    })();
+    var FindReagents = (function () {
+        function FindReagents() {
+        }
+        FindReagents.Job = new job("FindReagents");
+        return FindReagents;
+    })();
 
+    $scope.findReagents ={
+        start : function(serial,_data){
+            var data =  {};
+            data.serial = serial;
+            data.data = _data;
+            socket.emit(FindReagents.Job.shakeHands.start,data);
+        },
+        sumbit : function(serial,_data){
+            var data = {};
+            data.serial = serial;
+            data.list = _data;
+            socket.emit(FindReagents.Job.submit, data);
+        }
+    }
+
+    $scope.quickRegisterReagents = {
+        start : function(serial,_data){
+            var data = {};
+            data.serial = serial;
+            data.data = _data;
+            socket.emit(QuickRegisterReagents.Job.shakeHands.start,data);
+
+        },
+        submit : function(serial,_data){
+            var data={};
+            data.serial = serial;
+            data._data = _data;
+            socket.emit(QuickRegisterReagents.Job.submit,data);
+
+        },
+        onData : function(serial,_data){
+            socket.on(QuickRegisterReagents.Job.spread,function(_data){
+                data = _data;
+                console.log(data);
+                // console.log(data.serial+' : '+data.rfid);
+                $scope.add(data.detail.rfid,data.serial);
+                $scope.$apply();
+            });
+
+            console.log('ok');
+        }
+    }
  
-
+    $scope.quickRegisterReagents.onData();
     $scope.toggleAll=function(){
         $scope.selectAll=!$scope.selectAll;
         for(var x=0;x<$scope.reagents.length;x++) {
@@ -709,12 +794,12 @@ function reagentCtrl($scope, $modal, $compile, $timeout, $http, RfidInfo, ngTabl
         $scope.reagentsAdd.splice(id,1);
     }
 
-    $scope.add=function(){
-        var rid=tools.randomStr(10);
+    $scope.add=function(rfid,serial){
+        // var rid=tools.randomStr(10);
         var data={
             name : "",
-            rfid : "",
-            id : rid
+            rfid : rfid||"",
+            id : serial||""
         };
         $scope.reagentsAdd.unshift(data);
     }
@@ -729,19 +814,23 @@ function reagentCtrl($scope, $modal, $compile, $timeout, $http, RfidInfo, ngTabl
              name: $scope.reagentsAdd[id].name,
              rfid: $scope.reagentsAdd[id].rfid
         };
-        RfidInfo.create(info,
-            function(val, resHeader){//success
-                //$scope.close(id);
-                $scope.reagentsBak.unshift(val);
-                $scope.reagentsAdd.splice(id,1);
-                val.flag=true;
-                val.readonly=true;
-                $scope.reagents.unshift(val);
-             },
-            function(res){//error
-                console.log(res);
-                tools.notify('alert-danger', res.data.error.message);
-            });
+        socket.emit(QuickRegisterReagents.Job.shakeHands.start,{serial:$scope.reagentsAdd[id].id});
+        socket.on(QuickRegisterReagents.Job.shakeHands.accept,function(data){
+            RfidInfo.create(info,
+                function(val, resHeader){//success
+                    //$scope.close(id);
+                    $scope.reagentsBak.unshift(val);
+                    $scope.reagentsAdd.splice(id,1);
+                    val.flag=true;
+                    val.readonly=true;
+                    $scope.reagents.unshift(val);
+                },
+                function(res){//error
+                    console.log(res);
+                    tools.notify('alert-danger', res.data.error.message);
+                });
+            socket.removeListener(QuickRegisterReagents.Job.shakeHands.accept);
+        });
 
     };
 

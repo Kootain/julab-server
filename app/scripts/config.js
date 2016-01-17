@@ -168,7 +168,7 @@ function config($stateProvider, $urlRouterProvider) {
                         {
                             name: 'ngTable',
                             files: ['../bower_components/ng-table/dist/ng-table.js']
-                        },
+                        }
                         
                     ]);
                 }

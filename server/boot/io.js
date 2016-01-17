@@ -73,7 +73,9 @@ module.exports = function io(app) {
 						 *  * find reagents
 						 */
 						socket.on(FindReagents.Job.submit, function (data) {
+							console.log('on FindReagents.Job.submit');
 							todo.scanner[data.serial]=data.list;
+							console.log();
 							for(var id in scanner){
 								scanner[id].emit(FindReagents.Job.spread,
 									{ serial:data.serial, detail: data, owner: socket.id });
@@ -81,7 +83,7 @@ module.exports = function io(app) {
 						});
 						
 						socket.on(QuickRegisterReagents.Job.shakeHands.start,function (data){
-							data=JSON.parse(data);
+							// data=JSON.parse(data);
 							if(!todo.web[data.serial]){
 								colorlog.log([colorlog.yellow(data.serial),' was ',colorlog.red('expired'),'!']);
 								socket.emit(QuickRegisterReagents.Job.shakeHands.reject, data);
@@ -95,8 +97,10 @@ module.exports = function io(app) {
 					},	
 		scanner: 	function(socket){
 						var todo=app.todo;
+						var web = app.connected.web;
 						socket.on(FindReagents.Job.shakeHands.start,function (data){
-							data=JSON.parse(data);
+							console.log(FindReagents.Job.shakeHands.start,data);
+							// data=JSON.parse(data);
 							if(!todo.scanner[data.serial]){
 								colorlog.log([colorlog.yellow(data.serial),' was ',colorlog.red('expired'),'!']);
 								socket.emit(FindReagents.Job.shakeHands.reject, data);
@@ -108,7 +112,8 @@ module.exports = function io(app) {
 						});
 
 						socket.on(QuickRegisterReagents.Job.submit,function (data){
-							data=JSON.parse(data);
+							console.log(QuickRegisterReagents.Job.submit,data);
+							// data=JSON.parse(data);
 							todo.web[data.serial] = data.rfid;
 							for(var id in web){
 								web[id].emit(QuickRegisterReagents.Job.spread,
@@ -145,7 +150,7 @@ module.exports = function io(app) {
 
 	app.io.on('connection', function (socket) {
 		socket.on('in',function(data){
-			console.log(data.type+"  connected");
+			console.log(socket.id+" "+data.type+"  connected");
 			app.connected[data.type][socket.id]=socket;
 			jobs.registerJobs(data.type, socket);
 		});
