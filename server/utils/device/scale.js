@@ -30,8 +30,10 @@ var _scale = function (app , device, params){
     _canHandle=true;
   },FREQUENCY);
   device.connect(function(data){
+    console.log('loop!');
     if(!_canHandle) return;
     _canHandle = false;
+    console.log(data.toString());
     var weight = data.toString().match('[0-9]+.[0-9]+')[0];
  
     app.models.Weight.create(
