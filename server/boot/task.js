@@ -1,15 +1,13 @@
 var exec = require('child_process').exec;
 var SERVER_PORT = 8080;
 module.exports = function (app) {
-  console.log('called');
-    var Device = require('../utils/device/device');
+  var Device = require('../utils/device/device');
   var tasks = {
         Scale:require('../utils/device/scale')(app)
       };
   var Async = require('async');
   var devices ={};
   var Q = require('q');  
-    //TODO get connected devices  devices={MACA:ipA,MACB:ipB.....}
 
   app.onlineDevices = {
           list: [],

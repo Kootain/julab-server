@@ -177,6 +177,36 @@ function config($stateProvider, $urlRouterProvider) {
                 label: 'list'
             }
         })
+        .state('content.shop',{
+            abstract: true,
+            url: "/shop",
+            template: '<ui-view/>',
+            ncyBreadcrumb:{
+                label:'shop'
+            }
+        })
+        .state('content.shop.overview', {
+            url: "/overview",
+            controller: 'reagentOverviewCtrl as reagentOverview',
+            templateUrl: "views/shop/list.html",
+            data: { pageTitle: 'reagents overview' },
+            ncyBreadcrumb:{
+                label:'overview'
+            },
+            resolve: {
+                loadPlugin: function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([
+                        {
+                            files: ['../bower_components/footable/footable.all.min.js', '../bower_components/footable/footable.core.css']
+                        },
+                        {
+                            name: 'ui.footable',
+                            files: ['../bower_components/footable/angular-footable.js']
+                        }
+                    ]);
+                }
+            }
+        })
 }
 angular
     .module('julab')
