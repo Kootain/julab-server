@@ -22,7 +22,7 @@ var server = net.createServer(function(socket){
   var cl = setInterval(function(){
     socket.write(weight);
   },2000);
-
+  console.log('connected!');
   socket.on('error',function(err){
     if(err.errno == 'ECONNRESET'){
       console.log('connection closed!');
@@ -34,6 +34,7 @@ var server = net.createServer(function(socket){
   socket.on('data',function(data){
     console.log(data.toString());
   })
+
 
 });
 

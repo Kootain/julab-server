@@ -4,18 +4,19 @@ var device = function (name, ip, MAC, port){
   var _port =port;
   var _MAC = MAC
   var client = new  require('net').Socket();
-  var isConnected=false;
   var _info=null;
   var colorlog = require('../../tools/colorlog');
-  var weight = 0.0;
-  var flag = 0;
+  var _isConnected = false;
+  
+  this.isConnected = function(){
+    return _isConnected;
+  };
 
   this.getInfo = function (){
     return {
       name:_name,
       ip:_ip
     };
-
   };
 
   this.getDeviceDetails = function (model,MAC){
@@ -30,28 +31,45 @@ var device = function (name, ip, MAC, port){
   };
 
   this.try = function(event){
+    var _this = this;
     client.connect(_port, _ip, function(){
-      event.emit('try',{connector:this, flag: true, MAC: _MAC});
+      _isConnected = true;
+      event.emit('try',{connector:_this, MAC: _MAC});
+      
     });
 
     client.once('error',function(){
-      event.emit('try',{connector:this, flag: false, MAC: _MAC});
+      event.emit('try',{connector:_this, MAC: _MAC});
+      _isConnected = false;
     });
 
     client.once('timeout',function(){
-      event.emit('try',{connector:this, flag: false, MAC: _MAC});
+      event.emit('try',{connector:_this, MAC: _MAC});
+      _isConnected = false;
     });
   };
 
+  this.data = function(callback){
+    if(!_isConnected){
+      return false;
+    }
+    client.on('data', function(data){
+      colorlog.info(['get data from server']);
+      colorlog.warning([data.toString()]);
+      callback(data);
+    });
+    return true;
+  }
+
   this.connect = function (callback){
     console.log(_name +' '+_ip+ ' '+_port);
-    if(isConnected) {
+    if(_isConnected) {
       colorlog.error(colorlog.log[_name, ' already connected']);
       return false;
     }
 
     client.connect(_port, _ip, function(){
-      isConnected= true;
+      _isConnected= true;
       colorlog.log(['connected device: ',_name||'undefined',', ',_ip,':',_port]);
     });
 
@@ -75,7 +93,7 @@ var device = function (name, ip, MAC, port){
   };
 
   this.close=function (){
-    if(!isConnected) {
+    if(!_isConnected) {
       colorlog.error(colorlog.log([_name, ' already closed']));
       return false;
     }
@@ -84,7 +102,7 @@ var device = function (name, ip, MAC, port){
   };
 
   this.send=function (data){
-    if(!isConnected){
+    if(!_isConnected){
       colorlog.error(colorlog.log[_name, ' already connected']);
       return false;
     }

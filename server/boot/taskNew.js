@@ -1,5 +1,5 @@
 var exec = require('child_process').exec;
-var SERVER_PORT = 8080;
+var SERVER_PORT = 8123;
 module.exports = function (app) {
   var Device = require('../utils/device/deviceNew');
   var tasks = {
@@ -9,11 +9,11 @@ module.exports = function (app) {
   var devices ={};
   var Q = require('q');
   var proxy = new require('eventproxy')();
-    //TODO get connected devices  devices={MACA:ipA,MACB:ipB.....}
 
   app.onlineDevices = [];
 
   var deviceList = function(){
+
     if( new RegExp(/win.*/).test(process.platform)){
       var cmd = 'type dhcp.leases';
     }else{
@@ -34,23 +34,26 @@ module.exports = function (app) {
 
       proxy.after('try',ips.length,function(data){
         for(var i in data){
-          if(data[i].flag){
-            app.onlineDevices[data[i].MAC]={
-              connector: data[i].connector,
-              type : ''
-            };
+          if(data[i].hasOwnProperty('connector')){
+            if(data[i].connector.isConnected()){
+              app.onlineDevices[data[i].MAC]={
+                connector: data[i].connector,
+                type : ''
+              };
+              data[i].connector.data(function(data){console.log(data);}); //todo绑定设备接收数据后的callback
+            }
           }
         }
       });
+
       for (var i = ips.length - 1; i >= 0; i--) {
         if(app.onlineDevices[MACs[i]] === undefined){
           var connector = new Device(i, ips[i], MACs[i], SERVER_PORT);
           connector.try(proxy);
         }else{
-          proxy.emit('try',{flag:false});
+          proxy.emit('try',{});
         }
       }
-    
       //TODO: 掉线设备及时排除列表
 
       var offlineDevices=[],     // [{MAC:??, name:??, type: ??}, ... ]
@@ -64,7 +67,6 @@ module.exports = function (app) {
           for (var i = data.length - 1; i >= 0; i--) {
             if(app.onlineDevices[data[i].MAC]){   //if exist in 'devices' => online  else  offline
               app.onlineDevices[data[i].MAC].type = type;
-              app.onlineDevices[data[i].MAC].new = true;
             } else {
               offlineDevices.push({
                 'MAC' : data[i].MAC, 
@@ -87,17 +89,21 @@ module.exports = function (app) {
       .done(function(){   
         //mark unknown
         for(var mac in app.onlineDevices){
-          if(app.onlineDevices[mac].new === true){
+          if(app.onlineDevices[mac].new === true){  //判断称是否被type循环扫描到
             app.onlineDevices[mac].new = false;
           }else{
             app.onlineDevices[mac].type = '';
             unKnownDevices[mac] = app.onlineDevices[mac];
             app.onlineDevices[mac].new = false;
           }
+          if(!app.onlineDevices[mac].connector.isConnected()){
+            delete app.onlineDevices[mac];
+          }
         }
         app.offlineDevices = offlineDevices;
         console.log('OFFLINE:',app.offlineDevices);
         console.log('ONLINE:',app.onlineDevices);
+
         setTimeout(function() {
           deviceList();
         }, 5000);
