@@ -7,7 +7,6 @@ var device = function (name, ip, port){
 	var _info=null;
 	var colorlog = require('../../tools/colorlog');
 	var weight = 0.0;
-	var flag = 0;
 
 	this.getInfo = function (){
 		return {

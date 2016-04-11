@@ -28,8 +28,7 @@
 //     console.log(data);
 //     console.log('=========');
 //     var MACs=[];
-//     var ips=[];
-    
+//     var ips=[];    
 //     var ips=data.match(/(\d+\.){3}\d+/g);
 //     var MACs=data.match(/([0-9a-zA-Z]{2}:){5}[0-9a-zA-Z]+/g);
 
